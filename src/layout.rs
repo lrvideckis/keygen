@@ -12,17 +12,17 @@ use std::fmt;
 //
 //            col 0         col 1         col 2         col 3         col 4
 //
-//          8   1   2 |  17  10  11 |  26  19  20 |  35  28  29 |  44  37  38
-// row 0    7   0   3 |  16   9  12 |  25  18  21 |  34  27  30 |  43  36  39
-//          6   5   4 |  15  14  13 |  24  23  22 |  33  32  31 |  42  41  40
+//          5   6   7 |             |             |             |
+// row 0    4   8   0 |             |             |             |
+//          3   2   1 |             |             |             |
 //        ------------ ------------- ------------- ------------- -------------
-//         53  46  47 |  62  55  56 |  71  64  65 |  80  73  74 |  89  82  83
-// row 1   52  45  48 |  61  54  57 |  70  63  66 |  79  72  75 |  88  81  84
-//         51  50  49 |  60  59  58 |  69  68  67 |  78  77  76 |  87  86  85
+//                    |             |             |             |
+// row 1              |             |             |             |
+//                    |             |             |             |
 //        ------------ ------------- ------------- ------------- -------------
-//                    | 107 100 101 | 116 109 110 | 125 118 119 |
-// row 2     shift    | 106  99 102 | 115 108 111 | 124 117 120 |  backspace
-//                    | 105 104 103 | 114 113 112 | 123 122 121 |
+//                    |             |             |             |
+// row 2     shift    |             |             |             |  backspace
+//                    |             |             |             |
 //
 // index%9 = relative location in key
 // (index/9)/5 = row
@@ -115,6 +115,11 @@ impl Layout {
 
         LayoutPosMap(map)
     }
+
+    pub fn get(&self, pos: usize) -> char {
+        let KeyMap(ref layer) = self.0;
+        layer[pos]
+    }
 }
 
 impl LayoutPosMap {
@@ -175,37 +180,37 @@ impl fmt::Display for Layout {
                 write!(
                     f,
                     " {} {} {} |",
-                    layer[loc * 9 + 8],
-                    layer[loc * 9 + 1],
-                    layer[loc * 9 + 2]
-                )?;
-            }
-            writeln!(f, "")?;
-            for col in 0..5 {
-                if row == 2 && col == 4 {
-                    break;
-                }
-                let loc = row * 5 + col;
-                write!(
-                    f,
-                    " {} {} {} |",
-                    layer[loc * 9 + 7],
-                    layer[loc * 9 + 0],
-                    layer[loc * 9 + 3]
-                )?;
-            }
-            writeln!(f, "")?;
-            for col in 0..5 {
-                if row == 2 && col == 4 {
-                    break;
-                }
-                let loc = row * 5 + col;
-                write!(
-                    f,
-                    " {} {} {} |",
-                    layer[loc * 9 + 6],
                     layer[loc * 9 + 5],
-                    layer[loc * 9 + 4]
+                    layer[loc * 9 + 6],
+                    layer[loc * 9 + 7]
+                )?;
+            }
+            writeln!(f, "")?;
+            for col in 0..5 {
+                if row == 2 && col == 4 {
+                    break;
+                }
+                let loc = row * 5 + col;
+                write!(
+                    f,
+                    " {} {} {} |",
+                    layer[loc * 9 + 4],
+                    layer[loc * 9 + 8],
+                    layer[loc * 9 + 0]
+                )?;
+            }
+            writeln!(f, "")?;
+            for col in 0..5 {
+                if row == 2 && col == 4 {
+                    break;
+                }
+                let loc = row * 5 + col;
+                write!(
+                    f,
+                    " {} {} {} |",
+                    layer[loc * 9 + 3],
+                    layer[loc * 9 + 2],
+                    layer[loc * 9 + 1]
                 )?;
             }
             writeln!(f, "")?;

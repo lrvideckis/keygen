@@ -87,7 +87,7 @@ pub fn calculate_penalty<'a>(
 
     let position_map = layout.get_position_map();
     for (string, count) in quartads {
-        total += penalty_for_quartad(string, *count, &position_map, &mut result, detailed);
+        total += penalty_for_quartad(string, *count, &position_map, &mut result, detailed, layout);
     }
 
     (total, total / (len as f64), result)
@@ -99,6 +99,7 @@ fn penalty_for_quartad<'a, 'b>(
     position_map: &'b LayoutPosMap,
     result: &'b mut Vec<KeyPenaltyResult<'a>>,
     detailed: bool,
+    layout: &Layout,
 ) -> f64 {
     let mut chars = string.chars().into_iter().rev();
     let opt_curr = chars.next();
@@ -126,7 +127,9 @@ fn penalty_for_quartad<'a, 'b>(
         None => &KP_NONE,
     };
 
-    penalize(string, count, &curr, old1, old2, old3, result, detailed)
+    penalize(
+        string, count, &curr, old1, old2, old3, result, detailed, layout,
+    )
 }
 
 // constants taken from https://www.exideas.com/ME/ICMI2003Paper.pdf
@@ -154,9 +157,48 @@ fn distance(point0: (f64, f64), point1: (f64, f64)) -> f64 {
 }
 
 fn get_coordinates(key: &KeyPress) -> (f64, f64) {
-    let pos = key.pos / 9;
-    ((pos / 5) as f64, (pos % 5) as f64)
+    let spot = key.pos / 9;
+    ((spot / 5) as f64, (spot % 5) as f64)
 }
+
+// returns coordinate of end of swipe, and width
+fn get_swipe_details(old1: &KeyPress, layout: &Layout) -> ((f64, f64), f64) {
+    let spot = old1.pos / 9;
+    let dir = old1.pos % 9;
+    let mut next_delta: f64 = 2.0;
+    for di in 1..=3 {
+        if layout.get(spot * 9 + ((dir + di) % 8)) != ' ' {
+            next_delta = (di as f64) / 2.0;
+            break;
+        }
+    }
+    let mut prev_delta: f64 = -2.0;
+    for di in 1..=3 {
+        if layout.get(spot * 9 + ((dir + 8 - di) % 8)) != ' ' {
+            prev_delta = -(di as f64) / 2.0;
+            break;
+        }
+    }
+    let mut coordinates = get_coordinates(old1);
+
+    let (sin, cos) =
+        f64::sin_cos((dir as f64 + next_delta + prev_delta) / 8.0 * 2.0 * std::f64::consts::PI);
+    coordinates.0 += sin;
+    coordinates.1 += cos;
+    (coordinates, (next_delta - prev_delta) as f64 / 2.0)
+}
+
+//          5   6   7 |             |             |             |
+// row 0    4   8   0 |             |             |             |
+//          3   2   1 |             |             |             |
+//        ------------ ------------- ------------- ------------- -------------
+//                    |             |             |             |
+// row 1              |             |             |             |
+//                    |             |             |             |
+//        ------------ ------------- ------------- ------------- -------------
+//                    |             |             |             |
+// row 2     shift    |             |             |             |  backspace
+//                    |             |             |             |
 
 fn penalize<'a, 'b>(
     string: &'a str,
@@ -167,6 +209,7 @@ fn penalize<'a, 'b>(
     _: &Option<KeyPress>,
     result: &'b mut Vec<KeyPenaltyResult<'a>>,
     detailed: bool,
+    layout: &Layout,
 ) -> f64 {
     let len = string.len();
     let count = count as f64;
@@ -186,14 +229,19 @@ fn penalize<'a, 'b>(
     }
 
     // previous key is a tap
-    if old1.pos % 9 == 0 {
+    if old1.pos % 9 == 8 {
         if old1.pos == curr.pos {
             penalty = A;
         } else {
             let dist = distance(get_coordinates(old1), get_coordinates(curr));
             penalty = fitts_law(dist, 1.0);
         }
-    } else { // previous key is a swipe
+    } else {
+        // previous key is a swipe
+        let (end_of_swipe_coords, width) = get_swipe_details(old1, layout);
+        penalty += fitts_law(distance(get_coordinates(old1), end_of_swipe_coords), width);
+        penalty -= A;
+        penalty += fitts_law(distance(end_of_swipe_coords, get_coordinates(curr)), 1.0);
     }
 
     penalty *= count;
@@ -204,15 +252,3 @@ fn penalize<'a, 'b>(
     }
     penalty
 }
-
-//   8   1   2 |  17  10  11 |  26  19  20 |  35  28  29 |  44  37  38
-//   7   0   3 |  16   9  12 |  25  18  21 |  34  27  30 |  43  36  39
-//   6   5   4 |  15  14  13 |  24  23  22 |  33  32  31 |  42  41  40
-// ------------ ------------- ------------- ------------- -------------
-//  53  46  47 |  62  55  56 |  71  64  65 |  80  73  74 |  89  82  83
-//  52  45  48 |  61  54  57 |  70  63  66 |  79  72  75 |  88  81  84
-//  51  50  49 |  60  59  58 |  69  68  67 |  78  77  76 |  87  86  85
-// ------------ ------------- ------------- ------------- -------------
-//             | 107 100 101 | 116 109 110 | 125 118 119 |
-//    shift    | 106  99 102 | 115 108 111 | 124 117 120 |  backspace
-//             | 105 104 103 | 114 113 112 | 123 122 121 |
