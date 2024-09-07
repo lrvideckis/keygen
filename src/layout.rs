@@ -169,11 +169,13 @@ impl fmt::Display for Layout {
                     break;
                 }
                 let loc = row * 5 + col;
-                if row == 0 && col == 4 {
-                    write!(f, " {}   {} |", '{', '}')?;
-                } else {
-                    write!(f, "   {}   |", layer[loc * 5 + 1])?;
-                }
+                write!(
+                    f,
+                    " {} {} {} |",
+                    layer[loc * 9 + 8],
+                    layer[loc * 9 + 1],
+                    layer[loc * 9 + 2]
+                )?;
             }
             writeln!(f, "")?;
             for col in 0..5 {
@@ -184,9 +186,9 @@ impl fmt::Display for Layout {
                 write!(
                     f,
                     " {} {} {} |",
-                    layer[loc * 5 + 4],
-                    layer[loc * 5],
-                    layer[loc * 5 + 3]
+                    layer[loc * 9 + 7],
+                    layer[loc * 9 + 0],
+                    layer[loc * 9 + 3]
                 )?;
             }
             writeln!(f, "")?;
@@ -195,11 +197,13 @@ impl fmt::Display for Layout {
                     break;
                 }
                 let loc = row * 5 + col;
-                if row == 0 && col == 4 {
-                    write!(f, " <   > |")?;
-                } else {
-                    write!(f, "   {}   |", layer[loc * 5 + 2])?;
-                }
+                write!(
+                    f,
+                    " {} {} {} |",
+                    layer[loc * 9 + 6],
+                    layer[loc * 9 + 5],
+                    layer[loc * 9 + 4]
+                )?;
             }
             writeln!(f, "")?;
             writeln!(f, "------- ------- ------- ------- -------")?;
