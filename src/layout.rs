@@ -27,6 +27,8 @@ use std::fmt;
 // index%9 = relative location in key
 // (index/9)/5 = row
 // (index/9)%5 = col
+//
+// (row*5+col)*9+(relative location in key)=index
 
 // convert number in range [0,117) to [0,90) union [99,126)
 pub fn shift_index(mut i: usize) -> usize {
