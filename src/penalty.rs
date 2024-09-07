@@ -138,7 +138,7 @@ fn penalty_for_quartad<'a, 'b>(
 pub static A: f64 = 0.127;
 // assuming each key is a 1-unit by 1-unit square, this is the distance a swipe takes (also 1-unit)
 // here, I assume each swipe is the same distance, independent of direction
-pub static D_SWIPE: f64 = 1.0;
+pub static D_SWIPE: f64 = 1.2;
 
 // if your thumb starts at position (x_start,y_start), and needs to travel to a button (with the
 // given width) at (x_end,y_end) where dist=sqrt((x_start-x_end)^2 + (y_start-y_end)^2)
@@ -181,11 +181,43 @@ fn get_swipe_details(old1: &KeyPress, layout: &Layout) -> ((f64, f64), f64) {
     }
     let mut coordinates = get_coordinates(old1);
 
-    let (sin, cos) =
-        f64::sin_cos((dir as f64 + next_delta + prev_delta) / 8.0 * 2.0 * std::f64::consts::PI);
-    coordinates.0 += sin;
-    coordinates.1 += cos;
-    (coordinates, (next_delta - prev_delta) as f64 / 2.0)
+    let dir_adjusted = dir as f64 + (next_delta + prev_delta) / 2.0;
+
+    let (sin, cos) = f64::sin_cos(dir_adjusted / 8.0 * 2.0 * std::f64::consts::PI);
+    coordinates.0 += D_SWIPE * sin;
+    coordinates.1 += D_SWIPE * cos;
+
+    let width = (next_delta - prev_delta) as f64 / 5.0;
+
+    if false {
+        println!(" ------- ");
+        println!(
+            "| {} {} {} |",
+            layout.get(spot * 9 + 5),
+            layout.get(spot * 9 + 6),
+            layout.get(spot * 9 + 7),
+        );
+        println!(
+            "| {} {} {} |",
+            layout.get(spot * 9 + 4),
+            layout.get(spot * 9 + 8),
+            layout.get(spot * 9 + 0),
+        );
+        println!(
+            "| {} {} {} |",
+            layout.get(spot * 9 + 3),
+            layout.get(spot * 9 + 2),
+            layout.get(spot * 9 + 1),
+        );
+        println!(" ------- ");
+
+        println!(
+            "dir {} dir adjusted {} swipe delta {:.4} {:.4} width {}",
+            dir, dir_adjusted, sin, cos, width,
+        );
+    }
+
+    (coordinates, width)
 }
 
 //          5   6   7 |             |             |             |
@@ -230,7 +262,7 @@ fn penalize<'a, 'b>(
 
     // previous key is a tap
     if old1.pos % 9 == 8 {
-        if old1.pos == curr.pos {
+        if old1.pos / 9 == curr.pos / 9 {
             penalty = A;
         } else {
             let dist = distance(get_coordinates(old1), get_coordinates(curr));
@@ -240,6 +272,16 @@ fn penalize<'a, 'b>(
         // previous key is a swipe
         let (end_of_swipe_coords, width) = get_swipe_details(old1, layout);
         penalty += fitts_law(distance(get_coordinates(old1), end_of_swipe_coords), width);
+        /*
+        println!(
+            "fitts law {:.3}",
+            fitts_law(distance(get_coordinates(old1), end_of_swipe_coords), width),
+        );
+        println!(
+            "fitts law - A {:.3}",
+            fitts_law(distance(get_coordinates(old1), end_of_swipe_coords), width) - A,
+        );
+        */
         penalty -= A;
         penalty += fitts_law(distance(end_of_swipe_coords, get_coordinates(curr)), 1.0);
     }
