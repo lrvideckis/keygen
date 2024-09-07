@@ -74,29 +74,7 @@ fn main() {
     };
 
     // Read layout, if applicable.
-    let _layout;
-    let layout = match matches.free.get(1) {
-        None => &layout::INIT_LAYOUT,
-        Some(layout_filename) => {
-            let mut f = match File::open(layout_filename) {
-                Ok(f) => f,
-                Err(e) => {
-                    println!("Error: {}", e);
-                    panic!("could not read layout");
-                }
-            };
-            let mut layout_str = String::new();
-            match f.read_to_string(&mut layout_str) {
-                Ok(_) => (),
-                Err(e) => {
-                    println!("Error: {}", e);
-                    panic!("could not read layout");
-                }
-            };
-            _layout = layout::Layout::from_string(&layout_str[..]);
-            &_layout
-        }
-    };
+    let layout = &layout::INIT_LAYOUT;
 
     // Parse options.
     let debug = matches.opt_present("d");
@@ -127,60 +105,6 @@ fn run_ref(s: &str) {
     let init_pos_map = layout::INIT_LAYOUT.get_position_map();
     let quartads = penalty::prepare_quartad_list(s, &init_pos_map);
     let len = s.len();
-
-    let penalty =
-        penalty::calculate_penalty(&quartads, len, &layout::QWERTY_LAYOUT, &penalties, true);
-    println!("Reference: QWERTY");
-    simulator::print_result(&layout::QWERTY_LAYOUT, &penalty);
-    println!("");
-
-    let penalty =
-        penalty::calculate_penalty(&quartads, len, &layout::DVORAK_LAYOUT, &penalties, true);
-    println!("Reference: DVORAK");
-    simulator::print_result(&layout::DVORAK_LAYOUT, &penalty);
-    println!("");
-
-    let penalty =
-        penalty::calculate_penalty(&quartads, len, &layout::COLEMAK_LAYOUT, &penalties, true);
-    println!("Reference: COLEMAK");
-    simulator::print_result(&layout::COLEMAK_LAYOUT, &penalty);
-    println!("");
-
-    let penalty =
-        penalty::calculate_penalty(&quartads, len, &layout::QGMLWY_LAYOUT, &penalties, true);
-    println!("Reference: QGMLWY");
-    simulator::print_result(&layout::QGMLWY_LAYOUT, &penalty);
-    println!("");
-
-    let penalty =
-        penalty::calculate_penalty(&quartads, len, &layout::WORKMAN_LAYOUT, &penalties, true);
-    println!("Reference: WORKMAN");
-    simulator::print_result(&layout::WORKMAN_LAYOUT, &penalty);
-    println!("");
-
-    let penalty =
-        penalty::calculate_penalty(&quartads, len, &layout::MALTRON_LAYOUT, &penalties, true);
-    println!("Reference: MALTRON");
-    simulator::print_result(&layout::MALTRON_LAYOUT, &penalty);
-    println!("");
-
-    let penalty =
-        penalty::calculate_penalty(&quartads, len, &layout::MTGAP_LAYOUT, &penalties, true);
-    println!("Reference: MTGAP");
-    simulator::print_result(&layout::MTGAP_LAYOUT, &penalty);
-    println!("");
-
-    let penalty =
-        penalty::calculate_penalty(&quartads, len, &layout::CAPEWELL_LAYOUT, &penalties, true);
-    println!("Reference: CAPEWELL");
-    simulator::print_result(&layout::CAPEWELL_LAYOUT, &penalty);
-    println!("");
-
-    let penalty =
-        penalty::calculate_penalty(&quartads, len, &layout::ARENSITO_LAYOUT, &penalties, true);
-    println!("Reference: ARENSITO");
-    simulator::print_result(&layout::ARENSITO_LAYOUT, &penalty);
-    println!("");
 
     let penalty =
         penalty::calculate_penalty(&quartads, len, &layout::INIT_LAYOUT, &penalties, true);

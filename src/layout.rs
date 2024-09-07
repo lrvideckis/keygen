@@ -15,7 +15,7 @@ use std::fmt;
 //          8   1   2 |  17  10  11 |  26  19  20 |  35  28  29 |  44  37  38
 // row 0    7   0   3 |  16   9  12 |  25  18  21 |  34  27  30 |  43  36  39
 //          6   5   4 |  15  14  13 |  24  23  22 |  33  32  31 |  42  41  40
-//        --------- ---------- ---------- ---------- ----------
+//        ------------ ------------- ------------- ------------- -------------
 //         53  46  47 |  62  55  56 |  71  64  65 |  80  73  74 |  89  82  83
 // row 1   52  45  48 |  61  54  57 |  70  63  66 |  79  72  75 |  88  81  84
 //         51  50  49 |  60  59  58 |  69  68  67 |  78  77  76 |  87  86  85
@@ -28,7 +28,15 @@ use std::fmt;
 // (index/9)/5 = row
 // (index/9)%5 = col
 
-pub struct KeyMap<T>(pub [T; 34]);
+// convert number in range [0,117) to [0,90) union [99,126)
+pub fn shift_index(mut i: usize) -> usize {
+    if i >= 90 {
+        i += 9;
+    }
+    i
+}
+
+pub struct KeyMap<T>(pub [T; 126]);
 
 impl<T: Copy> Clone for KeyMap<T> {
     fn clone(&self) -> KeyMap<T> {
@@ -37,372 +45,72 @@ impl<T: Copy> Clone for KeyMap<T> {
 }
 
 #[derive(Clone)]
-pub struct Layer(KeyMap<char>);
-
-#[derive(Clone)]
-pub struct Layout(Layer, Layer);
+pub struct Layout(KeyMap<char>);
 
 pub struct LayoutPermutations {
     orig_layout: Layout,
-    swap_idx: Vec<usize>,
-    started: bool,
+    swaps: Vec<(usize, usize)>,
+    index: usize,
 }
 
 pub struct LayoutPosMap([Option<KeyPress>; 128]);
 
-#[derive(Clone, Copy, PartialEq)]
-pub enum Finger {
-    Thumb,
-    Index,
-    Middle,
-    Ring,
-    Pinky,
-}
-
-#[derive(Clone, Copy, PartialEq)]
-pub enum Hand {
-    Left,
-    Right,
-}
-
-#[derive(Clone, Copy, PartialEq)]
-pub enum Row {
-    Top,
-    Home,
-    Bottom,
-    Thumb,
-}
-
 #[derive(Clone, Copy)]
 pub struct KeyPress {
     pub pos: usize,
-    pub finger: Finger,
-    pub hand: Hand,
-    pub row: Row,
-    pub center: bool,
 }
 
 /* ------- *
  * STATICS *
  * ------- */
 
-pub static INIT_LAYOUT: Layout = Layout(
-    Layer(KeyMap([
-        'j', 'c', 'y', 'f', 'k', 'z', 'l', ',', 'u', 'q', '=', 'r', 's', 't', 'h', 'd', 'm', 'n',
-        'a', 'i', 'o', '\'', '/', 'v', 'g', 'p', 'b', 'x', 'w', '.', ';', '-', 'e', ' ',
-    ])),
-    Layer(KeyMap([
-        'J', 'C', 'Y', 'F', 'K', 'Z', 'L', '<', 'U', 'Q', '+', 'R', 'S', 'T', 'H', 'D', 'M', 'N',
-        'A', 'I', 'O', '"', '?', 'V', 'G', 'P', 'B', 'X', 'W', '>', ':', '_', 'E', ' ',
-    ])),
-);
-
-pub static QWERTY_LAYOUT: Layout = Layout(
-    Layer(KeyMap([
-        'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '-', 'a', 's', 'd', 'f', 'g', 'h', 'j',
-        'k', 'l', ';', '\'', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '\0', ' ',
-    ])),
-    Layer(KeyMap([
-        'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '_', 'A', 'S', 'D', 'F', 'G', 'H', 'J',
-        'K', 'L', ':', '"', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', '\0', ' ',
-    ])),
-);
-
-pub static DVORAK_LAYOUT: Layout = Layout(
-    Layer(KeyMap([
-        '\'', ',', '.', 'p', 'y', 'f', 'g', 'c', 'r', 'l', '/', 'a', 'o', 'e', 'u', 'i', 'd', 'h',
-        't', 'n', 's', '-', ';', 'q', 'j', 'k', 'x', 'b', 'm', 'w', 'v', 'z', '\0', ' ',
-    ])),
-    Layer(KeyMap([
-        '"', ',', '.', 'P', 'Y', 'F', 'G', 'C', 'R', 'L', '?', 'A', 'O', 'E', 'U', 'I', 'D', 'H',
-        'T', 'N', 'S', '_', ':', 'Q', 'J', 'K', 'X', 'B', 'M', 'W', 'V', 'Z', '\0', ' ',
-    ])),
-);
-
-pub static COLEMAK_LAYOUT: Layout = Layout(
-    Layer(KeyMap([
-        'q', 'w', 'f', 'p', 'g', 'j', 'l', 'u', 'y', ';', '-', 'a', 'r', 's', 't', 'd', 'h', 'n',
-        'e', 'i', 'o', '\'', 'z', 'x', 'c', 'v', 'b', 'k', 'm', ',', '.', '/', '\0', ' ',
-    ])),
-    Layer(KeyMap([
-        'Q', 'W', 'F', 'P', 'G', 'J', 'L', 'U', 'Y', ':', '_', 'A', 'R', 'S', 'T', 'D', 'H', 'N',
-        'E', 'I', 'O', '"', 'Z', 'X', 'C', 'V', 'B', 'K', 'M', '<', '>', '?', '\0', ' ',
-    ])),
-);
-
-pub static QGMLWY_LAYOUT: Layout = Layout(
-    Layer(KeyMap([
-        'q', 'g', 'm', 'l', 'w', 'y', 'f', 'u', 'b', ';', '-', 'd', 's', 't', 'n', 'r', 'i', 'a',
-        'e', 'o', 'h', '\'', 'z', 'x', 'c', 'v', 'j', 'k', 'p', ',', '.', '/', '\0', ' ',
-    ])),
-    Layer(KeyMap([
-        'Q', 'G', 'M', 'L', 'W', 'Y', 'F', 'U', 'B', ':', '_', 'D', 'S', 'T', 'N', 'R', 'I', 'A',
-        'E', 'O', 'H', '"', 'Z', 'X', 'C', 'V', 'J', 'K', 'P', '<', '>', '?', '\0', ' ',
-    ])),
-);
-
-pub static WORKMAN_LAYOUT: Layout = Layout(
-    Layer(KeyMap([
-        'q', 'd', 'r', 'w', 'b', 'j', 'f', 'u', 'p', ';', '-', 'a', 's', 'h', 't', 'g', 'y', 'n',
-        'e', 'o', 'i', '\'', 'z', 'x', 'm', 'c', 'v', 'k', 'l', ',', '.', '/', '\0', ' ',
-    ])),
-    Layer(KeyMap([
-        'Q', 'D', 'R', 'W', 'B', 'J', 'F', 'U', 'P', ':', '_', 'A', 'S', 'H', 'T', 'G', 'Y', 'N',
-        'E', 'O', 'I', '"', 'Z', 'X', 'M', 'C', 'V', 'K', 'L', '<', '>', '?', '\0', ' ',
-    ])),
-);
-
-pub static MALTRON_LAYOUT: Layout = Layout(
-    Layer(KeyMap([
-        'q', 'p', 'y', 'c', 'b', 'v', 'm', 'u', 'z', 'l', '=', 'a', 'n', 'i', 's', 'f', 'd', 't',
-        'h', 'o', 'r', '\'', ',', '.', 'j', 'g', '/', ';', 'w', 'k', '-', 'x', 'e', ' ',
-    ])),
-    Layer(KeyMap([
-        'Q', 'P', 'Y', 'C', 'B', 'V', 'M', 'U', 'Z', 'L', '+', 'A', 'N', 'I', 'S', 'F', 'D', 'T',
-        'H', 'O', 'R', '"', '<', '>', 'J', 'G', '?', ':', 'W', 'K', '_', 'X', 'E', ' ',
-    ])),
-);
-
-pub static MTGAP_LAYOUT: Layout = Layout(
-    Layer(KeyMap([
-        'y', 'p', 'o', 'u', '-', 'b', 'd', 'l', 'c', 'k', 'j', 'i', 'n', 'e', 'a', ',', 'm', 'h',
-        't', 's', 'r', 'v', '(', '"', '\'', '.', '_', ')', 'f', 'w', 'g', 'x', 'z', ' ',
-    ])),
-    Layer(KeyMap([
-        'Y', 'P', 'O', 'U', ':', 'B', 'D', 'L', 'C', 'K', 'J', 'I', 'N', 'E', 'A', ';', 'M', 'H',
-        'T', 'S', 'R', 'V', '&', '?', '*', '=', '<', '>', 'F', 'W', 'G', 'X', 'Z', ' ',
-    ])),
-);
-
-pub static CAPEWELL_LAYOUT: Layout = Layout(
-    Layer(KeyMap([
-        '.', 'y', 'w', 'd', 'f', 'j', 'p', 'l', 'u', 'q', '/', 'a', 'e', 'r', 's', 'g', 'b', 't',
-        'n', 'i', 'o', '-', 'x', 'z', 'c', 'v', ';', 'k', 'w', 'h', ',', '\'', '\0', ' ',
-    ])),
-    Layer(KeyMap([
-        '>', 'Y', 'W', 'D', 'F', 'J', 'P', 'L', 'U', 'Q', '?', 'A', 'E', 'R', 'S', 'G', 'B', 'T',
-        'N', 'I', 'O', '_', 'X', 'Z', 'C', 'V', ':', 'K', 'W', 'H', '<', '"', '\0', ' ',
-    ])),
-);
-
-pub static ARENSITO_LAYOUT: Layout = Layout(
-    Layer(KeyMap([
-        'q', 'l', ',', 'p', '\0', '\0', 'f', 'u', 'd', 'k', '\0', 'a', 'r', 'e', 'n', 'b', 'g',
-        's', 'i', 't', 'o', '\0', 'z', 'w', '.', 'h', 'j', 'v', 'c', 'y', 'm', 'x', '\0', ' ',
-    ])),
-    Layer(KeyMap([
-        'Q', 'L', '<', 'P', '\0', '\0', 'F', 'U', 'D', 'K', '\0', 'A', 'R', 'E', 'N', 'B', 'G',
-        'S', 'I', 'T', 'O', '\0', 'Z', 'W', '>', 'H', 'J', 'V', 'C', 'Y', 'M', 'X', '\0', ' ',
-    ])),
-);
-
-// static LAYOUT_MASK: LayoutShuffleMask = LayoutShuffleMask(KeyMap([
-// 	true,  true,  true,  true,  true,  true,  true,  true,  true,  true,  false,
-// 	true,  true,  true,  true,  true,  true,  true,  true,  true,  true,  true,
-// 	true,  true,  true,  true,  true,  true,  true,  true,  true,  true,
-// 	false]));
-static LAYOUT_MASK_SWAP_OFFSETS: [usize; 33] = [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1,
-];
-static LAYOUT_MASK_NUM_SWAPPABLE: usize = 33;
-
-static KEY_FINGERS: KeyMap<Finger> = KeyMap([
-    Finger::Pinky,
-    Finger::Ring,
-    Finger::Middle,
-    Finger::Index,
-    Finger::Index,
-    Finger::Index,
-    Finger::Index,
-    Finger::Middle,
-    Finger::Ring,
-    Finger::Pinky,
-    Finger::Pinky,
-    Finger::Pinky,
-    Finger::Ring,
-    Finger::Middle,
-    Finger::Index,
-    Finger::Index,
-    Finger::Index,
-    Finger::Index,
-    Finger::Middle,
-    Finger::Ring,
-    Finger::Pinky,
-    Finger::Pinky,
-    Finger::Pinky,
-    Finger::Ring,
-    Finger::Middle,
-    Finger::Index,
-    Finger::Index,
-    Finger::Index,
-    Finger::Index,
-    Finger::Middle,
-    Finger::Ring,
-    Finger::Pinky,
-    Finger::Thumb,
-    Finger::Thumb,
-]);
-static KEY_HANDS: KeyMap<Hand> = KeyMap([
-    Hand::Left,
-    Hand::Left,
-    Hand::Left,
-    Hand::Left,
-    Hand::Left,
-    Hand::Right,
-    Hand::Right,
-    Hand::Right,
-    Hand::Right,
-    Hand::Right,
-    Hand::Right,
-    Hand::Left,
-    Hand::Left,
-    Hand::Left,
-    Hand::Left,
-    Hand::Left,
-    Hand::Right,
-    Hand::Right,
-    Hand::Right,
-    Hand::Right,
-    Hand::Right,
-    Hand::Right,
-    Hand::Left,
-    Hand::Left,
-    Hand::Left,
-    Hand::Left,
-    Hand::Left,
-    Hand::Right,
-    Hand::Right,
-    Hand::Right,
-    Hand::Right,
-    Hand::Right,
-    Hand::Left,
-    Hand::Right,
-]);
-static KEY_ROWS: KeyMap<Row> = KeyMap([
-    Row::Top,
-    Row::Top,
-    Row::Top,
-    Row::Top,
-    Row::Top,
-    Row::Top,
-    Row::Top,
-    Row::Top,
-    Row::Top,
-    Row::Top,
-    Row::Top,
-    Row::Home,
-    Row::Home,
-    Row::Home,
-    Row::Home,
-    Row::Home,
-    Row::Home,
-    Row::Home,
-    Row::Home,
-    Row::Home,
-    Row::Home,
-    Row::Home,
-    Row::Bottom,
-    Row::Bottom,
-    Row::Bottom,
-    Row::Bottom,
-    Row::Bottom,
-    Row::Bottom,
-    Row::Bottom,
-    Row::Bottom,
-    Row::Bottom,
-    Row::Bottom,
-    Row::Thumb,
-    Row::Thumb,
-]);
-static KEY_CENTER_COLUMN: KeyMap<bool> = KeyMap([
-    false, false, false, false, true, true, false, false, false, false, false, false, false, false,
-    false, true, true, false, false, false, false, false, false, false, false, false, true, true,
-    false, false, false, false, false, false,
-]);
+#[rustfmt::skip]
+pub static INIT_LAYOUT: Layout = Layout(KeyMap([
+//row 0
+' ',' ',' ',' ',' ',' ',' ',' ',' ',
+'e',' ','y','i','o',' ',' ',' ',' ',
+'r',' ','k','d','f',' ',' ',' ',' ',
+'.','\"','\'','-',',','?','!','*',' ',
+'w',' ',' ',' ',' ',' ',' ',' ',' ',
+//row 1
+'m','z',' ','x','c',' ',' ',' ',' ',
+'a',' ','u','j',' ',' ',' ',' ',' ',
+' ',' ',' ',' ',' ',' ',' ',' ',' ',
+'s',' ','l','_','p',' ',' ',' ',' ',
+'v',' ',' ',' ',' ',' ',' ',' ',' ',
+//row 2
+' ',' ',' ',' ',' ',' ',' ',' ',' ',
+'n',' ',' ','g','q',' ',' ',' ',' ',
+'t',' ',' ','b','h',' ',' ',' ',' ',
+' ',' ',' ',' ',' ',' ',' ',' ',' ',
+]));
 
 pub static KP_NONE: Option<KeyPress> = None;
-
-static LAYOUT_FILE_IDXS: KeyMap<usize> = KeyMap([
-    0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24, 26, 27, 28, 29,
-    30, 32, 33, 34, 35, 36, 37, 38,
-]);
 
 /* ----- *
  * IMPLS *
  * ----- */
 
 impl Layout {
-    pub fn from_string(s: &str) -> Layout {
-        let s: Vec<char> = s.chars().collect();
-        let mut lower: [char; 34] = ['\0'; 34];
-        let mut upper: [char; 34] = ['\0'; 34];
-
-        for i in 0..34 {
-            let file_i = LAYOUT_FILE_IDXS.0[i];
-            lower[i] = *s.get(file_i).unwrap_or(&'\0');
-            upper[i] = *s.get(file_i + 40).unwrap_or(&'\0');
-        }
-
-        Layout(Layer(KeyMap(lower)), Layer(KeyMap(upper)))
-    }
-
     pub fn shuffle(&mut self, times: usize) {
         for _ in 0..times {
-            let (i, j) = Layout::shuffle_position();
-            let Layout(ref mut lower, ref mut upper) = *self;
-            lower.swap(i, j);
-            upper.swap(i, j);
+            let i = shift_index(random::<usize>() % 117);
+            let j = shift_index(random::<usize>() % 117);
+            let KeyMap(ref mut layer) = self.0;
+            layer.swap(i, j);
         }
     }
 
     pub fn get_position_map(&self) -> LayoutPosMap {
-        let Layout(ref lower, ref upper) = *self;
+        let KeyMap(ref layer) = self.0;
         let mut map = [None; 128];
-        lower.fill_position_map(&mut map);
-        upper.fill_position_map(&mut map);
-
-        LayoutPosMap(map)
-    }
-
-    fn shuffle_position() -> (usize, usize) {
-        let mut i = random::<usize>() % LAYOUT_MASK_NUM_SWAPPABLE;
-        let mut j = random::<usize>() % (LAYOUT_MASK_NUM_SWAPPABLE - 1);
-        if j >= i {
-            j += 1;
-        }
-        i += LAYOUT_MASK_SWAP_OFFSETS[i];
-        j += LAYOUT_MASK_SWAP_OFFSETS[j];
-
-        (i, j)
-    }
-}
-
-impl Layer {
-    fn swap(&mut self, i: usize, j: usize) {
-        let Layer(KeyMap(ref mut layer)) = *self;
-        let temp = layer[i];
-        layer[i] = layer[j];
-        layer[j] = temp;
-    }
-
-    fn fill_position_map(&self, map: &mut [Option<KeyPress>; 128]) {
-        let Layer(KeyMap(ref layer)) = *self;
-        let KeyMap(ref fingers) = KEY_FINGERS;
-        let KeyMap(ref hands) = KEY_HANDS;
-        let KeyMap(ref rows) = KEY_ROWS;
-        let KeyMap(ref centers) = KEY_CENTER_COLUMN;
-        for (i, c) in layer.into_iter().enumerate() {
+        for (pos, c) in layer.into_iter().enumerate() {
             if *c < (128 as char) {
-                map[*c as usize] = Some(KeyPress {
-                    pos: i,
-                    finger: fingers[i],
-                    hand: hands[i],
-                    row: rows[i],
-                    center: centers[i],
-                });
+                map[*c as usize] = Some(KeyPress { pos });
             }
         }
+
+        LayoutPosMap(map)
     }
 }
 
@@ -418,15 +126,19 @@ impl LayoutPosMap {
 }
 
 impl LayoutPermutations {
-    pub fn new(layout: &Layout, depth: usize) -> LayoutPermutations {
-        let mut swaps = Vec::with_capacity(depth * 2);
-        for _ in 0..(depth * 2) {
-            swaps.push(0);
+    // for now, I will ignore the num_swaps/depth variable; and always search adjacent layouts
+    // which are 1 swap away
+    pub fn new(layout: &Layout, _: usize) -> LayoutPermutations {
+        let mut swaps = Vec::new();
+        for i in 0..117 {
+            for j in (i + 1)..117 {
+                swaps.push((shift_index(i), shift_index(j)));
+            }
         }
         LayoutPermutations {
             orig_layout: layout.clone(),
-            swap_idx: swaps,
-            started: false,
+            swaps,
+            index: 0,
         }
     }
 }
@@ -435,102 +147,63 @@ impl Iterator for LayoutPermutations {
     type Item = Layout;
 
     fn next(&mut self) -> Option<Layout> {
-        let mut some = false;
-        let mut idx = 0;
-        let mut val = 0;
-
-        if self.started {
-            for (i, e) in self.swap_idx.iter_mut().enumerate() {
-                if *e + 1 < LAYOUT_MASK_NUM_SWAPPABLE - i {
-                    *e += 1;
-                    some = true;
-                    idx = i;
-                    val = *e;
-                    break;
-                }
-            }
-        } else {
-            self.started = true;
-            some = true;
-            idx = 1;
-            val = 0;
-        }
-
-        if some {
-            for i in 0..idx {
-                self.swap_idx[i] = val + idx - i;
-            }
-
-            let mut layout = self.orig_layout.clone();
-            let mut i = 0;
-            while i < self.swap_idx.len() {
-                let ref mut lower = ((layout.0).0).0;
-                let ref mut upper = ((layout.1).0).0;
-                let swap_left = self.swap_idx[i] + LAYOUT_MASK_SWAP_OFFSETS[self.swap_idx[i]];
-                let swap_right =
-                    self.swap_idx[i + 1] + LAYOUT_MASK_SWAP_OFFSETS[self.swap_idx[i + 1]];
-                lower.swap(swap_left, swap_right);
-                upper.swap(swap_left, swap_right);
-                i += 2;
-            }
-
-            Some(layout)
-        } else {
+        if self.index == self.swaps.len() {
             None
+        } else {
+            let mut current_layout = self.orig_layout.clone();
+            let KeyMap(ref mut layer) = current_layout.0;
+            let (i, j) = self.swaps[self.index];
+            layer.swap(i, j);
+            self.index += 1;
+            return Some(current_layout);
         }
     }
 }
 
 impl fmt::Display for Layout {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let Layout(ref lower, _) = *self;
-        lower.fmt(f)
-    }
-}
-
-impl fmt::Display for Layer {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let Layer(KeyMap(ref layer)) = *self;
-        write!(
-            f,
-            "{} {} {} {} {} | {} {} {} {} {} {}
-{} {} {} {} {} | {} {} {} {} {} {}
-{} {} {} {} {} | {} {} {} {} {}
-        {} | {}",
-            layer[0],
-            layer[1],
-            layer[2],
-            layer[3],
-            layer[4],
-            layer[5],
-            layer[6],
-            layer[7],
-            layer[8],
-            layer[9],
-            layer[10],
-            layer[11],
-            layer[12],
-            layer[13],
-            layer[14],
-            layer[15],
-            layer[16],
-            layer[17],
-            layer[18],
-            layer[19],
-            layer[20],
-            layer[21],
-            layer[22],
-            layer[23],
-            layer[24],
-            layer[25],
-            layer[26],
-            layer[27],
-            layer[28],
-            layer[29],
-            layer[30],
-            layer[31],
-            layer[32],
-            layer[33]
-        )
+        let KeyMap(ref layer) = self.0;
+        for row in 0..3 {
+            for col in 0..5 {
+                if row == 2 && col == 4 {
+                    break;
+                }
+                let loc = row * 5 + col;
+                if row == 0 && col == 4 {
+                    write!(f, " {}   {} |", '{', '}')?;
+                } else {
+                    write!(f, "   {}   |", layer[loc * 5 + 1])?;
+                }
+            }
+            writeln!(f, "")?;
+            for col in 0..5 {
+                if row == 2 && col == 4 {
+                    break;
+                }
+                let loc = row * 5 + col;
+                write!(
+                    f,
+                    " {} {} {} |",
+                    layer[loc * 5 + 4],
+                    layer[loc * 5],
+                    layer[loc * 5 + 3]
+                )?;
+            }
+            writeln!(f, "")?;
+            for col in 0..5 {
+                if row == 2 && col == 4 {
+                    break;
+                }
+                let loc = row * 5 + col;
+                if row == 0 && col == 4 {
+                    write!(f, " <   > |")?;
+                } else {
+                    write!(f, "   {}   |", layer[loc * 5 + 2])?;
+                }
+            }
+            writeln!(f, "")?;
+            writeln!(f, "------- ------- ------- ------- -------")?;
+        }
+        Ok(())
     }
 }
