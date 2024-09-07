@@ -35,66 +35,6 @@ pub fn init<'a>() -> Vec<KeyPenalty<'a>> {
     // Base penalty.
     penalties.push(KeyPenalty { name: "base" });
 
-    // Penalise 5 points for using the same finger twice on different keys.
-    // An extra 5 points for using the centre column.
-    penalties.push(KeyPenalty {
-        name: "same finger",
-    });
-
-    // Penalise 1 point for jumping from top to bottom row or from bottom to
-    // top row on the same hand.
-    penalties.push(KeyPenalty {
-        name: "long jump hand",
-    });
-
-    // Penalise 10 points for jumping from top to bottom row or from bottom to
-    // top row on the same finger.
-    penalties.push(KeyPenalty { name: "long jump" });
-
-    // Penalise 5 points for jumping from top to bottom row or from bottom to
-    // top row on consecutive fingers, except for middle finger-top row ->
-    // index finger-bottom row.
-    penalties.push(KeyPenalty {
-        name: "long jump consecutive",
-    });
-
-    // Penalise 10 points for awkward pinky/ring combination where the pinky
-    // reaches above the ring finger, e.g. QA/AQ, PL/LP, ZX/XZ, ;./.; on Qwerty.
-    penalties.push(KeyPenalty {
-        name: "pinky/ring twist",
-    });
-
-    // Penalise 20 points for reversing a roll at the end of the hand, i.e.
-    // using the ring, pinky, then middle finger of the same hand, or the
-    // middle, pinky, then ring of the same hand.
-    penalties.push(KeyPenalty {
-        name: "roll reversal",
-    });
-
-    // Penalise 0.5 points for using the same hand four times in a row.
-    penalties.push(KeyPenalty { name: "same hand" });
-
-    // Penalise 0.5 points for alternating hands three times in a row.
-    penalties.push(KeyPenalty {
-        name: "alternating hand",
-    });
-
-    // Penalise 0.125 points for rolling outwards.
-    penalties.push(KeyPenalty { name: "roll out" });
-
-    // Award 0.125 points for rolling inwards.
-    penalties.push(KeyPenalty { name: "roll in" });
-
-    // Penalise 3 points for jumping from top to bottom row or from bottom to
-    // top row on the same finger with a keystroke in between.
-    penalties.push(KeyPenalty {
-        name: "long jump sandwich",
-    });
-
-    // Penalise 10 points for three consecutive keystrokes going up or down the
-    // three rows of the keyboard in a roll.
-    penalties.push(KeyPenalty { name: "twist" });
-
     penalties
 }
 
@@ -189,37 +129,90 @@ fn penalty_for_quartad<'a, 'b>(
     penalize(string, count, &curr, old1, old2, old3, result, detailed)
 }
 
+// constants taken from https://www.exideas.com/ME/ICMI2003Paper.pdf
+
+// Time (in seconds) taken to tap (finger down, then finger up)
+pub static A: f64 = 0.127;
+// assuming each key is a 1-unit by 1-unit square, this is the distance a swipe takes (also 1-unit)
+// here, I assume each swipe is the same distance, independent of direction
+pub static D_SWIPE: f64 = 1.0;
+
+// if your thumb starts at position (x_start,y_start), and needs to travel to a button (with the
+// given width) at (x_end,y_end) where dist=sqrt((x_start-x_end)^2 + (y_start-y_end)^2)
+//
+// then this function returns the amount of time needed to travel and press (finger down, then
+// finger up) the button
+fn fitts_law(dist: f64, width: f64) -> f64 {
+    1.0 / 4.9 * f64::log2(dist / width + 1.0)
+}
+
+fn distance(point0: (f64, f64), point1: (f64, f64)) -> f64 {
+    f64::sqrt(
+        (point0.0 - point1.0) * (point0.0 - point1.0)
+            + (point0.1 - point1.1) * (point0.1 - point1.1),
+    )
+}
+
+fn get_coordinates(key: &KeyPress) -> (f64, f64) {
+    let pos = key.pos / 9;
+    ((pos / 5) as f64, (pos % 5) as f64)
+}
+
 fn penalize<'a, 'b>(
     string: &'a str,
     count: usize,
     curr: &KeyPress,
     old1: &Option<KeyPress>,
-    old2: &Option<KeyPress>,
-    old3: &Option<KeyPress>,
+    _: &Option<KeyPress>,
+    _: &Option<KeyPress>,
     result: &'b mut Vec<KeyPenaltyResult<'a>>,
     detailed: bool,
 ) -> f64 {
     let len = string.len();
     let count = count as f64;
-    let mut total = 0.0;
+    let mut penalty = 0.0;
 
     // Two key penalties.
     let old1 = match *old1 {
         Some(ref o) => o,
-        None => return total,
+        None => return penalty,
     };
 
-    // Three key penalties.
-    let old2 = match *old2 {
-        Some(ref o) => o,
-        None => return total,
-    };
+    let slice2 = &string[(len - 2)..len];
+    for c in slice2.chars() {
+        if c == ' ' {
+            return penalty;
+        }
+    }
 
-    // Four key penalties.
-    let old3 = match *old3 {
-        Some(ref o) => o,
-        None => return total,
-    };
+    // previous key is a tap
+    if old1.pos % 9 == 0 {
+        if old1.pos == curr.pos {
+            penalty = A;
+        } else {
+            let dist = distance(get_coordinates(old1), get_coordinates(curr));
+            penalty = fitts_law(dist, 1.0);
+        }
+    } else { // previous key is a swipe
+    }
 
-    total
+    penalty *= count;
+
+    if detailed {
+        *result[0].high_keys.entry(slice2).or_insert(0.0) += penalty;
+        result[0].total += penalty;
+    }
+    penalty
 }
+
+//   8   1   2 |  17  10  11 |  26  19  20 |  35  28  29 |  44  37  38
+//   7   0   3 |  16   9  12 |  25  18  21 |  34  27  30 |  43  36  39
+//   6   5   4 |  15  14  13 |  24  23  22 |  33  32  31 |  42  41  40
+// ------------ ------------- ------------- ------------- -------------
+//  53  46  47 |  62  55  56 |  71  64  65 |  80  73  74 |  89  82  83
+//  52  45  48 |  61  54  57 |  70  63  66 |  79  72  75 |  88  81  84
+//  51  50  49 |  60  59  58 |  69  68  67 |  78  77  76 |  87  86  85
+// ------------ ------------- ------------- ------------- -------------
+//             | 107 100 101 | 116 109 110 | 125 118 119 |
+//    shift    | 106  99 102 | 115 108 111 | 124 117 120 |  backspace
+//             | 105 104 103 | 114 113 112 | 123 122 121 |
