@@ -138,7 +138,7 @@ fn penalty_for_quartad<'a, 'b>(
 pub static A: f64 = 0.127;
 // assuming each key is a 1-unit by 1-unit square, this is the distance a swipe takes (also 1-unit)
 // here, I assume each swipe is the same distance, independent of direction
-pub static D_SWIPE: f64 = 1.2;
+pub static D_SWIPE: f64 = 1.1;
 
 // if your thumb starts at position (x_start,y_start), and needs to travel to a button (with the
 // given width) at (x_end,y_end) where dist=sqrt((x_start-x_end)^2 + (y_start-y_end)^2)
@@ -146,7 +146,7 @@ pub static D_SWIPE: f64 = 1.2;
 // then this function returns the amount of time needed to travel and press (finger down, then
 // finger up) the button
 fn fitts_law(dist: f64, width: f64) -> f64 {
-    1.0 / 4.9 * f64::log2(dist / width + 1.0)
+    A.max(1.0 / 4.9 * f64::log2(dist / width + 1.0))
 }
 
 fn distance(point0: (f64, f64), point1: (f64, f64)) -> f64 {
@@ -189,48 +189,8 @@ fn get_swipe_details(old1: &KeyPress, layout: &Layout) -> ((f64, f64), f64) {
 
     let width = (next_delta - prev_delta) as f64 / 5.0;
 
-    if false {
-        println!(" ------- ");
-        println!(
-            "| {} {} {} |",
-            layout.get(spot * 9 + 5),
-            layout.get(spot * 9 + 6),
-            layout.get(spot * 9 + 7),
-        );
-        println!(
-            "| {} {} {} |",
-            layout.get(spot * 9 + 4),
-            layout.get(spot * 9 + 8),
-            layout.get(spot * 9 + 0),
-        );
-        println!(
-            "| {} {} {} |",
-            layout.get(spot * 9 + 3),
-            layout.get(spot * 9 + 2),
-            layout.get(spot * 9 + 1),
-        );
-        println!(" ------- ");
-
-        println!(
-            "dir {} dir adjusted {} swipe delta {:.4} {:.4} width {}",
-            dir, dir_adjusted, sin, cos, width,
-        );
-    }
-
     (coordinates, width)
 }
-
-//          5   6   7 |             |             |             |
-// row 0    4   8   0 |             |             |             |
-//          3   2   1 |             |             |             |
-//        ------------ ------------- ------------- ------------- -------------
-//                    |             |             |             |
-// row 1              |             |             |             |
-//                    |             |             |             |
-//        ------------ ------------- ------------- ------------- -------------
-//                    |             |             |             |
-// row 2     shift    |             |             |             |  backspace
-//                    |             |             |             |
 
 fn penalize<'a, 'b>(
     string: &'a str,
@@ -262,27 +222,12 @@ fn penalize<'a, 'b>(
 
     // previous key is a tap
     if old1.pos % 9 == 8 {
-        if old1.pos / 9 == curr.pos / 9 {
-            penalty = A;
-        } else {
-            let dist = distance(get_coordinates(old1), get_coordinates(curr));
-            penalty = fitts_law(dist, 1.0);
-        }
+        let dist = distance(get_coordinates(old1), get_coordinates(curr));
+        penalty = fitts_law(dist, 1.0);
     } else {
         // previous key is a swipe
         let (end_of_swipe_coords, width) = get_swipe_details(old1, layout);
-        penalty += fitts_law(distance(get_coordinates(old1), end_of_swipe_coords), width);
-        /*
-        println!(
-            "fitts law {:.3}",
-            fitts_law(distance(get_coordinates(old1), end_of_swipe_coords), width),
-        );
-        println!(
-            "fitts law - A {:.3}",
-            fitts_law(distance(get_coordinates(old1), end_of_swipe_coords), width) - A,
-        );
-        */
-        penalty -= A;
+        penalty += fitts_law(D_SWIPE, width) - A;
         penalty += fitts_law(distance(end_of_swipe_coords, get_coordinates(curr)), 1.0);
     }
 
