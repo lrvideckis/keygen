@@ -54,25 +54,29 @@ pub struct KeyPress {
     pub pos: usize,
 }
 
+pub static LETTER_SPOTS: [usize; 26] = [
+    1, 8, 11, 17, 21, 26, 27, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 49, 53, 61, 62, 63, 69, 71,
+    77, 80,
+];
+
 /* ------- *
  * STATICS *
  * ------- */
 
-// skipping symbols ()[]{}<> for now
 #[rustfmt::skip]
 pub static INIT_LAYOUT: Layout = Layout(KeyMap([
 //row 0
-' ','m',' ',' ',' ','z',' ',' ','f',
-' ','p',' ',' ',' ',' ',' ',' ','t',
-' ',' ',' ','b',' ',' ',' ','q','h',
+' ','c',' ',' ',' ',' ',' ',' ','t',
+' ',' ','p',' ',' ',' ',' ',' ','h',
+' ',' ',' ','b',' ',' ',' ',' ','s',
 //row 1
-' ','w',' ',' ',' ','x',' ',' ','o',
-' ',' ',' ','r',' ',' ',' ','u','e',
-' ',' ',' ',' ','y',' ','v',' ','s',
+'l',' ',' ',' ',' ',' ',' ',' ','i',
+'j','v','f','q','z','x','k','y','a',
+' ',' ',' ',' ','w',' ',' ',' ','e',
 //row 2
-' ',' ',' ','k',' ',' ',' ','n','i',
-'g',' ',' ',' ','d',' ',' ',' ','a',
-'j',' ',' ',' ','c',' ',' ',' ','l',
+' ',' ',' ',' ',' ',' ',' ','g','n',
+'d',' ',' ',' ',' ',' ','u',' ','o',
+' ',' ',' ',' ',' ','m',' ',' ','r',
 ]));
 
 #[rustfmt::skip]
@@ -116,8 +120,8 @@ pub static KP_NONE: Option<KeyPress> = None;
 impl Layout {
     pub fn shuffle(&mut self, times: usize) {
         for _ in 0..times {
-            let i = random::<usize>() % 81;
-            let j = random::<usize>() % 81;
+            let i = LETTER_SPOTS[random::<usize>() % 26];
+            let j = LETTER_SPOTS[random::<usize>() % 26];
             let KeyMap(ref mut layer) = self.0;
             layer.swap(i, j);
         }
@@ -157,9 +161,9 @@ impl LayoutPermutations {
     // which are 1 swap away
     pub fn new(layout: &Layout, _: usize) -> LayoutPermutations {
         let mut swaps = Vec::new();
-        for i in 0..81 {
-            for j in (i + 1)..81 {
-                swaps.push((i, j));
+        for i in 0..26 {
+            for j in (i + 1)..26 {
+                swaps.push((LETTER_SPOTS[i], LETTER_SPOTS[j]));
             }
         }
         LayoutPermutations {

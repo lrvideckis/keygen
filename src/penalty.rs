@@ -35,6 +35,11 @@ pub fn init<'a>() -> Vec<KeyPenalty<'a>> {
     // Base penalty.
     penalties.push(KeyPenalty { name: "base" });
 
+    // Penalize for swiping
+    penalties.push(KeyPenalty {
+        name: "swipe penalty",
+    });
+
     penalties
 }
 
@@ -136,7 +141,8 @@ fn penalty_for_quartad<'a, 'b>(
 
 // Time (in seconds) taken to tap (finger down, then finger up)
 pub static A: f64 = 0.127;
-// assuming each key is a 1-unit by 1-unit square, this is the distance a swipe takes (also 1-unit)
+// assuming each key is a 1-unit by 1-unit square, this is the distance a swipe takes (slightly
+// longer than a side length)
 // here, I assume each swipe is the same distance, independent of direction
 pub static D_SWIPE: f64 = 1.1;
 
@@ -201,25 +207,38 @@ fn penalize<'a, 'b>(
 ) -> f64 {
     let len = string.len();
     let count = count as f64;
-    let mut penalty = 0.0;
+    let mut total = 0.0;
+
+    // One key penalties.
+    let slice1 = &string[(len - 1)..len];
+
+    // 0: Base penalty.
+    let base = (if curr.pos % 9 == 8 { 0.0 } else { 0.3 }) * count;
+    if detailed {
+        *result[0].high_keys.entry(slice1).or_insert(0.0) += base;
+        result[0].total += base;
+    }
+    total += base;
 
     // Two key penalties.
     let old1 = match *old1 {
         Some(ref o) => o,
-        None => return penalty,
+        None => return total,
     };
 
     let slice2 = &string[(len - 2)..len];
     for c in slice2.chars() {
         if c < 'a' || c > 'z' {
-            return penalty;
+            return total;
         }
     }
+
+    let mut penalty = 0.0;
 
     // previous key is a tap
     if old1.pos % 9 == 8 {
         let dist = distance(get_coordinates(old1), get_coordinates(curr));
-        penalty = fitts_law(dist, 1.0);
+        penalty += fitts_law(dist, 1.0);
     } else {
         // previous key is a swipe
         let (end_of_swipe_coords, width) = get_swipe_details(old1, layout);
@@ -230,8 +249,9 @@ fn penalize<'a, 'b>(
     penalty *= count;
 
     if detailed {
-        *result[0].high_keys.entry(slice2).or_insert(0.0) += penalty;
-        result[0].total += penalty;
+        *result[1].high_keys.entry(slice2).or_insert(0.0) += penalty;
+        result[1].total += penalty;
     }
-    penalty
+    total += penalty;
+    total
 }

@@ -204,4 +204,3 @@ fn list_insert_ordered(
     }
     list
 }
-
