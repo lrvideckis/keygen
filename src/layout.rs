@@ -33,6 +33,12 @@ use std::fmt;
 // (index/9)%3 = col
 //
 // (row*3+col)*9+(relative location in key)=index
+//
+// if relative location in key != 8, then it's an integer in [0,8) representing a swipe such that:
+// (relative location in key) / 8.0 * 2PI = angle in radians of swipe.
+//
+// note the standard programming grid has the y-axis flipped compared to the standard x-y euclidean
+// plane in math
 
 pub struct KeyMap<T>(pub [T; 108]);
 
