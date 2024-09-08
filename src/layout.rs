@@ -10,19 +10,23 @@ use std::fmt;
 
 // KeyMap format:
 //
-//            col 0      col 1       col 2
+//            col 0   col 1     col 2
 //
-//         5  6  7 |             |
-// row 0   4  8  0 |             |
-//         3  2  1 |             |
-//        --------- ------------- -------------
-//                 |             |
-// row 1           |             |
-//                 |             |
-//        --------- ------------- -------------
-//                 |             |
-// row 2           |             |
-//                 |             |
+//         5  6  7 |         |
+// row 0   4  8  0 |         |
+//         3  2  1 |         |
+//        --------- --------- ---------
+//                 |         |
+// row 1           |         |
+//                 |         |
+//        --------- --------- ---------
+//                 |         |
+// row 2           |         |
+//                 |         |
+//        --------- --------- ---------
+//                 |         |
+// row 3           |  space  |
+//                 |         |
 //
 // index%9 = relative location in key
 // (index/9)/3 = row
@@ -30,7 +34,7 @@ use std::fmt;
 //
 // (row*3+col)*9+(relative location in key)=index
 
-pub struct KeyMap<T>(pub [T; 81]);
+pub struct KeyMap<T>(pub [T; 108]);
 
 impl<T: Copy> Clone for KeyMap<T> {
     fn clone(&self) -> KeyMap<T> {
@@ -77,6 +81,10 @@ pub static INIT_LAYOUT: Layout = Layout(KeyMap([
 '\0','\0','\0','\0','\0','\0','\0','g','n',
 'd','\0','\0','\0','\0','\0','u','\0','o',
 '\0','\0','\0','\0','\0','m','\0','\0','r',
+//row 3
+'\0','\0','\0','\0','\0','\0','\0','\0','\0',
+'\0','\0','\0','\0','\0','\0','\0','\0',' ',
+'\0','\0','\0','\0','\0','\0','\0','\0','\0',
 ]));
 
 #[rustfmt::skip]
@@ -93,6 +101,10 @@ pub static MESSAGEASE_LAYOUT: Layout = Layout(KeyMap([
 '\0','\0','\0','\0','\0','\0','\0','y','t',
 'z','\0','\0','\0','\0','\0','w','\0','e',
 '\0','\0','\0','\0','\0','f','\0','\0','s',
+//row 3
+'\0','\0','\0','\0','\0','\0','\0','\0','\0',
+'\0','\0','\0','\0','\0','\0','\0','\0',' ',
+'\0','\0','\0','\0','\0','\0','\0','\0','\0',
 ]));
 
 #[rustfmt::skip]
@@ -109,6 +121,10 @@ pub static THUMB_KEY_LAYOUT: Layout = Layout(KeyMap([
 '\0','\0','\0','\0','\0','\0','\0','c','t',
 'z','\0','\0','\0','\0','\0','f','\0','i',
 '\0','\0','\0','\0','\0','d','\0','\0','e',
+//row 3
+'\0','\0','\0','\0','\0','\0','\0','\0','\0',
+'\0','\0','\0','\0','\0','\0','\0','\0',' ',
+'\0','\0','\0','\0','\0','\0','\0','\0','\0',
 ]));
 
 pub static KP_NONE: Option<KeyPress> = None;
@@ -192,17 +208,17 @@ impl Iterator for LayoutPermutations {
 }
 
 fn convert_for_printing(c: char) -> char {
-    if c == '\0' {
-        ' '
-    } else {
-        c
+    match c {
+        '\0' => ' ',
+        ' ' => 'S',
+        _ => c,
     }
 }
 
 impl fmt::Display for Layout {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let KeyMap(ref layer) = self.0;
-        for row in 0..3 {
+        for row in 0..4 {
             for col in 0..3 {
                 let loc = row * 3 + col;
                 write!(
