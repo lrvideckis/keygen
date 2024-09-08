@@ -158,7 +158,7 @@ fn distance(point0: (f64, f64), point1: (f64, f64)) -> f64 {
 
 fn get_coordinates(key: &KeyPress) -> (f64, f64) {
     let spot = key.pos / 9;
-    ((spot / 5) as f64, (spot % 5) as f64)
+    ((spot / 3) as f64, (spot % 3) as f64)
 }
 
 // returns coordinate of end of swipe, and width

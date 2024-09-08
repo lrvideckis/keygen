@@ -10,35 +10,27 @@ use std::fmt;
 
 // KeyMap format:
 //
-//            col 0         col 1         col 2         col 3         col 4
+//            col 0      col 1       col 2
 //
-//          5   6   7 |  14  15  16 |  23  24  25 |  32  33  34 |  41  42  43
-// row 0    4   8   0 |  13  17   9 |  22  26  18 |  31  35  27 |  40  44  36
-//          3   2   1 |  12  11  10 |  21  20  19 |  30  29  28 |  39  38  37
-//        ------------ ------------- ------------- ------------- -------------
-//         50  51  52 |  59  60  61 |  68  69  70 |  77  78  79 |  86  87  88
-// row 1   49  53  45 |  58  62  54 |  67  71  63 |  76  80  72 |  85  89  81
-//         48  47  46 |  57  56  55 |  66  65  64 |  75  74  73 |  84  83  82
-//        ------------ ------------- ------------- ------------- -------------
-//                    | 104 105 106 | 113 114 115 | 122 123 124 |
-// row 2     shift    | 103 107  99 | 112 116 108 | 121 125 117 |  backspace
-//                    | 102 101 100 | 111 110 109 | 120 119 118 |
+//         5  6  7 |             |
+// row 0   4  8  0 |             |
+//         3  2  1 |             |
+//        --------- ------------- -------------
+//                 |             |
+// row 1           |             |
+//                 |             |
+//        --------- ------------- -------------
+//                 |             |
+// row 2           |             |
+//                 |             |
 //
 // index%9 = relative location in key
-// (index/9)/5 = row
-// (index/9)%5 = col
+// (index/9)/3 = row
+// (index/9)%3 = col
 //
-// (row*5+col)*9+(relative location in key)=index
+// (row*3+col)*9+(relative location in key)=index
 
-// convert number in range [0,117) to [0,90) union [99,126)
-pub fn shift_index(mut i: usize) -> usize {
-    if i >= 90 {
-        i += 9;
-    }
-    i
-}
-
-pub struct KeyMap<T>(pub [T; 126]);
+pub struct KeyMap<T>(pub [T; 81]);
 
 impl<T: Copy> Clone for KeyMap<T> {
     fn clone(&self) -> KeyMap<T> {
@@ -70,19 +62,14 @@ pub struct KeyPress {
 #[rustfmt::skip]
 pub static INIT_LAYOUT: Layout = Layout(KeyMap([
 //row 0
-' ',' ',' ',' ',' ',' ',' ',' ',' ',
 'e',' ','y','i','o',' ',' ',' ',' ',
 'r',' ','k','d','f',' ',' ',' ',' ',
-' ',' ',' ',' ',' ',' ',' ',' ',' ',
 'w',' ',' ',' ',' ',' ',' ',' ',' ',
 //row 1
-'m','z',' ','x','c',' ',' ',' ',' ',
+'m','z','v','x','c',' ',' ',' ',' ',
 'a',' ','u','j',' ',' ',' ',' ',' ',
-' ',' ',' ',' ',' ',' ',' ',' ',' ',
 's',' ','l',' ','p',' ',' ',' ',' ',
-'v',' ',' ',' ',' ',' ',' ',' ',' ',
 //row 2
-' ',' ',' ',' ',' ',' ',' ',' ',' ',
 'n',' ',' ','g','q',' ',' ',' ',' ',
 't',' ',' ','b','h',' ',' ',' ',' ',
 ' ',' ',' ',' ',' ',' ',' ',' ',' ',
@@ -91,19 +78,14 @@ pub static INIT_LAYOUT: Layout = Layout(KeyMap([
 #[rustfmt::skip]
 pub static MESSAGEASE_LAYOUT: Layout = Layout(KeyMap([
 //row 0
-' ',' ',' ',' ',' ',' ',' ',' ',' ',
 ' ','v',' ',' ',' ',' ',' ',' ','a',
 ' ',' ','l',' ',' ',' ',' ',' ','n',
 ' ',' ',' ','x',' ',' ',' ',' ','i',
-' ',' ',' ',' ',' ',' ',' ',' ',' ',
 //row 1
-' ',' ',' ',' ',' ',' ',' ',' ',' ',
 'k',' ',' ',' ',' ',' ',' ',' ','h',
 'b','j','d','g','c','q','u','p','o',
 ' ',' ',' ',' ','m',' ',' ',' ','r',
-' ',' ',' ',' ',' ',' ',' ',' ',' ',
 //row 2
-' ',' ',' ',' ',' ',' ',' ',' ',' ',
 ' ',' ',' ',' ',' ',' ',' ','y','t',
 'z',' ',' ',' ',' ',' ','w',' ','e',
 ' ',' ',' ',' ',' ','f',' ',' ','s',
@@ -112,19 +94,14 @@ pub static MESSAGEASE_LAYOUT: Layout = Layout(KeyMap([
 #[rustfmt::skip]
 pub static THUMB_KEY_LAYOUT: Layout = Layout(KeyMap([
 //row 0
-' ',' ',' ',' ',' ',' ',' ',' ',' ',
 ' ','w',' ',' ',' ',' ',' ',' ','s',
 ' ',' ','g',' ',' ',' ',' ',' ','r',
 ' ',' ',' ','u',' ',' ',' ',' ','o',
-' ',' ',' ',' ',' ',' ',' ',' ',' ',
 //row 1
-' ',' ',' ',' ',' ',' ',' ',' ',' ',
 'm',' ',' ',' ',' ',' ',' ',' ','n',
 'p','y','x','v','k','j','q','b','h',
 ' ',' ',' ',' ','l',' ',' ',' ','a',
-' ',' ',' ',' ',' ',' ',' ',' ',' ',
 //row 2
-' ',' ',' ',' ',' ',' ',' ',' ',' ',
 ' ',' ',' ',' ',' ',' ',' ','c','t',
 'z',' ',' ',' ',' ',' ','f',' ','i',
 ' ',' ',' ',' ',' ','d',' ',' ','e',
@@ -139,8 +116,8 @@ pub static KP_NONE: Option<KeyPress> = None;
 impl Layout {
     pub fn shuffle(&mut self, times: usize) {
         for _ in 0..times {
-            let i = shift_index(random::<usize>() % 117);
-            let j = shift_index(random::<usize>() % 117);
+            let i = random::<usize>() % 81;
+            let j = random::<usize>() % 81;
             let KeyMap(ref mut layer) = self.0;
             layer.swap(i, j);
         }
@@ -180,9 +157,9 @@ impl LayoutPermutations {
     // which are 1 swap away
     pub fn new(layout: &Layout, _: usize) -> LayoutPermutations {
         let mut swaps = Vec::new();
-        for i in 0..117 {
-            for j in (i + 1)..117 {
-                swaps.push((shift_index(i), shift_index(j)));
+        for i in 0..81 {
+            for j in (i + 1)..81 {
+                swaps.push((i, j));
             }
         }
         LayoutPermutations {
@@ -214,11 +191,8 @@ impl fmt::Display for Layout {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let KeyMap(ref layer) = self.0;
         for row in 0..3 {
-            for col in 0..5 {
-                if row == 2 && col == 4 {
-                    break;
-                }
-                let loc = row * 5 + col;
+            for col in 0..3 {
+                let loc = row * 3 + col;
                 write!(
                     f,
                     " {} {} {} |",
@@ -228,11 +202,8 @@ impl fmt::Display for Layout {
                 )?;
             }
             writeln!(f, "")?;
-            for col in 0..5 {
-                if row == 2 && col == 4 {
-                    break;
-                }
-                let loc = row * 5 + col;
+            for col in 0..3 {
+                let loc = row * 3 + col;
                 write!(
                     f,
                     " {} {} {} |",
@@ -242,11 +213,8 @@ impl fmt::Display for Layout {
                 )?;
             }
             writeln!(f, "")?;
-            for col in 0..5 {
-                if row == 2 && col == 4 {
-                    break;
-                }
-                let loc = row * 5 + col;
+            for col in 0..3 {
+                let loc = row * 3 + col;
                 write!(
                     f,
                     " {} {} {} |",
@@ -256,7 +224,7 @@ impl fmt::Display for Layout {
                 )?;
             }
             writeln!(f, "")?;
-            writeln!(f, "------- ------- ------- ------- -------")?;
+            writeln!(f, "------- ------- -------")?;
         }
         Ok(())
     }
