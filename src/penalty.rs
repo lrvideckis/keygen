@@ -155,11 +155,12 @@ fn fitts_law(dist: f64, width: f64) -> f64 {
     A.max(1.0 / 4.9 * f64::log2(dist / width + 1.0))
 }
 
+fn square(x: f64) -> f64 {
+    x * x
+}
+
 fn distance(point0: (f64, f64), point1: (f64, f64)) -> f64 {
-    f64::sqrt(
-        (point0.0 - point1.0) * (point0.0 - point1.0)
-            + (point0.1 - point1.1) * (point0.1 - point1.1),
-    )
+    f64::sqrt(square(point0.0 - point1.0) + square(point0.1 - point1.1))
 }
 
 fn get_coordinates(key: &KeyPress) -> (f64, f64) {
@@ -190,7 +191,7 @@ fn get_swipe_details(old1: &KeyPress, layout: &Layout) -> ((f64, f64), f64) {
     let (sin, cos) = f64::sin_cos(dir_adjusted / 8.0 * 2.0 * std::f64::consts::PI);
     coordinates.0 += D_SWIPE * sin;
     coordinates.1 += D_SWIPE * cos;
-    let width = (next_delta - prev_delta) as f64 / 2.0;
+    let width = (next_delta - prev_delta) / 2.0;
     (coordinates, width)
 }
 
@@ -227,11 +228,6 @@ fn penalize<'a, 'b>(
     };
 
     let slice2 = &string[(len - 2)..len];
-    for c in slice2.chars() {
-        if c < 'a' || c > 'z' {
-            return total;
-        }
-    }
 
     let mut penalty = 0.0;
 
