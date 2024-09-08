@@ -215,7 +215,7 @@ fn penalize<'a, 'b>(
 
     let slice2 = &string[(len - 2)..len];
     for c in slice2.chars() {
-        if c == ' ' {
+        if c < 'a' || c > 'z' {
             return penalty;
         }
     }

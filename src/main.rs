@@ -107,6 +107,12 @@ fn run_ref(s: &str) {
     let len = s.len();
 
     let penalty =
+        penalty::calculate_penalty(&quartads, len, &layout::MESSAGEASE_LAYOUT, &penalties, true);
+    println!("Reference: MESSAGEASE");
+    simulator::print_result(&layout::MESSAGEASE_LAYOUT, &penalty);
+    println!();
+
+    let penalty =
         penalty::calculate_penalty(&quartads, len, &layout::INIT_LAYOUT, &penalties, true);
     println!("Reference: INITIAL");
     simulator::print_result(&layout::INIT_LAYOUT, &penalty);
