@@ -180,15 +180,11 @@ fn get_swipe_details(old1: &KeyPress, layout: &Layout) -> ((f64, f64), f64) {
         }
     }
     let mut coordinates = get_coordinates(old1);
-
     let dir_adjusted = dir as f64 + (next_delta + prev_delta) / 2.0;
-
     let (sin, cos) = f64::sin_cos(dir_adjusted / 8.0 * 2.0 * std::f64::consts::PI);
     coordinates.0 += D_SWIPE * sin;
     coordinates.1 += D_SWIPE * cos;
-
-    let width = (next_delta - prev_delta) as f64 / 5.0;
-
+    let width = (next_delta - prev_delta) as f64 / 2.0;
     (coordinates, width)
 }
 
