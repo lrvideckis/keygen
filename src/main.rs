@@ -113,6 +113,12 @@ fn run_ref(s: &str) {
     println!();
 
     let penalty =
+        penalty::calculate_penalty(&quartads, len, &layout::THUMB_KEY_LAYOUT, &penalties, true);
+    println!("Reference: THUMB KEY");
+    simulator::print_result(&layout::THUMB_KEY_LAYOUT, &penalty);
+    println!();
+
+    let penalty =
         penalty::calculate_penalty(&quartads, len, &layout::INIT_LAYOUT, &penalties, true);
     println!("Reference: INITIAL");
     simulator::print_result(&layout::INIT_LAYOUT, &penalty);
