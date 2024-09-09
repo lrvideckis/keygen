@@ -38,7 +38,9 @@ use std::fmt;
 // (relative location in key) / 8.0 * 2PI = angle in radians of swipe.
 //
 // note the standard programming grid has the y-axis flipped compared to the standard x-y euclidean
-// plane in math
+// plane in math, formally:
+// - programming-grid-col = euclidean-plane-x
+// - programming-grid-row = -1 * euclidean-plane-y
 
 pub struct KeyMap<T>(pub [T; 108]);
 
