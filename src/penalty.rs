@@ -203,7 +203,7 @@ fn get_swipe_details(old1: &KeyPress, layout: &Layout) -> ((f64, f64), f64) {
     coordinates.1 += D_SWIPE * cos;
     let width = (next_delta - prev_delta) / 2.0;
 
-    if true {
+    if false {
         println!(" ------- ");
         println!(
             "| {} {} {} |",
