@@ -77,7 +77,7 @@ pub static INIT_LAYOUT: Layout = Layout(KeyMap([
 '\0','\0','l','\0','\0','\0','\0','x','n',
 '\0','\0','\0','g','\0','z','\0','\0','i',
 //row 1
-'\0','f','\0','j','\0','\0','u','\0','o',
+'\0','f','\0','j','\0','\0','\0','u','o',
 'v','\0','d','\0','k','\0','q','\0','e',
 '-','\0','\0','y','\0','p','\0','\0','a',
 //row 2
@@ -197,19 +197,14 @@ impl Iterator for LayoutPermutations {
     type Item = Layout;
 
     fn next(&mut self) -> Option<Layout> {
-        let len = self.swaps.len();
-        if self.index == len * len {
+        if self.index == self.swaps.len() {
             None
         } else {
             let mut current_layout = self.orig_layout.clone();
             let KeyMap(ref mut layer) = current_layout.0;
 
-            let swaps: [usize; 2] = [self.index % len, (self.index / len) % len];
-
-            for swap in swaps {
-                let (i, j) = self.swaps[swap];
-                layer.swap(i, j);
-            }
+            let (i, j) = self.swaps[self.index];
+            layer.swap(i, j);
 
             self.index += 1;
             return Some(current_layout);
