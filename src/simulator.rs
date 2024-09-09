@@ -31,7 +31,7 @@ pub fn simulate<'a>(
     debug: bool,
     top_layouts: usize,
     num_swaps: usize,
-) {
+) -> layout::Layout {
     let penalty = penalty::calculate_penalty(&quartads, len, init_layout, penalties, true);
 
     if debug {
@@ -78,12 +78,14 @@ pub fn simulate<'a>(
         }
     }
 
-    for entry in best_layouts.into_iter() {
-        let layout = entry.layout;
+    for entry in &best_layouts {
+        let layout = entry.layout.clone();
         let penalty = penalty::calculate_penalty(&quartads, len, &layout, penalties, true);
         println!("");
         print_result(&layout, &penalty);
     }
+
+    best_layouts.front().unwrap().layout.clone()
 }
 
 pub fn refine<'a>(

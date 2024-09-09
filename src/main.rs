@@ -95,8 +95,23 @@ fn run(s: &str, layout: &layout::Layout, debug: bool, top: usize, swaps: usize) 
     let quartads = penalty::prepare_quartad_list(s, &init_pos_map);
     let len = s.len();
 
+    let mut ultimate_winner = layout::INIT_LAYOUT.clone();
+    let mut ultimate_penalty =
+        penalty::calculate_penalty(&quartads, len, &ultimate_winner, &penalties, true);
+
     loop {
-        simulator::simulate(&quartads, len, layout, &penalties, debug, top, swaps);
+        let current_winner =
+            simulator::simulate(&quartads, len, layout, &penalties, debug, top, swaps);
+        let current_penalty =
+            penalty::calculate_penalty(&quartads, len, &current_winner, &penalties, true);
+
+        if current_penalty.1 < ultimate_penalty.1 {
+            ultimate_winner = current_winner;
+            ultimate_penalty = current_penalty;
+        }
+
+        println!("ultimate winner so far:");
+        simulator::print_result(&ultimate_winner, &ultimate_penalty);
     }
 }
 
