@@ -145,6 +145,8 @@ pub static A: f64 = 0.127;
 // longer than a side length)
 // here, I assume each swipe is the same distance, independent of direction
 pub static D_SWIPE: f64 = 1.3;
+// extra time (in seconds) penalized for each swipe
+pub static SWIPE_PENALTY: f64 = 0.3;
 
 // if your thumb starts at position (x_start,y_start), and needs to travel to a button (with the
 // given width) at (x_end,y_end) where dist=sqrt((x_start-x_end)^2 + (y_start-y_end)^2)
@@ -168,20 +170,28 @@ fn get_coordinates(key: &KeyPress) -> (f64, f64) {
     ((spot / 3) as f64, (spot % 3) as f64)
 }
 
+fn convert_for_printing(c: char) -> char {
+    match c {
+        '\0' => ' ',
+        ' ' => 'S',
+        _ => c,
+    }
+}
+
 // returns coordinate of end of swipe, and width
 fn get_swipe_details(old1: &KeyPress, layout: &Layout) -> ((f64, f64), f64) {
     let spot = old1.pos / 9;
     let dir = old1.pos % 9;
     let mut next_delta: f64 = 2.0;
     for di in 1..=3 {
-        if layout.get(spot * 9 + ((dir + di) % 8)) != ' ' {
+        if layout.get(spot * 9 + ((dir + di) % 8)) != '\0' {
             next_delta = (di as f64) / 2.0;
             break;
         }
     }
     let mut prev_delta: f64 = -2.0;
     for di in 1..=3 {
-        if layout.get(spot * 9 + ((dir + 8 - di) % 8)) != ' ' {
+        if layout.get(spot * 9 + ((dir + 8 - di) % 8)) != '\0' {
             prev_delta = -(di as f64) / 2.0;
             break;
         }
@@ -192,6 +202,37 @@ fn get_swipe_details(old1: &KeyPress, layout: &Layout) -> ((f64, f64), f64) {
     coordinates.0 += D_SWIPE * sin;
     coordinates.1 += D_SWIPE * cos;
     let width = (next_delta - prev_delta) / 2.0;
+
+    if true {
+        println!(" ------- ");
+        println!(
+            "| {} {} {} |",
+            convert_for_printing(layout.get(spot * 9 + 5)),
+            convert_for_printing(layout.get(spot * 9 + 6)),
+            convert_for_printing(layout.get(spot * 9 + 7)),
+        );
+        println!(
+            "| {} {} {} |",
+            convert_for_printing(layout.get(spot * 9 + 4)),
+            convert_for_printing(layout.get(spot * 9 + 8)),
+            convert_for_printing(layout.get(spot * 9 + 0)),
+        );
+        println!(
+            "| {} {} {} |",
+            convert_for_printing(layout.get(spot * 9 + 3)),
+            convert_for_printing(layout.get(spot * 9 + 2)),
+            convert_for_printing(layout.get(spot * 9 + 1)),
+        );
+        println!(" ------- ");
+
+        println!("prev_delta, next_delta {} {}", prev_delta, next_delta);
+        println!(
+            "dir {} dir adjusted {} swipe delta {:.4} {:.4} width {}",
+            dir, dir_adjusted, sin, cos, width,
+        );
+        println!();
+    }
+
     (coordinates, width)
 }
 
@@ -214,7 +255,11 @@ fn penalize<'a, 'b>(
     let slice1 = &string[(len - 1)..len];
 
     // 0: Base penalty.
-    let base = (if curr.pos % 9 == 8 { 0.0 } else { 0.3 }) * count;
+    let base = (if curr.pos % 9 == 8 {
+        0.0
+    } else {
+        SWIPE_PENALTY
+    }) * count;
     if detailed {
         *result[0].high_keys.entry(slice1).or_insert(0.0) += base;
         result[0].total += base;
