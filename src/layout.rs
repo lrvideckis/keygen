@@ -222,7 +222,7 @@ impl Iterator for LayoutPermutations {
     }
 }
 
-fn convert_for_printing(c: char) -> char {
+pub fn convert_for_printing(c: char) -> char {
     match c {
         '\0' => ' ',
         ' ' => 'S',

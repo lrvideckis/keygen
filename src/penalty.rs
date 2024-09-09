@@ -5,6 +5,7 @@ use std::ops::Range;
 /// corpus string.
 use std::vec::Vec;
 
+use layout::convert_for_printing;
 use layout::KeyPress;
 use layout::Layout;
 use layout::LayoutPosMap;
@@ -168,14 +169,6 @@ fn distance(point0: (f64, f64), point1: (f64, f64)) -> f64 {
 fn get_coordinates(key: &KeyPress) -> (f64, f64) {
     let spot = key.pos / 9;
     ((spot / 3) as f64, (spot % 3) as f64)
-}
-
-fn convert_for_printing(c: char) -> char {
-    match c {
-        '\0' => ' ',
-        ' ' => 'S',
-        _ => c,
-    }
 }
 
 // returns coordinate of end of swipe, and width
