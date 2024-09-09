@@ -5,6 +5,7 @@ use std::ops::Range;
 /// corpus string.
 use std::vec::Vec;
 
+use layout::convert_for_printing;
 use layout::KeyPress;
 use layout::Layout;
 use layout::LayoutPosMap;
@@ -170,38 +171,35 @@ fn get_coordinates(key: &KeyPress) -> (f64, f64) {
     ((spot / 3) as f64, (spot % 3) as f64)
 }
 
-fn convert_for_printing(c: char) -> char {
-    match c {
-        '\0' => ' ',
-        ' ' => 'S',
-        _ => c,
-    }
-}
-
 // returns coordinate of end of swipe, and width
 fn get_swipe_details(old1: &KeyPress, layout: &Layout) -> ((f64, f64), f64) {
     let spot = old1.pos / 9;
     let dir = old1.pos % 9;
-    let mut next_delta: f64 = 2.0;
-    for di in 1..=3 {
-        if layout.get(spot * 9 + ((dir + di) % 8)) != '\0' {
-            next_delta = (di as f64) / 2.0;
-            break;
+
+    let mut end_of_swipe_coords = get_coordinates(old1);
+    let (sin, cos) = f64::sin_cos((dir as f64) / 8.0 * 2.0 * std::f64::consts::PI);
+    end_of_swipe_coords.0 += D_SWIPE * sin;
+    end_of_swipe_coords.1 += D_SWIPE * cos;
+
+    // get next and previous swipe-letters (if they exist) to determine how precise the
+    // swipe-direction has to be
+    let width = {
+        let mut next_delta: f64 = 4.0;
+        for di in 1..=3 {
+            if layout.get(spot * 9 + ((dir + di) % 8)) != '\0' {
+                next_delta = di as f64;
+                break;
+            }
         }
-    }
-    let mut prev_delta: f64 = -2.0;
-    for di in 1..=3 {
-        if layout.get(spot * 9 + ((dir + 8 - di) % 8)) != '\0' {
-            prev_delta = -(di as f64) / 2.0;
-            break;
+        let mut prev_delta: f64 = -4.0;
+        for di in 1..=3 {
+            if layout.get(spot * 9 + ((dir + 8 - di) % 8)) != '\0' {
+                prev_delta = -(di as f64);
+                break;
+            }
         }
-    }
-    let mut coordinates = get_coordinates(old1);
-    let dir_adjusted = dir as f64 + (next_delta + prev_delta) / 2.0;
-    let (sin, cos) = f64::sin_cos(dir_adjusted / 8.0 * 2.0 * std::f64::consts::PI);
-    coordinates.0 += D_SWIPE * sin;
-    coordinates.1 += D_SWIPE * cos;
-    let width = (next_delta - prev_delta) / 2.0;
+        (next_delta - prev_delta) / 8.0
+    };
 
     if false {
         println!(" ------- ");
@@ -225,15 +223,14 @@ fn get_swipe_details(old1: &KeyPress, layout: &Layout) -> ((f64, f64), f64) {
         );
         println!(" ------- ");
 
-        println!("prev_delta, next_delta {} {}", prev_delta, next_delta);
         println!(
-            "dir {} dir adjusted {} swipe delta {:.4} {:.4} width {}",
-            dir, dir_adjusted, sin, cos, width,
+            "dir {} swipe delta {:.4} {:.4} width {}",
+            dir, sin, cos, width,
         );
         println!();
     }
 
-    (coordinates, width)
+    (end_of_swipe_coords, width)
 }
 
 fn penalize<'a, 'b>(
