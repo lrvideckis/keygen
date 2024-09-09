@@ -184,20 +184,16 @@ fn get_swipe_details(old1: &KeyPress, layout: &Layout) -> ((f64, f64), f64) {
     // get next and previous swipe-letters (if they exist) to determine how precise the
     // swipe-direction has to be
     let width = {
-        let mut next_delta: f64 = 4.0;
-        for di in 1..=3 {
-            if layout.get(spot * 9 + ((dir + di) % 8)) != '\0' {
-                next_delta = di as f64;
-                break;
-            }
-        }
-        let mut prev_delta: f64 = -4.0;
-        for di in 1..=3 {
-            if layout.get(spot * 9 + ((dir + 8 - di) % 8)) != '\0' {
-                prev_delta = -(di as f64);
-                break;
-            }
-        }
+        let next_delta = if layout.get(spot * 9 + ((dir + 1) % 8)) != '\0' {
+            1.0
+        } else {
+            4.0
+        };
+        let prev_delta = if layout.get(spot * 9 + ((dir + 7) % 8)) != '\0' {
+            -1.0
+        } else {
+            -4.0
+        };
         (next_delta - prev_delta) / 8.0
     };
 
