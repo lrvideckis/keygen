@@ -55,7 +55,7 @@ pub struct Layout(KeyMap<char>);
 
 pub struct LayoutPermutations {
     orig_layout: Layout,
-    swaps: Vec<(usize, usize)>,
+    swaps: Vec<(usize, usize, usize)>,
     index: usize,
 }
 
@@ -73,17 +73,17 @@ pub struct KeyPress {
 #[rustfmt::skip]
 pub static INIT_LAYOUT: Layout = Layout(KeyMap([
 //row 0
-'z','\0','\'','\0','\0','\0','\0','\0','r',
+'z','\0','q','\0','\0','\0','\0','\0','r',
 'x','\0','l','\0','\0','\0','\0','\0','i',
 '\0','\0','\0','g','\0','\0','\0','\0','n',
 //row 1
-'\0','f','\0','q','\0','\0','\0','u','o',
+'\0','f','\0','?','\0','\0','\0','u','o',
 '-','\0','d','\0','p','\0','k','\0','e',
-'\0','\0','\0','y','\0','v','\0','\0','a',
+'\0','!','\0','\'','\0','v','\0','\0','a',
 //row 2
-'\0','.','\0','?','\0','j','\0','m','s',
+'\0','.','\0','\0','\0','j','\0','m','s',
 '\0','\0',',','\0','\0','b','\0','w','t',
-'\0','\0','\0','!','\0','c','\0','\0','h',
+'\0','\0','\0','y','\0','c','\0','\0','h',
 //row 3
 '\0','\0','\0','\0','\0','\0','\0','\0','\0',
 '\0','\0','\0','\0','\0','\0','\0','\0',' ',
@@ -182,7 +182,9 @@ impl LayoutPermutations {
         let mut swaps = Vec::new();
         for i in 0..81 {
             for j in (i + 1)..81 {
-                swaps.push((i, j));
+                for k in (i + 1)..81 {
+                    swaps.push((i, j, k));
+                }
             }
         }
         LayoutPermutations {
@@ -203,8 +205,9 @@ impl Iterator for LayoutPermutations {
             let mut current_layout = self.orig_layout.clone();
             let KeyMap(ref mut layer) = current_layout.0;
 
-            let (i, j) = self.swaps[self.index];
+            let (i, j, k) = self.swaps[self.index];
             layer.swap(i, j);
+            layer.swap(j, k);
 
             self.index += 1;
             return Some(current_layout);
