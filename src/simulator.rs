@@ -106,7 +106,7 @@ pub fn refine<'a>(
     loop {
         // Test every layout within `num_swaps` swaps of the initial layout.
         let mut best_layouts: LinkedList<BestLayoutsEntry> = LinkedList::new();
-        let permutations = layout::LayoutPermutations::new(init_layout, num_swaps);
+        let permutations = layout::LayoutPermutations::new(&curr_layout, num_swaps);
         for (i, layout) in permutations.enumerate() {
             let penalty = penalty::calculate_penalty(&quartads, len, &layout, penalties, false);
 
@@ -206,8 +206,15 @@ fn list_insert_ordered(
             cursor.move_next();
         }
 
+<<<<<<< HEAD
         // Add to list.
         cursor.insert_after(entry);
     }
     list
+=======
+		// Add to list.
+		cursor.insert_after(entry);
+	}
+	list
+>>>>>>> master
 }
