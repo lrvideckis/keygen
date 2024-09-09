@@ -206,15 +206,8 @@ fn list_insert_ordered(
             cursor.move_next();
         }
 
-<<<<<<< HEAD
         // Add to list.
         cursor.insert_after(entry);
     }
     list
-=======
-		// Add to list.
-		cursor.insert_after(entry);
-	}
-	list
->>>>>>> master
 }
