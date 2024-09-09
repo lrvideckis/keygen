@@ -144,7 +144,7 @@ pub static A: f64 = 0.127;
 // assuming each key is a 1-unit by 1-unit square, this is the distance a swipe takes (slightly
 // longer than a side length)
 // here, I assume each swipe is the same distance, independent of direction
-pub static D_SWIPE: f64 = 1.1;
+pub static D_SWIPE: f64 = 1.3;
 
 // if your thumb starts at position (x_start,y_start), and needs to travel to a button (with the
 // given width) at (x_end,y_end) where dist=sqrt((x_start-x_end)^2 + (y_start-y_end)^2)
