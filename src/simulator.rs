@@ -111,7 +111,9 @@ pub fn refine<'a>(
             let penalty = penalty::calculate_penalty(&quartads, len, &layout, penalties, false);
 
             if debug {
-                println!("Iteration {}: {}", i, penalty.1);
+                if i % 10000 == 0 {
+                    println!("Iteration {}: {}", i, penalty.1);
+                }
             }
 
             // Insert this layout into best layouts.

@@ -76,16 +76,16 @@ pub static LETTER_SPOTS: [usize; 26] = [
 #[rustfmt::skip]
 pub static INIT_LAYOUT: Layout = Layout(KeyMap([
 //row 0
-'\0','p','\0','\0','\0','\0','\0','\0','r',
+'\0','b','\0','\0','\0','\0','\0','\0','r',
 '\0','\0','d','\0','\0','\0','\0','\0','i',
 '\0','\0','\0','g','\0','\0','\0','\0','n',
 //row 1
 'u','\0','\0','\0','\0','\0','\0','\0','o',
-'z','k','y','v','b','q','j','x','e',
+'z','k','y','v','p','q','j','x','e',
 '\0','\0','\0','\0','l','\0','\0','\0','a',
 //row 2
-'\0','\0','\0','\0','\0','\0','\0','f','h',
-'w','\0','\0','\0','\0','\0','m','\0','t',
+'\0','\0','\0','\0','\0','\0','\0','w','h',
+'f','\0','\0','\0','\0','\0','m','\0','t',
 '\0','\0','\0','\0','\0','c','\0','\0','s',
 //row 3
 '\0','\0','\0','\0','\0','\0','\0','\0','\0',
@@ -200,13 +200,20 @@ impl Iterator for LayoutPermutations {
     type Item = Layout;
 
     fn next(&mut self) -> Option<Layout> {
-        if self.index == self.swaps.len() {
+        let len = self.swaps.len();
+        if self.index == len * len {
             None
         } else {
             let mut current_layout = self.orig_layout.clone();
             let KeyMap(ref mut layer) = current_layout.0;
-            let (i, j) = self.swaps[self.index];
-            layer.swap(i, j);
+
+            let swaps: [usize; 2] = [self.index % len, (self.index / len) % len];
+
+            for swap in swaps {
+                let (i, j) = self.swaps[swap];
+                layer.swap(i, j);
+            }
+
             self.index += 1;
             return Some(current_layout);
         }
