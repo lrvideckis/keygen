@@ -46,10 +46,11 @@ your swipe direction has to be quite precise. So in my mind, having 9 total
 letters in a single key should have some penalty.
 
 So I added a penalty when 2 swipe-letters are adjacent. This is pretty much the
-main difference.
+main difference between my algorithm and MessagEase's.
 
 --------
 
+```
 Reference: MESSAGEASE
        |       |       |
    a   |   n   |   i   |
@@ -159,6 +160,7 @@ Reference: my layout with symbols
 total: 1064955.6507521062; scaled: 0.3520985952671701
 base: 242207.69999998302  /  d: 32771.399999999805; l: 27170.09999999979; u: 20160.899999999907; w: 18682.79999999993; m: 18507.299999999905;
 swipe penalty: 822747.9507520351  /  e : 29779.504618141495;  a: 21257.20379757074; d : 17188.5186561915; he: 16805.523156362993;  i: 16686.122448979597;
+```
 
 ## Installing and running
 
