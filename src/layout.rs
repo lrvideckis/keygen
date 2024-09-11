@@ -78,7 +78,7 @@ pub static INIT_LAYOUT: Layout = Layout(KeyMap([
 '\0','\0','\0','g','\0','\0','\0','\0','n',
 //row 1
 '\0','f','\0','\0','\0','\0','\0','u','o',
-'-','\0','d','\0','p','\0','k','\0','e',
+'\0','\0','d','\0','p','\0','k','\0','e',
 '\0','\0','\0','\'','\0','v','\0','\0','a',
 //row 2
 '\0','.','\0','\0','\0','j','\0','m','s',
@@ -136,11 +136,22 @@ pub static KP_NONE: Option<KeyPress> = None;
  * IMPLS *
  * ----- */
 
+fn is_tap(key: usize) -> bool {
+    key % 9 == 8
+}
+
 impl Layout {
     pub fn shuffle(&mut self, times: usize) {
         for _ in 0..times {
-            let i = random::<usize>() % 81;
-            let j = random::<usize>() % 81;
+            let mut i;
+            let mut j;
+            loop {
+                i = random::<usize>() % 81;
+                j = random::<usize>() % 81;
+                if is_tap(i) == is_tap(j) {
+                    break;
+                }
+            }
             let KeyMap(ref mut layer) = self.0;
             layer.swap(i, j);
         }
