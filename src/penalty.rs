@@ -160,23 +160,23 @@ fn penalty_for_quartad<'a, 'b>(
 // top, while TNS is on the left side.
 #[rustfmt::skip]
 pub static BASE_PENALTY: [[f64; 3]; 3] = [
-    [0.15, 0.1, 0.05],
-    [0.1, 0.05, 0.0],
-    [0.05, 0.0, 0.0],
+    [0.12, 0.09, 0.06],
+    [0.09, 0.06, 0.03],
+    [0.06, 0.03, 0.0],
 ];
 
-// constants taken from https://www.exideas.com/ME/ICMI2003Paper.pdf
+// Time (in seconds) penalized for each swipe
+pub static SWIPE_PENALTY: f64 = 0.3;
 
+// constants taken from https://www.exideas.com/ME/ICMI2003Paper.pdf
 // Time (in seconds) taken to tap (finger down, then finger up)
 pub static A: f64 = 0.127;
 // assuming each key is a 1-unit by 1-unit square, this is the distance a swipe takes (slightly
 // longer than a side length)
 // here, I assume each swipe is the same distance, independent of direction
 pub static D_SWIPE: f64 = 1.3;
-// extra time (in seconds) penalized for each swipe
-pub static SWIPE_PENALTY: f64 = 0.3;
 
-// Time (in seconds) gained back for typing 2,3,4 keystrokes in a row with alternating thumbs
+// Time (in seconds) gained back for typing 3,4 keystrokes in a row with alternating thumbs
 pub static LENGTH_3_ALTERNATION_BONUS: f64 = 0.10;
 pub static LENGTH_4_ALTERNATION_BONUS: f64 = 0.25;
 
@@ -299,11 +299,11 @@ fn penalize<'a, 'b>(
 
     // Base penalty.
     if curr.pos != 98 {
-        let base = get_base_penalty(curr) * count;
-        total += base;
+        let base_penalty = get_base_penalty(curr) * count;
+        total += base_penalty;
         if detailed {
-            *result[0].high_keys.entry(slice1).or_insert(0.0) += base;
-            result[0].total += base;
+            *result[0].high_keys.entry(slice1).or_insert(0.0) += base_penalty;
+            result[0].total += base_penalty;
         }
     }
 
