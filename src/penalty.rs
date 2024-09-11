@@ -34,16 +34,18 @@ pub fn init<'a>() -> Vec<KeyPenalty<'a>> {
     let mut penalties = Vec::new();
 
     // Base penalty.
-    penalties.push(KeyPenalty { name: "base" });
+    penalties.push(KeyPenalty {
+        name: "base penalty",
+    });
 
-    // Penalize for swiping
+    // Swipe penalty.
     penalties.push(KeyPenalty {
         name: "swipe penalty",
     });
 
-    // Bonus for alternating thumbs for 2 keys
+    // thumb travel distance penalty
     penalties.push(KeyPenalty {
-        name: "length 2 alternation bonus",
+        name: "thumb travel distance penalty",
     });
 
     // Bonus for alternating thumbs for 3 keys
@@ -153,6 +155,16 @@ fn penalty_for_quartad<'a, 'b>(
     )
 }
 
+// https://github.com/dessalines/thumb-key?tab=readme-ov-file#thumb-key-letter-positions
+// Prioritize bottom, and right side of keyboard. So EAO should be on the right side, and bottom to
+// top, while TNS is on the left side.
+#[rustfmt::skip]
+pub static BASE_PENALTY: [[f64; 3]; 3] = [
+    [0.15, 0.1, 0.05],
+    [0.1, 0.05, 0.0],
+    [0.05, 0.0, 0.0],
+];
+
 // constants taken from https://www.exideas.com/ME/ICMI2003Paper.pdf
 
 // Time (in seconds) taken to tap (finger down, then finger up)
@@ -165,9 +177,8 @@ pub static D_SWIPE: f64 = 1.3;
 pub static SWIPE_PENALTY: f64 = 0.3;
 
 // Time (in seconds) gained back for typing 2,3,4 keystrokes in a row with alternating thumbs
-pub static LENGTH_2_ALTERNATION_BONUS: f64 = 0.05;
-pub static LENGTH_3_ALTERNATION_BONUS: f64 = 0.15;
-pub static LENGTH_4_ALTERNATION_BONUS: f64 = 0.3;
+pub static LENGTH_3_ALTERNATION_BONUS: f64 = 0.10;
+pub static LENGTH_4_ALTERNATION_BONUS: f64 = 0.25;
 
 // if your thumb starts at position (x_start,y_start), and needs to travel to a button (with the
 // given width) at (x_end,y_end) where dist=sqrt((x_start-x_end)^2 + (y_start-y_end)^2)
@@ -189,6 +200,11 @@ fn distance(point0: (f64, f64), point1: (f64, f64)) -> f64 {
 fn get_coordinates(key: &KeyPress) -> (f64, f64) {
     let spot = key.pos / 9;
     ((spot / 3) as f64, (spot % 3) as f64)
+}
+
+fn get_base_penalty(key: &KeyPress) -> f64 {
+    let spot = key.pos / 9;
+    BASE_PENALTY[spot / 3][spot % 3]
 }
 
 fn get_column(key: &KeyPress) -> usize {
@@ -281,17 +297,29 @@ fn penalize<'a, 'b>(
     // One key penalties.
     let slice1 = &string[(len - 1)..len];
 
-    // 0: Base penalty.
-    let base = (if curr.pos % 9 == 8 {
-        0.0
-    } else {
-        SWIPE_PENALTY
-    }) * count;
-    if detailed {
-        *result[0].high_keys.entry(slice1).or_insert(0.0) += base;
-        result[0].total += base;
+    // Base penalty.
+    if curr.pos != 98 {
+        let base = get_base_penalty(curr) * count;
+        total += base;
+        if detailed {
+            *result[0].high_keys.entry(slice1).or_insert(0.0) += base;
+            result[0].total += base;
+        }
     }
-    total += base;
+
+    // Swipe penalty
+    {
+        let swipe_penalty = (if curr.pos % 9 == 8 {
+            0.0
+        } else {
+            SWIPE_PENALTY
+        }) * count;
+        if detailed {
+            *result[1].high_keys.entry(slice1).or_insert(0.0) += swipe_penalty;
+            result[1].total += swipe_penalty;
+        }
+        total += swipe_penalty;
+    }
 
     // Two key penalties.
     let old1 = match *old1 {
@@ -312,34 +340,6 @@ fn penalize<'a, 'b>(
             let (end_of_swipe_coords, width) = get_swipe_details(old1, layout);
             penalty += fitts_law(D_SWIPE, width) - A;
             penalty += fitts_law(distance(end_of_swipe_coords, get_coordinates(curr)), 1.0);
-        }
-
-        penalty *= count;
-
-        if detailed {
-            *result[1].high_keys.entry(slice2).or_insert(0.0) += penalty;
-            result[1].total += penalty;
-        }
-        total += penalty;
-    }
-    for c in slice2.chars() {
-        if c == ' ' {
-            return total;
-        }
-    }
-    {
-        let mut penalty = 0.0;
-
-        let col_old1 = get_column(old1);
-        let col_curr = get_column(curr);
-
-        if col_old1 != col_curr {
-            if is_left(col_old1) && is_right(col_curr) {
-                penalty -= LENGTH_2_ALTERNATION_BONUS;
-            }
-            if is_right(col_old1) && is_left(col_curr) {
-                penalty -= LENGTH_2_ALTERNATION_BONUS;
-            }
         }
 
         penalty *= count;
