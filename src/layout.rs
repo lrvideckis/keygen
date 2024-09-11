@@ -149,7 +149,7 @@ impl Layout {
             loop {
                 i = random::<usize>() % 81;
                 j = random::<usize>() % 81;
-                if is_tap(i) == is_tap(j) {
+                if !is_tap(i) && !is_tap(j) {
                     break;
                 }
             }

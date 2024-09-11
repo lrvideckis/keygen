@@ -308,12 +308,14 @@ fn penalize<'a, 'b>(
 
     if is_tap(curr) {
         // Base tap penalty
+        /*
         let base_tap_penalty = get_base_tap_penalty(curr) * count;
         if detailed {
             *result[0].high_keys.entry(slice1).or_insert(0.0) += base_tap_penalty;
             result[0].total += base_tap_penalty;
         }
         total += base_tap_penalty;
+        */
     } else {
         // Swipe penalty
         /*
