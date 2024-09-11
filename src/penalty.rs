@@ -166,8 +166,8 @@ pub static SWIPE_PENALTY: f64 = 0.3;
 
 // Time (in seconds) gained back for typing 2,3,4 keystrokes in a row with alternating thumbs
 pub static LENGTH_2_ALTERNATION_BONUS: f64 = 0.05;
-pub static LENGTH_3_ALTERNATION_BONUS: f64 = 0.1;
-pub static LENGTH_4_ALTERNATION_BONUS: f64 = 0.2;
+pub static LENGTH_3_ALTERNATION_BONUS: f64 = 0.15;
+pub static LENGTH_4_ALTERNATION_BONUS: f64 = 0.3;
 
 // if your thumb starts at position (x_start,y_start), and needs to travel to a button (with the
 // given width) at (x_end,y_end) where dist=sqrt((x_start-x_end)^2 + (y_start-y_end)^2)
@@ -322,6 +322,11 @@ fn penalize<'a, 'b>(
         }
         total += penalty;
     }
+    for c in slice2.chars() {
+        if c == ' ' {
+            return total;
+        }
+    }
     {
         let mut penalty = 0.0;
 
@@ -353,6 +358,11 @@ fn penalize<'a, 'b>(
     };
 
     let slice3 = &string[(len - 3)..len];
+    for c in slice3.chars() {
+        if c == ' ' {
+            return total;
+        }
+    }
 
     {
         let mut penalty = 0.0;
@@ -386,6 +396,11 @@ fn penalize<'a, 'b>(
     };
 
     let slice4 = &string[(len - 4)..len];
+    for c in slice4.chars() {
+        if c == ' ' {
+            return total;
+        }
+    }
 
     {
         let mut penalty = 0.0;
