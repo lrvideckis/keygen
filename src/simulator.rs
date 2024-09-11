@@ -59,6 +59,7 @@ pub fn simulate<'a>(
         if annealing::accept_transition(scaled_penalty - accepted_penalty, i) {
             if debug {
                 println!("Iteration {} accepted with penalty {}", i, scaled_penalty);
+                print_result(&curr_layout_copy, &penalty);
             }
 
             accepted_layout = curr_layout_copy.clone();
