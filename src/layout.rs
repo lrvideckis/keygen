@@ -151,6 +151,13 @@ impl Layout {
                 if !is_tap(i) && !is_tap(j) {
                     break;
                 }
+                if is_tap(i)
+                    && is_tap(j)
+                    && (i / 9 == 0 || i / 9 == 1 || i / 9 == 3)
+                    && (j / 9 == 0 || j / 9 == 1 || j / 9 == 3)
+                {
+                    break;
+                }
             }
             let KeyMap(ref mut layer) = self.0;
             layer.swap(i, j);
@@ -193,9 +200,9 @@ impl LayoutPermutations {
         let mut swaps = Vec::new();
         for i in 0..81 {
             for j in (i + 1)..81 {
-                if !is_tap(i) && !is_tap(j) {
+                if is_tap(i) == is_tap(j) {
                     for k in j..81 {
-                        if !is_tap(k) {
+                        if is_tap(j) == is_tap(k) {
                             swaps.push((i, j, k));
                         }
                     }
