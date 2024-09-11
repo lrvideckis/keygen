@@ -164,6 +164,11 @@ pub static D_SWIPE: f64 = 1.3;
 // extra time (in seconds) penalized for each swipe
 pub static SWIPE_PENALTY: f64 = 0.3;
 
+// Time (in seconds) gained back for typing 2,3,4 keystrokes in a row with alternating thumbs
+pub static LENGTH_2_ALTERNATION_BONUS: f64 = 0.05;
+pub static LENGTH_3_ALTERNATION_BONUS: f64 = 0.1;
+pub static LENGTH_4_ALTERNATION_BONUS: f64 = 0.2;
+
 // if your thumb starts at position (x_start,y_start), and needs to travel to a button (with the
 // given width) at (x_end,y_end) where dist=sqrt((x_start-x_end)^2 + (y_start-y_end)^2)
 //
@@ -325,10 +330,10 @@ fn penalize<'a, 'b>(
 
         if col_old1 != col_curr {
             if is_left(col_old1) && is_right(col_curr) {
-                penalty -= 0.2;
+                penalty -= LENGTH_2_ALTERNATION_BONUS;
             }
             if is_right(col_old1) && is_left(col_curr) {
-                penalty -= 0.2;
+                penalty -= LENGTH_2_ALTERNATION_BONUS;
             }
         }
 
@@ -358,10 +363,10 @@ fn penalize<'a, 'b>(
 
         if col_old2 != col_old1 && col_old1 != col_curr {
             if is_right(col_old2) && is_left(col_old1) && is_right(col_curr) {
-                penalty -= 0.3;
+                penalty -= LENGTH_3_ALTERNATION_BONUS;
             }
             if is_left(col_old2) && is_right(col_old1) && is_left(col_curr) {
-                penalty -= 0.3;
+                penalty -= LENGTH_3_ALTERNATION_BONUS;
             }
         }
 
@@ -392,10 +397,10 @@ fn penalize<'a, 'b>(
 
         if col_old3 != col_old2 && col_old2 != col_old1 && col_old1 != col_curr {
             if is_left(col_old3) && is_right(col_old2) && is_left(col_old1) && is_right(col_curr) {
-                penalty -= 0.4;
+                penalty -= LENGTH_4_ALTERNATION_BONUS;
             }
             if is_right(col_old3) && is_left(col_old2) && is_right(col_old1) && is_left(col_curr) {
-                penalty -= 0.4;
+                penalty -= LENGTH_4_ALTERNATION_BONUS;
             }
         }
 
