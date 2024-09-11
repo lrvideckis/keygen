@@ -55,7 +55,8 @@ pub struct Layout(KeyMap<char>);
 
 pub struct LayoutPermutations {
     orig_layout: Layout,
-    swaps: Vec<(usize, usize, usize)>,
+    swaps: Vec<(usize, usize)>,
+    //swaps: Vec<(usize, usize, usize)>,
     index: usize,
 }
 
@@ -74,16 +75,16 @@ pub struct KeyPress {
 pub static INIT_LAYOUT: Layout = Layout(KeyMap([
 //row 0
 '\0','c','\0','\0','\0','\0','\0','\0','n',
-'\0','\0','g','\0','\0','\0','\0','\0','s',
-'\0','\0','\0','\0','\0','\0','\0','\0','i',
+'z','\0','g','\0','\0','\0','\0','\0','s',
+'\0','\0','\0','\'','\0','\0','\0','\0','i',
 //row 1
-'l','\0','x','\0','\0','z','\0','\0','r',
-'v','\0','d','\0','q','\0','k','\0','o',
-'\0','\0','\'','\0','u','\0','\0','\0','a',
+'l','\0','x','\0','\0','\0','\0','\0','r',
+'v','\0','d','\0','p','\0','k','\0','o',
+'\0','\0','\0','\0','u','\0','\0','\0','a',
 //row 2
-'\0','f','\0','\0','\0','j','\0','m','h',
-'b','\0',',','\0','p','\0','w','\0','t',
-'\0','\0','.','\0','y','\0','\0','\0','e',
+'\0','.','\0','\0','\0','j','\0','m','h',
+'b','\0',',','\0','f','\0','w','\0','t',
+'\0','\0','\0','y','\0','\0','q','\0','e',
 //row 3
 '\0','\0','\0','\0','\0','\0','\0','\0','\0',
 '\0','\0','\0','\0','\0','\0','\0','\0',' ',
@@ -193,8 +194,13 @@ impl LayoutPermutations {
         let mut swaps = Vec::new();
         for i in 0..81 {
             for j in (i + 1)..81 {
-                for k in (i + 1)..81 {
-                    swaps.push((i, j, k));
+                if is_tap(i) == is_tap(j) {
+                    //for k in j..81 {
+                    //if is_tap(j) == is_tap(k) {
+                    swaps.push((i, j));
+                    //swaps.push((i, j, k));
+                    //}
+                    //}
                 }
             }
         }
@@ -216,9 +222,10 @@ impl Iterator for LayoutPermutations {
             let mut current_layout = self.orig_layout.clone();
             let KeyMap(ref mut layer) = current_layout.0;
 
-            let (i, j, k) = self.swaps[self.index];
+            let (i, j) = self.swaps[self.index];
+            //let (i, j, k) = self.swaps[self.index];
             layer.swap(i, j);
-            layer.swap(j, k);
+            //layer.swap(j, k);
 
             self.index += 1;
             return Some(current_layout);
