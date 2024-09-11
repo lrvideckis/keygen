@@ -162,6 +162,7 @@ fn penalty_for_quartad<'a, 'b>(
 // this penalty is only applied to taps, as the reason for this penalty is you type the frequent
 // key then press enter (on left/bottom) side. And applying this reason to swipes, the direction
 // now matters too. But I just don't feel like implementing that, and it might just add noise.
+/*
 #[rustfmt::skip]
 pub static BASE_TAP_PENALTY: [[f64; 3]; 4] = [
     [0.2, 0.2, 0.2],
@@ -169,9 +170,10 @@ pub static BASE_TAP_PENALTY: [[f64; 3]; 4] = [
     [0.2, 0.1, 0.0],
     [0.0, 0.0, 0.0], // 0 penalty for space key
 ];
+*/
 
 // penalty for each swipe
-pub static SWIPE_PENALTY: f64 = 0.8;
+//pub static SWIPE_PENALTY: f64 = 0.8;
 
 // constants taken from https://www.exideas.com/ME/ICMI2003Paper.pdf
 // Time (in seconds) taken to tap (finger down, then finger up)
@@ -207,10 +209,12 @@ fn get_coordinates(key: &KeyPress) -> (f64, f64) {
     ((spot / 3) as f64, (spot % 3) as f64)
 }
 
+/*
 fn get_base_tap_penalty(key: &KeyPress) -> f64 {
     let spot = key.pos / 9;
     BASE_TAP_PENALTY[spot / 3][spot % 3]
 }
+*/
 
 fn is_tap(key: &KeyPress) -> bool {
     key.pos % 9 == 8
