@@ -164,9 +164,9 @@ fn penalty_for_quartad<'a, 'b>(
 // now matters too. But I just don't feel like implementing that, and it might just add noise.
 #[rustfmt::skip]
 pub static BASE_TAP_PENALTY: [[f64; 3]; 4] = [
-    [0.12, 0.09, 0.06],
-    [0.09, 0.06, 0.03],
-    [0.06, 0.03, 0.0],
+    [0.2, 0.15, 0.1],
+    [0.15, 0.1, 0.05],
+    [0.1, 0.05, 0.0],
     [0.0, 0.0, 0.0], // 0 penalty for space key
 ];
 
@@ -182,8 +182,8 @@ pub static A: f64 = 0.127;
 pub static D_SWIPE: f64 = 1.3;
 
 // Time (in seconds) gained back for typing 3,4 keystrokes in a row with alternating thumbs
-pub static LENGTH_3_ALTERNATION_BONUS: f64 = 0.13;
-pub static LENGTH_4_ALTERNATION_BONUS: f64 = 0.26;
+pub static LENGTH_3_ALTERNATION_BONUS: f64 = 0.2;
+pub static LENGTH_4_ALTERNATION_BONUS: f64 = 0.3;
 
 // if your thumb starts at position (x_start,y_start), and needs to travel to a button (with the
 // given width) at (x_end,y_end) where dist=sqrt((x_start-x_end)^2 + (y_start-y_end)^2)
@@ -306,19 +306,17 @@ fn penalize<'a, 'b>(
     // One key penalties.
     let slice1 = &string[(len - 1)..len];
 
-    // Base tap penalty
     if is_tap(curr) {
+        // Base tap penalty
         let base_tap_penalty = get_base_tap_penalty(curr) * count;
-        total += base_tap_penalty;
         if detailed {
             *result[0].high_keys.entry(slice1).or_insert(0.0) += base_tap_penalty;
             result[0].total += base_tap_penalty;
         }
-    }
-
-    // Swipe penalty
-    {
-        let swipe_penalty = (if is_tap(curr) { 0.0 } else { SWIPE_PENALTY }) * count;
+        total += base_tap_penalty;
+    } else {
+        // Swipe penalty
+        let swipe_penalty = SWIPE_PENALTY * count;
         if detailed {
             *result[1].high_keys.entry(slice1).or_insert(0.0) += swipe_penalty;
             result[1].total += swipe_penalty;
