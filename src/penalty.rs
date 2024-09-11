@@ -34,11 +34,28 @@ pub fn init<'a>() -> Vec<KeyPenalty<'a>> {
     let mut penalties = Vec::new();
 
     // Base penalty.
-    penalties.push(KeyPenalty { name: "base" });
+    penalties.push(KeyPenalty {
+        name: "base penalty",
+    });
 
-    // Penalize for swiping
+    // Swipe penalty.
     penalties.push(KeyPenalty {
         name: "swipe penalty",
+    });
+
+    // thumb travel distance penalty
+    penalties.push(KeyPenalty {
+        name: "thumb travel distance penalty",
+    });
+
+    // Bonus for alternating thumbs for 3 keys
+    penalties.push(KeyPenalty {
+        name: "length 3 alternation bonus",
+    });
+
+    // Bonus for alternating thumbs for 4 keys
+    penalties.push(KeyPenalty {
+        name: "length 4 alternation bonus",
     });
 
     penalties
@@ -138,16 +155,35 @@ fn penalty_for_quartad<'a, 'b>(
     )
 }
 
-// constants taken from https://www.exideas.com/ME/ICMI2003Paper.pdf
+// https://github.com/dessalines/thumb-key?tab=readme-ov-file#thumb-key-letter-positions
+// Prioritize bottom, and right side of keyboard. So EAO should be on the right side, and bottom to
+// top, while TNS is on the left side.
+//
+// this penalty is only applied to taps, as the reason for this penalty is you type the frequent
+// key then press enter (on left/bottom) side. And applying this reason to swipes, the direction
+// now matters too. But I just don't feel like implementing that, and it might just add noise.
+#[rustfmt::skip]
+pub static BASE_TAP_PENALTY: [[f64; 3]; 4] = [
+    [0.12, 0.09, 0.06],
+    [0.09, 0.06, 0.03],
+    [0.06, 0.03, 0.0],
+    [0.0, 0.0, 0.0], // 0 penalty for space key
+];
 
+// Time (in seconds) penalized for each swipe
+pub static SWIPE_PENALTY: f64 = 0.5;
+
+// constants taken from https://www.exideas.com/ME/ICMI2003Paper.pdf
 // Time (in seconds) taken to tap (finger down, then finger up)
 pub static A: f64 = 0.127;
 // assuming each key is a 1-unit by 1-unit square, this is the distance a swipe takes (slightly
 // longer than a side length)
 // here, I assume each swipe is the same distance, independent of direction
 pub static D_SWIPE: f64 = 1.3;
-// extra time (in seconds) penalized for each swipe
-pub static SWIPE_PENALTY: f64 = 0.3;
+
+// Time (in seconds) gained back for typing 3,4 keystrokes in a row with alternating thumbs
+pub static LENGTH_3_ALTERNATION_BONUS: f64 = 0.13;
+pub static LENGTH_4_ALTERNATION_BONUS: f64 = 0.26;
 
 // if your thumb starts at position (x_start,y_start), and needs to travel to a button (with the
 // given width) at (x_end,y_end) where dist=sqrt((x_start-x_end)^2 + (y_start-y_end)^2)
@@ -169,6 +205,29 @@ fn distance(point0: (f64, f64), point1: (f64, f64)) -> f64 {
 fn get_coordinates(key: &KeyPress) -> (f64, f64) {
     let spot = key.pos / 9;
     ((spot / 3) as f64, (spot % 3) as f64)
+}
+
+fn get_base_tap_penalty(key: &KeyPress) -> f64 {
+    let spot = key.pos / 9;
+    BASE_TAP_PENALTY[spot / 3][spot % 3]
+}
+
+fn is_tap(key: &KeyPress) -> bool {
+    key.pos % 9 == 8
+}
+
+fn get_column(key: &KeyPress) -> usize {
+    (key.pos / 9) % 3
+}
+
+// is typed with left thumb
+fn is_left(column: usize) -> bool {
+    column == 0 || column == 1
+}
+
+// is typed with right thumb
+fn is_right(column: usize) -> bool {
+    column == 2 || column == 1
 }
 
 // returns coordinate of end of swipe, and width
@@ -234,8 +293,8 @@ fn penalize<'a, 'b>(
     count: usize,
     curr: &KeyPress,
     old1: &Option<KeyPress>,
-    _: &Option<KeyPress>,
-    _: &Option<KeyPress>,
+    old2: &Option<KeyPress>,
+    old3: &Option<KeyPress>,
     result: &'b mut Vec<KeyPenaltyResult<'a>>,
     detailed: bool,
     layout: &Layout,
@@ -247,17 +306,25 @@ fn penalize<'a, 'b>(
     // One key penalties.
     let slice1 = &string[(len - 1)..len];
 
-    // 0: Base penalty.
-    let base = (if curr.pos % 9 == 8 {
-        0.0
-    } else {
-        SWIPE_PENALTY
-    }) * count;
-    if detailed {
-        *result[0].high_keys.entry(slice1).or_insert(0.0) += base;
-        result[0].total += base;
+    // Base tap penalty
+    if is_tap(curr) {
+        let base_tap_penalty = get_base_tap_penalty(curr) * count;
+        total += base_tap_penalty;
+        if detailed {
+            *result[0].high_keys.entry(slice1).or_insert(0.0) += base_tap_penalty;
+            result[0].total += base_tap_penalty;
+        }
     }
-    total += base;
+
+    // Swipe penalty
+    {
+        let swipe_penalty = (if is_tap(curr) { 0.0 } else { SWIPE_PENALTY }) * count;
+        if detailed {
+            *result[1].high_keys.entry(slice1).or_insert(0.0) += swipe_penalty;
+            result[1].total += swipe_penalty;
+        }
+        total += swipe_penalty;
+    }
 
     // Two key penalties.
     let old1 = match *old1 {
@@ -267,25 +334,104 @@ fn penalize<'a, 'b>(
 
     let slice2 = &string[(len - 2)..len];
 
-    let mut penalty = 0.0;
+    {
+        let mut penalty = 0.0;
 
-    // previous key is a tap
-    if old1.pos % 9 == 8 {
-        let dist = distance(get_coordinates(old1), get_coordinates(curr));
-        penalty += fitts_law(dist, 1.0);
-    } else {
-        // previous key is a swipe
-        let (end_of_swipe_coords, width) = get_swipe_details(old1, layout);
-        penalty += fitts_law(D_SWIPE, width) - A;
-        penalty += fitts_law(distance(end_of_swipe_coords, get_coordinates(curr)), 1.0);
+        // previous key is a tap
+        if is_tap(old1) {
+            penalty += fitts_law(distance(get_coordinates(old1), get_coordinates(curr)), 1.0);
+        } else {
+            // previous key is a swipe
+            let (end_of_swipe_coords, width) = get_swipe_details(old1, layout);
+            penalty += fitts_law(D_SWIPE, width) - A;
+            penalty += fitts_law(distance(end_of_swipe_coords, get_coordinates(curr)), 1.0);
+        }
+
+        penalty *= count;
+
+        if detailed {
+            *result[2].high_keys.entry(slice2).or_insert(0.0) += penalty;
+            result[2].total += penalty;
+        }
+        total += penalty;
     }
 
-    penalty *= count;
+    // Three key penalties.
+    let old2 = match *old2 {
+        Some(ref o) => o,
+        None => return total,
+    };
 
-    if detailed {
-        *result[1].high_keys.entry(slice2).or_insert(0.0) += penalty;
-        result[1].total += penalty;
+    let slice3 = &string[(len - 3)..len];
+    for c in slice3.chars() {
+        if c == ' ' {
+            return total;
+        }
     }
-    total += penalty;
+
+    {
+        let mut penalty = 0.0;
+
+        let col_old2 = get_column(old2);
+        let col_old1 = get_column(old1);
+        let col_curr = get_column(curr);
+
+        if col_old2 != col_old1 && col_old1 != col_curr {
+            if is_right(col_old2) && is_left(col_old1) && is_right(col_curr) {
+                penalty -= LENGTH_3_ALTERNATION_BONUS;
+            }
+            if is_left(col_old2) && is_right(col_old1) && is_left(col_curr) {
+                penalty -= LENGTH_3_ALTERNATION_BONUS;
+            }
+        }
+
+        penalty *= count;
+
+        if detailed {
+            *result[3].high_keys.entry(slice3).or_insert(0.0) += penalty;
+            result[3].total += penalty;
+        }
+        total += penalty;
+    }
+
+    // Four key penalties.
+    let old3 = match *old3 {
+        Some(ref o) => o,
+        None => return total,
+    };
+
+    let slice4 = &string[(len - 4)..len];
+    for c in slice4.chars() {
+        if c == ' ' {
+            return total;
+        }
+    }
+
+    {
+        let mut penalty = 0.0;
+
+        let col_old3 = get_column(old3);
+        let col_old2 = get_column(old2);
+        let col_old1 = get_column(old1);
+        let col_curr = get_column(curr);
+
+        if col_old3 != col_old2 && col_old2 != col_old1 && col_old1 != col_curr {
+            if is_left(col_old3) && is_right(col_old2) && is_left(col_old1) && is_right(col_curr) {
+                penalty -= LENGTH_4_ALTERNATION_BONUS;
+            }
+            if is_right(col_old3) && is_left(col_old2) && is_right(col_old1) && is_left(col_curr) {
+                penalty -= LENGTH_4_ALTERNATION_BONUS;
+            }
+        }
+
+        penalty *= count;
+
+        if detailed {
+            *result[4].high_keys.entry(slice4).or_insert(0.0) += penalty;
+            result[4].total += penalty;
+        }
+        total += penalty;
+    }
+
     total
 }
