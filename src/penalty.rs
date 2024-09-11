@@ -41,6 +41,21 @@ pub fn init<'a>() -> Vec<KeyPenalty<'a>> {
         name: "swipe penalty",
     });
 
+    // Bonus for alternating thumbs for 2 keys
+    penalties.push(KeyPenalty {
+        name: "length 2 alternation bonus",
+    });
+
+    // Bonus for alternating thumbs for 3 keys
+    penalties.push(KeyPenalty {
+        name: "length 3 alternation bonus",
+    });
+
+    // Bonus for alternating thumbs for 4 keys
+    penalties.push(KeyPenalty {
+        name: "length 4 alternation bonus",
+    });
+
     penalties
 }
 
@@ -171,6 +186,20 @@ fn get_coordinates(key: &KeyPress) -> (f64, f64) {
     ((spot / 3) as f64, (spot % 3) as f64)
 }
 
+fn get_column(key: &KeyPress) -> usize {
+    (key.pos / 9) % 3
+}
+
+// is typed with left thumb
+fn is_left(column: usize) -> bool {
+    column == 0 || column == 1
+}
+
+// is typed with right thumb
+fn is_right(column: usize) -> bool {
+    column == 2 || column == 1
+}
+
 // returns coordinate of end of swipe, and width
 fn get_swipe_details(old1: &KeyPress, layout: &Layout) -> ((f64, f64), f64) {
     let spot = old1.pos / 9;
@@ -234,8 +263,8 @@ fn penalize<'a, 'b>(
     count: usize,
     curr: &KeyPress,
     old1: &Option<KeyPress>,
-    _: &Option<KeyPress>,
-    _: &Option<KeyPress>,
+    old2: &Option<KeyPress>,
+    old3: &Option<KeyPress>,
     result: &'b mut Vec<KeyPenaltyResult<'a>>,
     detailed: bool,
     layout: &Layout,
@@ -267,25 +296,117 @@ fn penalize<'a, 'b>(
 
     let slice2 = &string[(len - 2)..len];
 
-    let mut penalty = 0.0;
+    {
+        let mut penalty = 0.0;
 
-    // previous key is a tap
-    if old1.pos % 9 == 8 {
-        let dist = distance(get_coordinates(old1), get_coordinates(curr));
-        penalty += fitts_law(dist, 1.0);
-    } else {
-        // previous key is a swipe
-        let (end_of_swipe_coords, width) = get_swipe_details(old1, layout);
-        penalty += fitts_law(D_SWIPE, width) - A;
-        penalty += fitts_law(distance(end_of_swipe_coords, get_coordinates(curr)), 1.0);
+        // previous key is a tap
+        if old1.pos % 9 == 8 {
+            penalty += fitts_law(distance(get_coordinates(old1), get_coordinates(curr)), 1.0);
+        } else {
+            // previous key is a swipe
+            let (end_of_swipe_coords, width) = get_swipe_details(old1, layout);
+            penalty += fitts_law(D_SWIPE, width) - A;
+            penalty += fitts_law(distance(end_of_swipe_coords, get_coordinates(curr)), 1.0);
+        }
+
+        penalty *= count;
+
+        if detailed {
+            *result[1].high_keys.entry(slice2).or_insert(0.0) += penalty;
+            result[1].total += penalty;
+        }
+        total += penalty;
+    }
+    {
+        let mut penalty = 0.0;
+
+        let col_old1 = get_column(old1);
+        let col_curr = get_column(curr);
+
+        if col_old1 != col_curr {
+            if is_left(col_old1) && is_right(col_curr) {
+                penalty -= 0.2;
+            }
+            if is_right(col_old1) && is_left(col_curr) {
+                penalty -= 0.2;
+            }
+        }
+
+        penalty *= count;
+
+        if detailed {
+            *result[2].high_keys.entry(slice2).or_insert(0.0) += penalty;
+            result[2].total += penalty;
+        }
+        total += penalty;
     }
 
-    penalty *= count;
+    // Three key penalties.
+    let old2 = match *old2 {
+        Some(ref o) => o,
+        None => return total,
+    };
 
-    if detailed {
-        *result[1].high_keys.entry(slice2).or_insert(0.0) += penalty;
-        result[1].total += penalty;
+    let slice3 = &string[(len - 3)..len];
+
+    {
+        let mut penalty = 0.0;
+
+        let col_old2 = get_column(old2);
+        let col_old1 = get_column(old1);
+        let col_curr = get_column(curr);
+
+        if col_old2 != col_old1 && col_old1 != col_curr {
+            if is_right(col_old2) && is_left(col_old1) && is_right(col_curr) {
+                penalty -= 0.3;
+            }
+            if is_left(col_old2) && is_right(col_old1) && is_left(col_curr) {
+                penalty -= 0.3;
+            }
+        }
+
+        penalty *= count;
+
+        if detailed {
+            *result[3].high_keys.entry(slice3).or_insert(0.0) += penalty;
+            result[3].total += penalty;
+        }
+        total += penalty;
     }
-    total += penalty;
+
+    // Four key penalties.
+    let old3 = match *old3 {
+        Some(ref o) => o,
+        None => return total,
+    };
+
+    let slice4 = &string[(len - 4)..len];
+
+    {
+        let mut penalty = 0.0;
+
+        let col_old3 = get_column(old3);
+        let col_old2 = get_column(old2);
+        let col_old1 = get_column(old1);
+        let col_curr = get_column(curr);
+
+        if col_old3 != col_old2 && col_old2 != col_old1 && col_old1 != col_curr {
+            if is_left(col_old3) && is_right(col_old2) && is_left(col_old1) && is_right(col_curr) {
+                penalty -= 0.4;
+            }
+            if is_right(col_old3) && is_left(col_old2) && is_right(col_old1) && is_left(col_curr) {
+                penalty -= 0.4;
+            }
+        }
+
+        penalty *= count;
+
+        if detailed {
+            *result[4].high_keys.entry(slice4).or_insert(0.0) += penalty;
+            result[4].total += penalty;
+        }
+        total += penalty;
+    }
+
     total
 }
