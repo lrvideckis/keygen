@@ -55,8 +55,7 @@ pub struct Layout(KeyMap<char>);
 
 pub struct LayoutPermutations {
     orig_layout: Layout,
-    swaps: Vec<(usize, usize)>,
-    //swaps: Vec<(usize, usize, usize)>,
+    swaps: Vec<(usize, usize, usize)>,
     index: usize,
 }
 
@@ -149,7 +148,7 @@ impl Layout {
             loop {
                 i = random::<usize>() % 81;
                 j = random::<usize>() % 81;
-                if is_tap(i) == is_tap(j) {
+                if !is_tap(i) && !is_tap(j) {
                     break;
                 }
             }
@@ -194,13 +193,12 @@ impl LayoutPermutations {
         let mut swaps = Vec::new();
         for i in 0..81 {
             for j in (i + 1)..81 {
-                if is_tap(i) == is_tap(j) {
-                    //for k in j..81 {
-                    //if is_tap(j) == is_tap(k) {
-                    swaps.push((i, j));
-                    //swaps.push((i, j, k));
-                    //}
-                    //}
+                if !is_tap(i) && !is_tap(j) {
+                    for k in j..81 {
+                        if !is_tap(k) {
+                            swaps.push((i, j, k));
+                        }
+                    }
                 }
             }
         }
@@ -222,10 +220,9 @@ impl Iterator for LayoutPermutations {
             let mut current_layout = self.orig_layout.clone();
             let KeyMap(ref mut layer) = current_layout.0;
 
-            let (i, j) = self.swaps[self.index];
-            //let (i, j, k) = self.swaps[self.index];
+            let (i, j, k) = self.swaps[self.index];
             layer.swap(i, j);
-            //layer.swap(j, k);
+            layer.swap(j, k);
 
             self.index += 1;
             return Some(current_layout);
