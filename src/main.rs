@@ -134,6 +134,12 @@ fn run_ref(s: &str) {
     println!();
 
     let penalty =
+        penalty::calculate_penalty(&quartads, len, &layout::RSINOA_LAYOUT, &penalties, true);
+    println!("Reference: Original RSINOA");
+    simulator::print_result(&layout::RSINOA_LAYOUT, &penalty);
+    println!();
+
+    let penalty =
         penalty::calculate_penalty(&quartads, len, &layout::INIT_LAYOUT, &penalties, true);
     println!("Reference: INITIAL");
     simulator::print_result(&layout::INIT_LAYOUT, &penalty);
