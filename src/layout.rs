@@ -25,7 +25,7 @@ use std::fmt;
 //        57 56 55 | 66 65 64 | 75 74 73
 //        --------- ---------- ---------
 //                 |          |
-// row 3           |  space   |
+// row 3           |          |  space
 //                 |          |
 //
 // index%9 = relative location in key
