@@ -207,41 +207,42 @@ pub fn convert_for_printing(c: char) -> char {
 impl fmt::Display for Layout {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let KeyMap(ref layer) = self.0;
-        for row in 0..4 {
-            for col in 0..3 {
-                let loc = row * 3 + col;
+        for row in 0..3 {
+            for col in 0..6 {
+                if row == 2 && col == 5 {
+                    continue;
+                }
+                let loc = row * 6 + col;
                 write!(
                     f,
-                    " {} {} {} |",
-                    convert_for_printing(layer[loc * 9 + 5]),
-                    convert_for_printing(layer[loc * 9 + 6]),
-                    convert_for_printing(layer[loc * 9 + 7]),
+                    " {}   {} |",
+                    convert_for_printing(layer[loc * 5 + 2]),
+                    convert_for_printing(layer[loc * 5 + 3]),
                 )?;
             }
             writeln!(f, "")?;
-            for col in 0..3 {
-                let loc = row * 3 + col;
+            for col in 0..6 {
+                if row == 2 && col == 5 {
+                    continue;
+                }
+                let loc = row * 6 + col;
+                write!(f, "   {}   |", convert_for_printing(layer[loc * 5 + 4]),)?;
+            }
+            writeln!(f, "")?;
+            for col in 0..6 {
+                if row == 2 && col == 5 {
+                    continue;
+                }
+                let loc = row * 6 + col;
                 write!(
                     f,
-                    " {} {} {} |",
-                    convert_for_printing(layer[loc * 9 + 4]),
-                    convert_for_printing(layer[loc * 9 + 8]),
-                    convert_for_printing(layer[loc * 9 + 0]),
+                    " {}   {} |",
+                    convert_for_printing(layer[loc * 5 + 1]),
+                    convert_for_printing(layer[loc * 5 + 0]),
                 )?;
             }
             writeln!(f, "")?;
-            for col in 0..3 {
-                let loc = row * 3 + col;
-                write!(
-                    f,
-                    " {} {} {} |",
-                    convert_for_printing(layer[loc * 9 + 3]),
-                    convert_for_printing(layer[loc * 9 + 2]),
-                    convert_for_printing(layer[loc * 9 + 1]),
-                )?;
-            }
-            writeln!(f, "")?;
-            writeln!(f, "------- ------- -------")?;
+            writeln!(f, "------- ------- ------- ------- ------- -------")?;
         }
         Ok(())
     }
