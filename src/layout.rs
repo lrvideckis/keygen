@@ -38,7 +38,18 @@ use std::fmt;
 // - programming-grid-col = euclidean-plane-x
 // - programming-grid-row = -1 * euclidean-plane-y
 
-pub struct KeyMap<T>(pub [T; 90]);
+// Not including shift,backspace, there are 80 valid locations.
+//
+// This function maps a number in [0,80) to a valid location, preserving order.
+fn to_index(mut orig: usize) -> usize {
+    assert!(orig < 80);
+    if orig >= 60 {
+        orig += 5;
+    }
+    orig
+}
+
+pub struct KeyMap<T>(pub [T; 85]);
 
 impl<T: Copy> Clone for KeyMap<T> {
     fn clone(&self) -> KeyMap<T> {
@@ -90,7 +101,6 @@ pub static INIT_LAYOUT: Layout = Layout(KeyMap([
 '\0','\0','\0','\0','\0',
 '\0','\0','\0','\0','\0',
 '\0','\0','\0','\0','\0',
-'\0','\0','\0','\0','\0',
 ]));
 
 pub static KP_NONE: Option<KeyPress> = None;
@@ -100,21 +110,14 @@ pub static KP_NONE: Option<KeyPress> = None;
  * ----- */
 
 fn is_tap(key: usize) -> bool {
-    key % 9 == 8
+    key % 5 == 4
 }
 
 impl Layout {
     pub fn shuffle(&mut self, times: usize) {
         for _ in 0..times {
-            let mut i;
-            let mut j;
-            loop {
-                i = random::<usize>() % 81;
-                j = random::<usize>() % 81;
-                if is_tap(i) == is_tap(j) {
-                    break;
-                }
-            }
+            let i = to_index(random::<usize>() % 80);
+            let j = to_index(random::<usize>() % 80);
             let KeyMap(ref mut layer) = self.0;
             layer.swap(i, j);
         }
