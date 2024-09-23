@@ -2,6 +2,7 @@
 extern crate rand;
 
 use self::rand::random;
+use penalty::D_SWIPE;
 use std::fmt;
 
 /* ----- *
@@ -105,13 +106,54 @@ pub static INIT_LAYOUT: Layout = Layout(KeyMap([
 
 pub static KP_NONE: Option<KeyPress> = None;
 
+/* ------- *
+ * HELPERS *
+ * ------- */
+
+pub fn is_tap(key: &KeyPress) -> bool {
+    key.pos % 5 == 4
+}
+
+pub fn get_coordinates(key: &KeyPress) -> (usize, usize) {
+    let spot = key.pos / 5;
+    (spot / 6, spot % 6)
+}
+
+pub fn get_coordinates_float(key: &KeyPress) -> (f64, f64) {
+    let (row, col) = get_coordinates(key);
+    (row as f64, col as f64)
+}
+
+// is typed with left thumb
+pub fn is_left(key: &KeyPress) -> bool {
+    let column = get_coordinates(key).1;
+    column < 3
+}
+
+// is a good swipe for the left thumb: i.e. either north-west or south-east
+pub fn is_good_for_left(key: &KeyPress) -> bool {
+    assert!(!is_tap(key));
+    (key.pos % 5) % 2 == 0
+}
+
+fn get_swipe_angle_radians(key: &KeyPress) -> f64 {
+    assert!(!is_tap(key));
+    ((key.pos % 5) as f64 / 4.0 + 1.0 / 8.0) * 2.0 * std::f64::consts::PI
+}
+
+// returns coordinates of end of swipe
+pub fn get_end_of_swipe_coords(key: &KeyPress) -> (f64, f64) {
+    assert!(!is_tap(key));
+    let mut end_of_swipe_coords = get_coordinates_float(key);
+    let (sin, cos) = f64::sin_cos(get_swipe_angle_radians(key));
+    end_of_swipe_coords.0 += D_SWIPE * sin;
+    end_of_swipe_coords.1 += D_SWIPE * cos;
+    end_of_swipe_coords
+}
+
 /* ----- *
  * IMPLS *
  * ----- */
-
-fn is_tap(key: usize) -> bool {
-    key % 5 == 4
-}
 
 impl Layout {
     pub fn shuffle(&mut self, times: usize) {
@@ -134,11 +176,6 @@ impl Layout {
 
         LayoutPosMap(map)
     }
-
-    pub fn get(&self, pos: usize) -> char {
-        let KeyMap(ref layer) = self.0;
-        layer[pos]
-    }
 }
 
 impl LayoutPosMap {
@@ -159,12 +196,8 @@ impl LayoutPermutations {
         let mut swaps = Vec::new();
         for i in 0..81 {
             for j in (i + 1)..81 {
-                if is_tap(i) == is_tap(j) {
-                    for k in j..81 {
-                        if is_tap(j) == is_tap(k) {
-                            swaps.push((i, j, k));
-                        }
-                    }
+                for k in j..81 {
+                    swaps.push((i, j, k));
                 }
             }
         }
@@ -196,7 +229,7 @@ impl Iterator for LayoutPermutations {
     }
 }
 
-pub fn convert_for_printing(c: char) -> char {
+fn convert_for_printing(c: char) -> char {
     match c {
         '\0' => ' ',
         ' ' => 'S',
@@ -226,7 +259,7 @@ impl fmt::Display for Layout {
                     continue;
                 }
                 let loc = row * 6 + col;
-                write!(f, "   {}   |", convert_for_printing(layer[loc * 5 + 4]),)?;
+                write!(f, "   {}   |", convert_for_printing(layer[loc * 5 + 4]))?;
             }
             writeln!(f, "")?;
             for col in 0..6 {
