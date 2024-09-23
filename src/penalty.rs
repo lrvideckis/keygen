@@ -286,14 +286,12 @@ fn penalize<'a, 'b>(
         total += penalty;
     }
     if same_hand(old1, curr) {
-        /*
         let penalty = thumb_travel_penalty(old1, curr) * count;
         if detailed {
             *result[3].high_keys.entry(slice2).or_insert(0.0) += penalty;
             result[3].total += penalty;
         }
         total += penalty;
-        */
     }
 
     {
@@ -338,14 +336,12 @@ fn penalize<'a, 'b>(
     }
 
     if same_hand(old2, curr) && !same_hand(old2, old1) {
-        /*
-        let penalty = thumb_travel_penalty(old1, curr) * count;
+        let penalty = thumb_travel_penalty(old2, curr) * count;
         if detailed {
-            *result[3].high_keys.entry(slice2).or_insert(0.0) += penalty;
+            *result[3].high_keys.entry(slice3).or_insert(0.0) += penalty;
             result[3].total += penalty;
         }
         total += penalty;
-        */
     }
 
     // Four key penalties.
@@ -370,6 +366,15 @@ fn penalize<'a, 'b>(
         if detailed {
             *result[6].high_keys.entry(slice3).or_insert(0.0) += penalty;
             result[6].total += penalty;
+        }
+        total += penalty;
+    }
+
+    if same_hand(old3, curr) && !same_hand(old3, old1) && !same_hand(old3, old2) {
+        let penalty = thumb_travel_penalty(old3, curr) * count;
+        if detailed {
+            *result[3].high_keys.entry(slice4).or_insert(0.0) += penalty;
+            result[3].total += penalty;
         }
         total += penalty;
     }
