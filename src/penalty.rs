@@ -8,9 +8,9 @@ use std::vec::Vec;
 use layout::get_coordinates;
 use layout::get_coordinates_float;
 use layout::get_end_of_swipe_coords;
-use layout::is_good_for_left;
-use layout::is_left;
 use layout::is_tap;
+use layout::same_hand;
+use layout::swipe_is_good_for_hand;
 use layout::KeyPress;
 use layout::Layout;
 use layout::LayoutPosMap;
@@ -214,6 +214,21 @@ fn distance(point0: (f64, f64), point1: (f64, f64)) -> f64 {
     f64::sqrt(square(point0.0 - point1.0) + square(point0.1 - point1.1))
 }
 
+fn thumb_travel_penalty(old: &KeyPress, curr: &KeyPress) -> f64 {
+    if is_tap(old) {
+        // previous key is a tap
+        fitts_law(distance(
+            get_coordinates_float(old),
+            get_coordinates_float(curr),
+        ))
+    } else {
+        // previous key is a swipe
+        let end_of_swipe_coords = get_end_of_swipe_coords(old);
+        fitts_law(D_SWIPE) - A
+            + fitts_law(distance(end_of_swipe_coords, get_coordinates_float(curr)))
+    }
+}
+
 fn penalize<'a, 'b>(
     string: &'a str,
     count: usize,
@@ -243,7 +258,7 @@ fn penalize<'a, 'b>(
 
     if !is_tap(curr) {
         let mut swipe_penalty = SWIPE_PENALTY * count;
-        if is_left(curr) != is_good_for_left(curr) {
+        if !swipe_is_good_for_hand(curr) {
             swipe_penalty += EXTRA_SWIPE_PENALTY * count;
         }
         if detailed {
@@ -262,22 +277,7 @@ fn penalize<'a, 'b>(
     let slice2 = &string[(len - 2)..len];
 
     {
-        let mut penalty = 0.0;
-
-        // previous key is a tap
-        if is_tap(old1) {
-            penalty += fitts_law(distance(
-                get_coordinates_float(old1),
-                get_coordinates_float(curr),
-            ));
-        } else {
-            // previous key is a swipe
-            let end_of_swipe_coords = get_end_of_swipe_coords(old1);
-            penalty += fitts_law(D_SWIPE) - A;
-            penalty += fitts_law(distance(end_of_swipe_coords, get_coordinates_float(curr)));
-        }
-
-        penalty *= count;
+        let penalty = thumb_travel_penalty(old1, curr) * count;
 
         if detailed {
             *result[2].high_keys.entry(slice2).or_insert(0.0) += penalty;
@@ -285,11 +285,21 @@ fn penalize<'a, 'b>(
         }
         total += penalty;
     }
+    if same_hand(old1, curr) {
+        /*
+        let penalty = thumb_travel_penalty(old1, curr) * count;
+        if detailed {
+            *result[3].high_keys.entry(slice2).or_insert(0.0) += penalty;
+            result[3].total += penalty;
+        }
+        total += penalty;
+        */
+    }
 
     {
         let mut penalty = 0.0;
 
-        if is_left(old1) != is_left(curr) {
+        if !same_hand(old1, curr) {
             penalty = LENGTH_2_ALTERNATION_BONUS * count;
         }
 
@@ -316,7 +326,7 @@ fn penalize<'a, 'b>(
     {
         let mut penalty = 0.0;
 
-        if is_left(old2) != is_left(old1) && is_left(old1) != is_left(curr) {
+        if !same_hand(old2, old1) && !same_hand(old1, curr) {
             penalty = LENGTH_3_ALTERNATION_BONUS * count;
         }
 
@@ -325,6 +335,17 @@ fn penalize<'a, 'b>(
             result[5].total += penalty;
         }
         total += penalty;
+    }
+
+    if same_hand(old2, curr) && !same_hand(old2, old1) {
+        /*
+        let penalty = thumb_travel_penalty(old1, curr) * count;
+        if detailed {
+            *result[3].high_keys.entry(slice2).or_insert(0.0) += penalty;
+            result[3].total += penalty;
+        }
+        total += penalty;
+        */
     }
 
     // Four key penalties.
@@ -342,10 +363,7 @@ fn penalize<'a, 'b>(
     {
         let mut penalty = 0.0;
 
-        if is_left(old3) != is_left(old2)
-            && is_left(old2) != is_left(old1)
-            && is_left(old1) != is_left(curr)
-        {
+        if !same_hand(old3, old2) && !same_hand(old2, old1) && !same_hand(old1, curr) {
             penalty = LENGTH_4_ALTERNATION_BONUS * count;
         }
 

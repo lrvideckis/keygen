@@ -125,15 +125,23 @@ pub fn get_coordinates_float(key: &KeyPress) -> (f64, f64) {
 }
 
 // is typed with left thumb
-pub fn is_left(key: &KeyPress) -> bool {
+fn is_left(key: &KeyPress) -> bool {
     let column = get_coordinates(key).1;
     column < 3
 }
 
 // is a good swipe for the left thumb: i.e. either north-west or south-east
-pub fn is_good_for_left(key: &KeyPress) -> bool {
+fn is_good_for_left(key: &KeyPress) -> bool {
     assert!(!is_tap(key));
     (key.pos % 5) % 2 == 0
+}
+
+pub fn swipe_is_good_for_hand(key: &KeyPress) -> bool {
+    is_left(key) == is_good_for_left(key)
+}
+
+pub fn same_hand(key1: &KeyPress, key2: &KeyPress) -> bool {
+    is_left(key1) == is_left(key2)
 }
 
 fn get_swipe_angle_radians(key: &KeyPress) -> f64 {
