@@ -174,9 +174,9 @@ fn penalty_for_quartad<'a, 'b>(
 // https://github.com/Julow/Unexpected-Keyboard/issues/740#issuecomment-2350971805
 #[rustfmt::skip]
 pub static BASE_PENALTY: [[f64; 6]; 3] = [
-    [0.0, 1.0, 2.0, 2.0, 1.0, 0.0],
-    [1.0, 0.0, 1.0, 1.0, 0.0, 1.0],
-    [2.0, 1.0, 0.0, 0.0, 1.0, 2.0],
+    [0.0, 0.3, 0.6, 0.6, 0.3, 0.0],
+    [0.3, 0.0, 0.3, 0.3, 0.0, 0.3],
+    [0.0, 0.3, 0.0, 0.0, 0.3, 0.0],
 ];
 
 // penalty for each swipe
@@ -189,7 +189,7 @@ pub static A: f64 = 0.127;
 // assuming each key is a 1-unit by 1-unit square, this is the distance a swipe takes (slightly
 // longer than a side length)
 // here, I assume each swipe is the same distance, independent of direction
-pub static D_SWIPE: f64 = 1.3;
+pub static D_SWIPE: f64 = 1.5;
 
 // penalty gained back for typing 23,4 keystrokes in a row with alternating thumbs
 pub static LENGTH_2_ALTERNATION_BONUS: f64 = -0.1;
