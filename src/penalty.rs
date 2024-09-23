@@ -8,6 +8,7 @@ use std::vec::Vec;
 use layout::get_coordinates;
 use layout::get_coordinates_float;
 use layout::get_end_of_swipe_coords;
+use layout::is_space;
 use layout::is_tap;
 use layout::same_hand;
 use layout::swipe_is_good_for_hand;
@@ -246,28 +247,29 @@ fn penalize<'a, 'b>(
     // One key penalties.
     let slice1 = &string[(len - 1)..len];
 
-    {
-        let (row, col) = get_coordinates(curr);
-        let base_penalty = BASE_PENALTY[row][col] * count;
-        if detailed {
-            *result[0].high_keys.entry(slice1).or_insert(0.0) += base_penalty;
-            result[0].total += base_penalty;
+    if !is_space(curr) {
+        {
+            let (row, col) = get_coordinates(curr);
+            let base_penalty = BASE_PENALTY[row][col] * count;
+            if detailed {
+                *result[0].high_keys.entry(slice1).or_insert(0.0) += base_penalty;
+                result[0].total += base_penalty;
+            }
+            total += base_penalty;
         }
-        total += base_penalty;
-    }
 
-    if !is_tap(curr) {
-        let mut swipe_penalty = SWIPE_PENALTY * count;
-        if !swipe_is_good_for_hand(curr) {
-            swipe_penalty += EXTRA_SWIPE_PENALTY * count;
+        if !is_tap(curr) {
+            let mut swipe_penalty = SWIPE_PENALTY * count;
+            if !swipe_is_good_for_hand(curr) {
+                swipe_penalty += EXTRA_SWIPE_PENALTY * count;
+            }
+            if detailed {
+                *result[1].high_keys.entry(slice1).or_insert(0.0) += swipe_penalty;
+                result[1].total += swipe_penalty;
+            }
+            total += swipe_penalty;
         }
-        if detailed {
-            *result[1].high_keys.entry(slice1).or_insert(0.0) += swipe_penalty;
-            result[1].total += swipe_penalty;
-        }
-        total += swipe_penalty;
     }
-
     // Two key penalties.
     let old1 = match *old1 {
         Some(ref o) => o,
@@ -285,6 +287,13 @@ fn penalize<'a, 'b>(
         }
         total += penalty;
     }
+
+    for c in slice2.chars() {
+        if c == ' ' {
+            return total;
+        }
+    }
+
     if same_hand(old1, curr) {
         let penalty = thumb_travel_penalty(old1, curr) * count;
         if detailed {

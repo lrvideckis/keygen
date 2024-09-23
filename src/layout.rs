@@ -115,17 +115,23 @@ pub fn is_tap(key: &KeyPress) -> bool {
 }
 
 pub fn get_coordinates(key: &KeyPress) -> (usize, usize) {
+    assert!(!is_space(key));
     let spot = key.pos / 5;
     (spot / 6, spot % 6)
 }
 
 pub fn get_coordinates_float(key: &KeyPress) -> (f64, f64) {
-    let (row, col) = get_coordinates(key);
-    (row as f64, col as f64)
+    if is_space(key) {
+        (3.0, 2.5)
+    } else {
+        let (row, col) = get_coordinates(key);
+        (row as f64, col as f64)
+    }
 }
 
 // is typed with left thumb
 fn is_left(key: &KeyPress) -> bool {
+    assert!(!is_space(key));
     let column = get_coordinates(key).1;
     column < 3
 }
@@ -137,10 +143,13 @@ fn is_good_for_left(key: &KeyPress) -> bool {
 }
 
 pub fn swipe_is_good_for_hand(key: &KeyPress) -> bool {
+    assert!(!is_space(key));
     is_left(key) == is_good_for_left(key)
 }
 
 pub fn same_hand(key1: &KeyPress, key2: &KeyPress) -> bool {
+    assert!(!is_space(key1));
+    assert!(!is_space(key2));
     is_left(key1) == is_left(key2)
 }
 
@@ -157,6 +166,10 @@ pub fn get_end_of_swipe_coords(key: &KeyPress) -> (f64, f64) {
     end_of_swipe_coords.0 += D_SWIPE * sin;
     end_of_swipe_coords.1 += D_SWIPE * cos;
     end_of_swipe_coords
+}
+
+pub fn is_space(key: &KeyPress) -> bool {
+    key.pos == 109
 }
 
 /* ----- *
@@ -176,6 +189,7 @@ impl Layout {
     pub fn get_position_map(&self) -> LayoutPosMap {
         let KeyMap(ref layer) = self.0;
         let mut map = [None; 128];
+        map[' ' as usize] = Some(KeyPress { pos: 109 });
         for (pos, c) in layer.into_iter().enumerate() {
             if *c < (128 as char) {
                 map[*c as usize] = Some(KeyPress { pos });
