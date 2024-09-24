@@ -181,7 +181,7 @@ pub static BASE_PENALTY: [[f64; 6]; 3] = [
 ];
 
 // penalty for each swipe
-pub static SWIPE_PENALTY: f64 = 1.0;
+pub static SWIPE_PENALTY: f64 = 2.0;
 pub static EXTRA_SWIPE_PENALTY: f64 = 2.0;
 
 // constants taken from https://www.exideas.com/ME/ICMI2003Paper.pdf
