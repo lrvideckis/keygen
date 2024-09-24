@@ -314,15 +314,8 @@ fn penalize<'a, 'b>(
             result[3].total += penalty;
         }
         total += penalty;
-    }
-
-    {
-        let mut penalty = 0.0;
-
-        if !same_hand(old1, curr) {
-            penalty = LENGTH_2_ALTERNATION_BONUS * count;
-        }
-
+    } else {
+        let penalty = LENGTH_2_ALTERNATION_BONUS * count;
         if detailed {
             *result[6].high_keys.entry(slice2).or_insert(0.0) += penalty;
             result[6].total += penalty;
