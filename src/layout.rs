@@ -224,7 +224,7 @@ impl LayoutPermutations {
         let mut swaps = Vec::new();
         for i in 0..80 {
             for j in (i + 1)..80 {
-                swaps.push((i, j));
+                swaps.push((to_index(i), to_index(j)));
             }
         }
         LayoutPermutations {
