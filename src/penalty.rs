@@ -59,8 +59,21 @@ pub fn init<'a>() -> Vec<KeyPenalty<'a>> {
     });
 
     // both thumbs travel distance penalty
+    // but 0 keystrokes are typed with other thumb
     penalties.push(KeyPenalty {
-        name: "both thumbs travel distance penalty",
+        name: "both thumbs travel distance penalty, 0 in between",
+    });
+
+    // both thumbs travel distance penalty
+    // but 1 keystroke is typed with other thumb
+    penalties.push(KeyPenalty {
+        name: "both thumbs travel distance penalty, 1 in between",
+    });
+
+    // both thumbs travel distance penalty
+    // but 2 keystrokes are typed with other thumb
+    penalties.push(KeyPenalty {
+        name: "both thumbs travel distance penalty, 2 in between",
     });
 
     // Bonus for alternating thumbs for 2 keys
@@ -311,8 +324,8 @@ fn penalize<'a, 'b>(
         }
 
         if detailed {
-            *result[4].high_keys.entry(slice2).or_insert(0.0) += penalty;
-            result[4].total += penalty;
+            *result[6].high_keys.entry(slice2).or_insert(0.0) += penalty;
+            result[6].total += penalty;
         }
         total += penalty;
     }
@@ -338,8 +351,8 @@ fn penalize<'a, 'b>(
         }
 
         if detailed {
-            *result[5].high_keys.entry(slice3).or_insert(0.0) += penalty;
-            result[5].total += penalty;
+            *result[7].high_keys.entry(slice3).or_insert(0.0) += penalty;
+            result[7].total += penalty;
         }
         total += penalty;
     }
@@ -347,8 +360,8 @@ fn penalize<'a, 'b>(
     if same_hand(old2, curr) && !same_hand(old2, old1) {
         let penalty = thumb_travel_penalty(old2, curr) * count;
         if detailed {
-            *result[3].high_keys.entry(slice3).or_insert(0.0) += penalty;
-            result[3].total += penalty;
+            *result[4].high_keys.entry(slice3).or_insert(0.0) += penalty;
+            result[4].total += penalty;
         }
         total += penalty;
     }
@@ -373,8 +386,8 @@ fn penalize<'a, 'b>(
         }
 
         if detailed {
-            *result[6].high_keys.entry(slice4).or_insert(0.0) += penalty;
-            result[6].total += penalty;
+            *result[8].high_keys.entry(slice4).or_insert(0.0) += penalty;
+            result[8].total += penalty;
         }
         total += penalty;
     }
@@ -382,8 +395,8 @@ fn penalize<'a, 'b>(
     if same_hand(old3, curr) && !same_hand(old3, old1) && !same_hand(old3, old2) {
         let penalty = thumb_travel_penalty(old3, curr) * count;
         if detailed {
-            *result[3].high_keys.entry(slice4).or_insert(0.0) += penalty;
-            result[3].total += penalty;
+            *result[5].high_keys.entry(slice4).or_insert(0.0) += penalty;
+            result[5].total += penalty;
         }
         total += penalty;
     }
