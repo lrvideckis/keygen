@@ -373,7 +373,7 @@ fn penalize<'a, 'b>(
         }
 
         if detailed {
-            *result[6].high_keys.entry(slice3).or_insert(0.0) += penalty;
+            *result[6].high_keys.entry(slice4).or_insert(0.0) += penalty;
             result[6].total += penalty;
         }
         total += penalty;
