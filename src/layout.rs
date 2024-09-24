@@ -95,7 +95,7 @@ pub static INIT_LAYOUT: Layout = Layout(KeyMap([
 'v','\0','$','|','r',
 '\0','*','\0','?','a',
 '\0',';','\0','\'','i',
-'_','_','\0','&','f',
+'_','-','\0','&','f',
 //row 2
 '\0','\0','\0','\0','\0',
 '\"','\0','z','\0','s',
@@ -176,6 +176,8 @@ pub fn is_space(key: &KeyPress) -> bool {
  * IMPLS *
  * ----- */
 
+pub static ALL_CHARS: &str = "`~!@#$%^&*-_=+\\|;:\'\",./?qwertyuiopasdfghjklzxcvbnm";
+
 impl Layout {
     pub fn shuffle(&mut self, times: usize) {
         for _ in 0..times {
@@ -194,6 +196,10 @@ impl Layout {
             if *c < (128 as char) {
                 map[*c as usize] = Some(KeyPress { pos });
             }
+        }
+
+        for c in ALL_CHARS.chars() {
+            assert!(map[c as usize].is_some(), "missing char: {}", c);
         }
 
         LayoutPosMap(map)
