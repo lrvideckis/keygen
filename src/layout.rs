@@ -63,7 +63,7 @@ pub struct Layout(KeyMap<char>);
 
 pub struct LayoutPermutations {
     orig_layout: Layout,
-    swaps: Vec<(usize, usize, usize)>,
+    swaps: Vec<(usize, usize)>,
     index: usize,
 }
 
@@ -222,11 +222,9 @@ impl LayoutPermutations {
     // which are 1 swap away
     pub fn new(layout: &Layout, _: usize) -> LayoutPermutations {
         let mut swaps = Vec::new();
-        for i in 0..81 {
-            for j in (i + 1)..81 {
-                for k in j..81 {
-                    swaps.push((i, j, k));
-                }
+        for i in 0..80 {
+            for j in (i + 1)..80 {
+                swaps.push((i, j));
             }
         }
         LayoutPermutations {
@@ -247,9 +245,8 @@ impl Iterator for LayoutPermutations {
             let mut current_layout = self.orig_layout.clone();
             let KeyMap(ref mut layer) = current_layout.0;
 
-            let (i, j, k) = self.swaps[self.index];
+            let (i, j) = self.swaps[self.index];
             layer.swap(i, j);
-            layer.swap(j, k);
 
             self.index += 1;
             return Some(current_layout);
