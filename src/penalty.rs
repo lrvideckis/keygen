@@ -206,9 +206,9 @@ pub static A: f64 = 0.127;
 pub static D_SWIPE: f64 = 1.5;
 
 // penalty gained back for typing 23,4 keystrokes in a row with alternating thumbs
-pub static LENGTH_2_ALTERNATION_BONUS: f64 = -0.15;
-pub static LENGTH_3_ALTERNATION_BONUS: f64 = -0.4;
-pub static LENGTH_4_ALTERNATION_BONUS: f64 = -0.7;
+pub static LENGTH_2_ALTERNATION_BONUS: f64 = -0.3;
+pub static LENGTH_3_ALTERNATION_BONUS: f64 = -0.5;
+pub static LENGTH_4_ALTERNATION_BONUS: f64 = -0.8;
 
 // if your thumb starts at position (x_start,y_start), and needs to travel to a button (with the
 // given width) at (x_end,y_end) where dist=sqrt((x_start-x_end)^2 + (y_start-y_end)^2)
