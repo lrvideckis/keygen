@@ -49998,3195 +49998,3291 @@ tom looks at me very grave, and says:
 "tom, didn't you just tell me he was all right? hasn't he got away?" 
 "him?" says aunt sally; "the runaway nigger? 'deed he hasn't. they've 
 got him back, safe and sound, and he's in that cabin again, on bread and 
-       
-const int mod = 998'244'353;
-vi lcm_convolution(const vi& a, const vi& b) {
-  int n = sz(a);
-  vector<ll> sum_a(n), sum_b(n);
-  vi c(n);
-  rep(i, 1, n) {
-    for (int j = i; j < n; j += i)
-      sum_a[j] += a[i], sum_b[j] += b[i];
-    sum_a[i] %= mod, sum_b[i] %= mod;
-    c[i] = (c[i] + sum_a[i] * sum_b[i]) % mod;
-    for (int j = i + i; j < n; j += i)
-      if ((c[j] -= c[i]) < 0) c[j] += mod;
-  }
-  return c;
+
+const int mod = 998'244'353
+vi lcm convolution(const vi& a, const vi& b) {
+	int n = sz(a)
+	vector<ll> sum a(n), sum b(n)
+	vi c(n)
+	rep(i, 1, n) {
+		for (int j = i; j < n; j += i)
+			sum a[j] += a[i], sum b[j] += b[i]
+		sum a[i] %= mod, sum b[i] %= mod
+		c[i] = (c[i] + sum a[i] * sum b[i]) % mod
+		for (int j = i + i; j < n; j += i)
+			if ((c[j] -= c[i]) < 0) c[j] += mod
+	}
+	return c
 }
-       
-vi min_plus(const vi& convex, const vi& arbitrary) {
-  int n = sz(convex);
-  int m = sz(arbitrary);
-  vi res(n + m - 1, INT_MAX);
-  auto dnc = [&](auto&& self, int res_le, int res_ri,
-               int arb_le, int arb_ri) -> void {
-    if (res_le >= res_ri) return;
-    int mid_res = (res_le + res_ri) / 2;
-    int op_arb = arb_le;
-    rep(i, arb_le, min(mid_res + 1, arb_ri)) {
-      int j = mid_res - i;
-      if (j >= n) continue;
-      if (res[mid_res] > convex[j] + arbitrary[i]) {
-        res[mid_res] = convex[j] + arbitrary[i];
-        op_arb = i;
-      }
-    }
-    self(self, res_le, mid_res, arb_le,
-      min(arb_ri, op_arb + 1));
-    self(self, mid_res + 1, res_ri, op_arb, arb_ri);
-  };
-  dnc(dnc, 0, n + m - 1, 0, m);
-  return res;
+
+vi min plus(const vi& convex, const vi& arbitrary) {
+	int n = sz(convex)
+	int m = sz(arbitrary)
+	vi res(n + m - 1, int max)
+	auto dnc = [&](auto&& self, int res le, int res ri,
+	int arb le, int arb ri) -> void {
+		if (res le >= res ri) return
+		int mid res = (res le + res ri) / 2
+		int op arb = arb le
+		rep(i, arb le, min(mid res + 1, arb ri)) {
+			int j = mid res - i
+			if (j >= n) continue
+			if (res[mid res] > convex[j] + arbitrary[i]) {
+				res[mid res] = convex[j] + arbitrary[i]
+				op arb = i
+			}
+		}
+		self(self, res le, mid res, arb le,
+				 min(arb ri, op arb + 1))
+		self(self, mid res + 1, res ri, op arb, arb ri)
+	}
+	dnc(dnc, 0, n + m - 1, 0, m)
+	return res
 }
-       
-const int mod = 998'244'353;
-vi gcd_convolution(const vi& a, const vi& b) {
-  int n = sz(a);
-  vi c(n);
-  for (int g = n - 1; g >= 1; g--) {
-    ll sum_a = 0, sum_b = 0;
-    for (int i = g; i < n; i += g) {
-      sum_a += a[i], sum_b += b[i];
-      if ((c[g] -= c[i]) < 0) c[g] += mod;
-    }
-    sum_a %= mod, sum_b %= mod;
-    c[g] = (c[g] + sum_a * sum_b) % mod;
-  }
-  return c;
+
+const int mod = 998'244'353
+vi gcd convolution(const vi& a, const vi& b) {
+	int n = sz(a)
+	vi c(n)
+	for (int g = n - 1; g >= 1; g--) {
+		ll sum a = 0, sum b = 0
+		for (int i = g; i < n; i += g) {
+			sum a += a[i], sum b += b[i]
+			if ((c[g] -= c[i]) < 0) c[g] += mod
+		}
+		sum a %= mod, sum b %= mod
+		c[g] = (c[g] + sum a * sum b) % mod
+	}
+	return c
 }
-       
-for (int mask = (1 << k) - 1; mask < (1 << n);
-     mask = next_subset(mask))
-       
-for (ll le = 1, ri; le <= n && (ri = n / (n / le));
-     le = ri + 1)
-       
-int next_subset(int mask) {
-  int c = mask & -mask, r = mask + c;
-  return r | (((r ^ mask) >> 2) / c);
-}
-       
-for (int supermask = mask; supermask < (1 << n);
-     supermask = (supermask + 1) | mask)
-       
-for (int submask = mask; submask;
-     submask = (submask - 1) & mask)
-       
-vector<ll> derangements(int n, int mod) {
-  vector<ll> dp(n);
-  dp[0] = 1;
-  rep(i, 2, n) dp[i] =
-    (i - 1) * (dp[i - 1] + dp[i - 2]) % mod;
-  return dp;
-}
-       
-const int mod = 998244353;
+
+for (int mask = (1 << k) - 1; mask < (1 << n)
+		 mask = next subset(mask))
+
+	for (ll le = 1, ri; le <= n && (ri = n / (n / le))
+			 le = ri + 1)
+
+		int next subset(int mask) {
+		int c = mask & -mask, r = mask + c
+		return r | (((r ^ mask) >> 2) / c)
+	}
+
+for (int supermask = mask; supermask < (1 << n)
+		 supermask = (supermask + 1) | mask)
+
+	for (int submask = mask; submask
+			 submask = (submask - 1) & mask)
+
+		vector<ll> derangements(int n, int mod) {
+		vector<ll> dp(n)
+		dp[0] = 1
+		rep(i, 2, n) dp[i] =
+			(i - 1) * (dp[i - 1] + dp[i - 2]) % mod
+		return dp
+	}
+
+const int mod = 998244353
 struct mint {
-  int x;
-  mint(int xx = 0): x(xx < 0 ? xx + mod : xx) {}
-  mint operator+(mint b) { return x - mod + b.x; }
-  mint operator-(mint b) { return x - b.x; }
-  mint operator*(mint b) { return ll(x) * b.x % mod; }
-  mint operator/(mint b) {
-    int m = mod, u = 1, v = 0;
-    while (m)
-      u = exchange(v, u - b.x / m * v),
-      b.x = exchange(m, b.x % m);
-    assert(b.x == 1);
-    return *this * u;
-  }
-};
-       
-const int mod = 998'244'353;
+	int x
+	mint(int xx = 0): x(xx < 0 ? xx + mod : xx) {}
+	mint operator+(mint b) {
+		return x - mod + b.x
+	}
+	mint operator-(mint b) {
+		return x - b.x
+	}
+	mint operator*(mint b) {
+		return ll(x) * b.x % mod
+	}
+	mint operator/(mint b) {
+		int m = mod, u = 1, v = 0
+		while (m)
+			u = exchange(v, u - b.x / m * v),
+			b.x = exchange(m, b.x % m)
+		assert(b.x == 1)
+		return *this * u
+	}
+}
+
+const int mod = 998'244'353
 array<ll, 2> fib(ll n) {
-  if (n == 0) return {0LL, 1LL};
-  auto [x, y] = fib(n >> 1);
-  ll c = x * (2 * y - x + mod) % mod,
-     d = (x * x + y * y) % mod;
-  if (n & 1) return {d, (c + d) % mod};
-  return {c, d};
+	if (n == 0) return {0ll, 1ll}
+	auto [x, y] = fib(n >> 1)
+	ll c = x * (2 * y - x + mod) % mod,
+		 d = (x * x + y * y) % mod
+	if (n & 1) return {d, (c + d) % mod}
+	return {c, d}
 }
-       
-const int mod = 998'244'353;
+
+const int mod = 998'244'353
 vector<ll> partitions(int n) {
-  vector<ll> dp(n, 1);
-  rep(i, 1, n) {
-    ll sum = 0;
-    for (int j = 1, pent = 1, sign = 1; pent <= i;
-         j++, pent += 3 * j - 2, sign = -sign) {
-      if (pent + j <= i)
-        sum += dp[i - pent - j] * sign + mod;
-      sum += dp[i - pent] * sign + mod;
-    }
-    dp[i] = sum % mod;
-  }
-  return dp;
+	vector<ll> dp(n, 1)
+	rep(i, 1, n) {
+		ll sum = 0
+		for (int j = 1, pent = 1, sign = 1; pent <= i
+				 j++, pent += 3 * j - 2, sign = -sign) {
+			if (pent + j <= i)
+				sum += dp[i - pent - j] * sign + mod
+			sum += dp[i - pent] * sign + mod
+		}
+		dp[i] = sum % mod
+	}
+	return dp
 }
-       
-template<class T>
-vector<vector<T>> operator*(const vector<vector<T>>& a,
-  const vector<vector<T>>& b) {
-  int n = sz(a), m = sz(b[0]), inner = sz(b);
-  vector<vector<T>> c(n, vector<T>(m));
-  rep(i, 0, n) rep(k, 0, inner) rep(j, 0, m) c[i][j] +=
-    a[i][k] * b[k][j];
-  return c;
+
+template<class t>
+vector<vector<t>> operator*(const vector<vector<t>>& a,
+														const vector<vector<t>>& b) {
+	int n = sz(a), m = sz(b[0]), inner = sz(b)
+	vector<vector<t>> c(n, vector<t>(m))
+	rep(i, 0, n) rep(k, 0, inner) rep(j, 0, m) c[i][j] +=
+		a[i][k] * b[k][j]
+	return c
 }
-       
-template<class T>
-basis<T> intersection(const basis<T>& u,
-  const basis<T>& v) {
-  vector<array<T, 2>> w(sz(u.b));
-  rep(i, 0, sz(w)) w[i] = {u.b[i], u.b[i]};
-  basis<T> res;
-  for (T e : v.b) {
-    T s = 0;
-    for (auto [x, y] : w)
-      if ((e ^ x) < e) e ^= x, s ^= y;
-    if (e) w.push_back({e, s});
-    else res.insert(s);
-  }
-  return res;
+
+template<class t>
+basis<t> intersection(const basis<t>& u,
+											const basis<t>& v) {
+	vector<array<t, 2>> w(sz(u.b))
+	rep(i, 0, sz(w)) w[i] = {u.b[i], u.b[i]}
+	basis<t> res
+	for (t e : v.b) {
+		t s = 0
+		for (auto [x, y] : w)
+			if ((e ^ x) < e) e ^= x, s ^= y
+		if (e) w.push back({e, s})
+		else res.insert(s)
+	}
+	return res
 }
-       
-struct solve_linear_mod {
-  int rank;
-  mint det;
-  vector<mint> sol;
-  solve_linear_mod(vector<vector<mint>>& mat,
-    const vector<mint>& rhs) {
-    int n = sz(mat), m = sz(mat[0]);
-    rep(i, 0, n) mat[i].push_back(rhs[i]);
-    tie(rank, det) = row_reduce(mat, m);
-    if (any_of(rank + all(mat),
-          [](auto& v) { return v.back().x; })) {
-      return;
-    }
-    sol.resize(m);
-    int j = 0;
-    for_each(begin(mat), begin(mat) + rank, [&](auto& v) {
-      while (v[j].x == 0) j++;
-      sol[j] = v.back();
-    });
-  }
-};
-       
-using ui = unsigned long int;
-template<ui N, ui M, ui K>
-array<bitset<K>, N> operator*(const array<bitset<M>, N>& a,
-  const array<bitset<K>, M>& b) {
-  array<bitset<K>, N> c;
-  rep(i, 0, int(N)) rep(j, 0, int(M)) if (a[i][j]) c[i] ^=
-    b[j];
-  return c;
+
+struct solve linear mod {
+	int rank
+	mint det
+	vector<mint> sol
+	solve linear mod(vector<vector<mint>>& mat,
+									 const vector<mint>& rhs) {
+		int n = sz(mat), m = sz(mat[0])
+		rep(i, 0, n) mat[i].push back(rhs[i])
+		tie(rank, det) = row reduce(mat, m)
+		if (any of(rank + all(mat),
+		[](auto& v) {
+		return v.back().x
+		})) {
+			return
+		}
+		sol.resize(m)
+		int j = 0
+		for each(begin(mat), begin(mat) + rank, [&](auto& v) {
+			while (v[j].x == 0) j++
+			sol[j] = v.back()
+		})
+	}
 }
-       
-const int lg = 60;
-template<class T> struct basis_ordered {
-  T b[lg]{};
-  int siz = 0;
-  int shrink(T& v) {
-    for (int i = lg - 1; i >= 0; i--)
-      if (((v >> i) & T(1)) != T(0)) {
-        if (b[i] == T(0)) return i;
-        v ^= b[i];
-      }
-    return -1;
-  }
-  bool insert(T v) {
-    int i = shrink(v);
-    return i >= 0 ? b[i] = v, ++siz : 0;
-  }
-};
-       
-pair<int, mint> row_reduce(vector<vector<mint>>& mat,
-  int cols) {
-  int n = sz(mat), m = sz(mat[0]), rank = 0;
-  mint det = 1;
-  for (int col = 0; col < cols && rank < n; col++) {
-    auto it = find_if(rank + all(mat),
-      [&](auto& v) { return v[col].x; });
-    if (it == end(mat)) {
-      det = 0;
-      continue;
-    }
-    if (it != begin(mat) + rank) {
-      det = mint(0) - det;
-      iter_swap(begin(mat) + rank, it);
-    }
-    det = det * mat[rank][col];
-    mint a_inv = mint(1) / mat[rank][col];
-    for (mint& num : mat[rank]) num = num * a_inv;
-    rep(i, 0, n) if (i != rank && mat[i][col].x != 0) {
-      mint num = mat[i][col];
-      rep(j, 0, m) mat[i][j] =
-        mat[i][j] - mat[rank][j] * num;
-    }
-    rank++;
-  }
-  return {rank, det};
+
+using ui = unsigned long int
+template<ui n, ui m, ui k>
+array<bitset<k>, n> operator*(const array<bitset<m>, n>& a,
+															const array<bitset<k>, m>& b) {
+	array<bitset<k>, n> c
+	rep(i, 0, int(n)) rep(j, 0, int(m)) if (a[i][j]) c[i] ^=
+			b[j]
+	return c
 }
-       
-template<class T> struct basis {
-  vector<T> b;
-  T shrink(T v) {
-    for (T x : b) v = min(v, v ^ x);
-    return v;
-  }
-  bool insert(T v) {
-    return (v = shrink(v)) ? b.push_back(v), 1 : 0;
-  }
-};
-       
-array<vl, 2> get_right_and_top(vl left, vl bottom) {
-  array<vl, 2> ret;
-  for (vl& res : ret) {
-    {
-      vl tr(sz(left));
-      rep(i, 0, sz(tr)) tr[i] = C(i + sz(bottom) - 1, i);
-      res = conv(left, tr);
-      res.resize(sz(left));
-    }
-    {
-      vl tr(sz(left) + sz(bottom));
-      grow(sz(tr));
-      rep(i, 0, sz(tr)) tr[i] = t[i].fact;
-      vl dp(sz(bottom));
-      rep(i, 0, sz(dp)) dp[i] =
-        bottom[i] * t[sz(dp) - 1 - i].inv_fact % mod;
-      vl tmp_res = conv(dp, tr);
-      rep(i, 0, sz(res)) res[i] =
-        (res[i] +
-          tmp_res[i + sz(bottom) - 1] * t[i].inv_fact) %
-        mod;
-    }
-    swap(left, bottom);
-  }
-  return ret;
+
+const int lg = 60
+template<class t> struct basis ordered {
+	t b[lg] {}
+	int siz = 0
+	int shrink(t& v) {
+		for (int i = lg - 1; i >= 0; i--)
+			if (((v >> i) & t(1)) != t(0)) {
+				if (b[i] == t(0)) return i
+				v ^= b[i]
+			}
+		return -1
+	}
+	bool insert(t v) {
+		int i = shrink(v)
+		return i >= 0 ? b[i] = v, ++siz : 0
+	}
 }
-       
-vl divide_and_conquer(vl h, vl bottom) {
-  {
-    int start =
-      find_if(all(h), [](ll x) { return x; }) - begin(h);
-    h.erase(begin(h), begin(h) + start);
-    bottom.erase(begin(bottom), begin(bottom) + start);
-  }
-  int n = sz(h);
-  if (n == 0) return {};
-  if (n == 1) return vl(h[0], bottom[0]);
-  int mid = n / 2;
-  auto rect_left =
-    divide_and_conquer(vl(begin(h), begin(h) + mid),
-      vl(begin(bottom), begin(bottom) + mid));
-  auto [rect_right, rect_top] =
-    get_right_and_top(rect_left, vl(mid + all(bottom)));
-  vl h_right(mid + all(h));
-  for (ll& hh : h_right) hh -= h[mid - 1];
-  auto upper_right = divide_and_conquer(h_right, rect_top);
-  rect_right.insert(end(rect_right), all(upper_right));
-  return rect_right;
+
+pair<int, mint> row reduce(vector<vector<mint>>& mat,
+													 int cols) {
+	int n = sz(mat), m = sz(mat[0]), rank = 0
+	mint det = 1
+	for (int col = 0; col < cols && rank < n; col++) {
+		auto it = find if(rank + all(mat),
+		[&](auto& v) {
+			return v[col].x
+		})
+		if (it == end(mat)) {
+			det = 0
+			continue
+		}
+		if (it != begin(mat) + rank) {
+			det = mint(0) - det
+			iter swap(begin(mat) + rank, it)
+		}
+		det = det * mat[rank][col]
+		mint a inv = mint(1) / mat[rank][col]
+		for (mint& num : mat[rank]) num = num * a inv
+		rep(i, 0, n) if (i != rank && mat[i][col].x != 0) {
+			mint num = mat[i][col]
+			rep(j, 0, m) mat[i][j] =
+				mat[i][j] - mat[rank][j] * num
+		}
+		rank++
+	}
+	return {rank, det}
 }
-       
+
+template<class t> struct basis {
+	vector<t> b
+	t shrink(t v) {
+		for (t x : b) v = min(v, v ^ x)
+		return v
+	}
+	bool insert(t v) {
+		return (v = shrink(v)) ? b.push back(v), 1 : 0
+	}
+}
+
+array<vl, 2> get right and top(vl left, vl bottom) {
+	array<vl, 2> ret
+	for (vl& res : ret) {
+		{
+			vl tr(sz(left))
+			rep(i, 0, sz(tr)) tr[i] = c(i + sz(bottom) - 1, i)
+			res = conv(left, tr)
+			res.resize(sz(left))
+		}
+		{
+			vl tr(sz(left) + sz(bottom))
+			grow(sz(tr))
+			rep(i, 0, sz(tr)) tr[i] = t[i].fact
+			vl dp(sz(bottom))
+			rep(i, 0, sz(dp)) dp[i] =
+				bottom[i] * t[sz(dp) - 1 - i].inv fact % mod
+			vl tmp res = conv(dp, tr)
+			rep(i, 0, sz(res)) res[i] =
+				(res[i] +
+				 tmp res[i + sz(bottom) - 1] * t[i].inv fact) %
+				mod
+		}
+		swap(left, bottom)
+	}
+	return ret
+}
+
+vl divide and conquer(vl h, vl bottom) {
+	{
+		int start =
+		find if(all(h), [](ll x) {
+			return x
+		}) - begin(h)
+		h.erase(begin(h), begin(h) + start)
+		bottom.erase(begin(bottom), begin(bottom) + start)
+	}
+	int n = sz(h)
+	if (n == 0) return {}
+	if (n == 1) return vl(h[0], bottom[0])
+	int mid = n / 2
+	auto rect left =
+		divide and conquer(vl(begin(h), begin(h) + mid),
+											 vl(begin(bottom), begin(bottom) + mid))
+	auto [rect right, rect top] =
+		get right and top(rect left, vl(mid + all(bottom)))
+	vl h right(mid + all(h))
+	for (ll& hh : h right) hh -= h[mid - 1]
+	auto upper right = divide and conquer(h right, rect top)
+	rect right.insert(end(rect right), all(upper right))
+	return rect right
+}
+
 int totient(int n) {
-  int res = n;
-  for (int i = 2; i * i <= n; i++)
-    if (n % i == 0) {
-      while (n % i == 0) n /= i;
-      res -= res / i;
-    }
-  if (n > 1) res -= res / n;
-  return res;
+	int res = n
+	for (int i = 2; i * i <= n; i++)
+		if (n % i == 0) {
+			while (n % i == 0) n /= i
+			res -= res / i
+		}
+	if (n > 1) res -= res / n
+	return res
 }
-       
-ll bin_exp(ll b, ll e, int mod) {
-  ll res = 1;
-  if ((b %= mod) < 0) b += mod;
-  for (; e; b = b * b % mod, e /= 2)
-    if (e & 1) res = res * b % mod;
-  return res;
+
+ll bin exp(ll b, ll e, int mod) {
+	ll res = 1
+	if ((b %= mod) < 0) b += mod
+	for (; e; b = b * b % mod, e /= 2)
+		if (e & 1) res = res * b % mod
+	return res
 }
 ll tetration(ll b, ll e, int mod) {
-  if (mod == 1) return 0;
-  if (b == 0) return (e + 1) % 2 % mod;
-  if (b == 1 || e == 0) return 1;
-  if (e == 1) return b % mod;
-  if (b == 2 && e == 2) return 4 % mod;
-  if (b == 2 && e == 3) return 16 % mod;
-  if (b == 3 && e == 2) return 27 % mod;
-  int t = totient(mod);
-  ll exp = tetration(b, e - 1, t);
-  return bin_exp(b, exp + t, mod);
+	if (mod == 1) return 0
+	if (b == 0) return (e + 1) % 2 % mod
+	if (b == 1 || e == 0) return 1
+	if (e == 1) return b % mod
+	if (b == 2 && e == 2) return 4 % mod
+	if (b == 2 && e == 3) return 16 % mod
+	if (b == 3 && e == 2) return 27 % mod
+	int t = totient(mod)
+	ll exp = tetration(b, e - 1, t)
+	return bin exp(b, exp + t, mod)
 }
-       
+
 mint mpow(mint b, ll e) {
-  mint res = 1;
-  for (; e; e /= 2, b = b * b)
-    if (e & 1) res = res * b;
-  return res;
+	mint res = 1
+	for (; e; e /= 2, b = b * b)
+		if (e & 1) res = res * b
+	return res
 }
-       
-ll c_small_k(ll n, int k) {
-  if (k < 0 || n < k || (n %= mod) < k) return 0;
-  grow(k);
-  ll res = t[k].inv_fact;
-  rep(i, 0, k) res = res * (n - i) % mod;
-  return res;
+
+ll c small k(ll n, int k) {
+	if (k < 0 || n < k || (n %= mod) < k) return 0
+	grow(k)
+	ll res = t[k].inv fact
+	rep(i, 0, k) res = res * (n - i) % mod
+	return res
 }
-       
-const int mod = 17;
+
+const int mod = 17
 struct comb {
-  ll inv = 1, fact = 1, inv_fact = 1;
-};
-vector<comb> t(2);
+	ll inv = 1, fact = 1, inv fact = 1
+}
+vector<comb> t(2)
 void grow(int n) {
-  while (sz(t) <= n) {
-    ll i = sz(t),
-       inv = mod - (mod / i) * t[mod % i].inv % mod;
-    t.push_back({inv, i * t[i - 1].fact % mod,
-      inv * t[i - 1].inv_fact % mod});
-  }
+	while (sz(t) <= n) {
+		ll i = sz(t),
+			 inv = mod - (mod / i) * t[mod % i].inv % mod
+		t.push back({inv, i * t[i - 1].fact % mod,
+								 inv * t[i - 1].inv fact % mod})
+	}
 }
-       
+
 ll lucas(ll n, ll k) {
-  if (k < 0 || n < k) return 0;
-  ll res = 1;
-  for (; k && k < n && res; n /= mod, k /= mod)
-    res = res * C(n % mod, k % mod) % mod;
-  return res;
+	if (k < 0 || n < k) return 0
+	ll res = 1
+	for (; k && k < n && res; n /= mod, k /= mod)
+		res = res * c(n % mod, k % mod) % mod
+	return res
 }
-       
-ll C(int n, int k) {
-  if (k < 0 || n < k) return 0;
-  grow(n);
-  return t[n].fact * t[k].inv_fact % mod *
-    t[n - k].inv_fact % mod;
+
+ll c(int n, int k) {
+	if (k < 0 || n < k) return 0
+	grow(n)
+	return t[n].fact * t[k].inv fact % mod *
+				 t[n - k].inv fact % mod
 }
-       
-const int mod = 17;
-vector<vector<ll>> ch(1010);
+
+const int mod = 17
+vector<vector<ll>> ch(1010)
 rep(i, 0, sz(ch)) {
-  ch[i].resize(i + 1, 1);
-  rep(j, 1, i) ch[i][j] =
-    (ch[i - 1][j] + ch[i - 1][j - 1]) % mod;
+	ch[i].resize(i + 1, 1)
+	rep(j, 1, i) ch[i][j] =
+		(ch[i - 1][j] + ch[i - 1][j - 1]) % mod
 }
-       
-int num_subsequences(const vi& a, int mod) {
-  vector dp(sz(a) + 1, 1);
-  map<int, int> last;
-  rep(i, 0, sz(a)) {
-    int& curr = dp[i + 1] = 2 * dp[i];
-    if (curr >= mod) curr -= mod;
-    auto it = last.find(a[i]);
-    if (it != end(last)) {
-      curr -= dp[it->second];
-      if (curr < 0) curr += mod;
-      it->second = i;
-    } else last[a[i]] = i;
-  }
-  return dp.back();
+
+int num subsequences(const vi& a, int mod) {
+	vector dp(sz(a) + 1, 1)
+	map<int, int> last
+	rep(i, 0, sz(a)) {
+		int& curr = dp[i + 1] = 2 * dp[i]
+		if (curr >= mod) curr -= mod
+		auto it = last.find(a[i])
+		if (it != end(last)) {
+			curr -= dp[it->second]
+			if (curr < 0) curr += mod
+			it->second = i
+		} else last[a[i]] = i
+	}
+	return dp.back()
 }
-       
-vi sieve(1001);
-iota(all(sieve), 0);
+
+vi sieve(1001)
+iota(all(sieve), 0)
 for (int i = 2; i * i < sz(sieve); i++)
-  if (sieve[i] == i)
-    for (int j = i * i; j < sz(sieve); j += i)
-      sieve[j] = min(sieve[j], i);
-       
-for (int left = num, fac = sieve[left]; left > 1;
-     fac = sieve[left /= fac])
-       
-vi primes, sieve(1001);
-iota(all(sieve), 0);
+	if (sieve[i] == i)
+		for (int j = i * i; j < sz(sieve); j += i)
+			sieve[j] = min(sieve[j], i)
+
+for (int left = num, fac = sieve[left]; left > 1
+		 fac = sieve[left /= fac])
+
+	vi primes, sieve(1001)
+iota(all(sieve), 0)
 rep(i, 2, sz(sieve)) {
-  if (sieve[i] == i) primes.push_back(i);
-  for (int prime : primes) {
-    if (prime * i >= sz(sieve)) break;
-    sieve[prime * i] = prime;
-    if (i % prime == 0) break;
-  }
+	if (sieve[i] == i) primes.push back(i)
+	for (int prime : primes) {
+		if (prime * i >= sz(sieve)) break
+		sieve[prime * i] = prime
+		if (i % prime == 0) break
+	}
 }
-       
-auto is_prime = [&](int num) -> bool {
-  return num >= 2 && sieve[num] == num;
-};
-       
-vi mobius(1'000'005);
-mobius[1] = 1;
-rep(i, 1, sz(mobius)) for (int j = i + i; j < sz(mobius);
-                           j += i) mobius[j] -= mobius[i];
-       
-template<class T> struct pal_query {
-  vi man;
-  pal_query(const T& s): man(manacher(s)) {};
-  bool is_pal(int le, int ri) {
-    return man[le + ri] <= le;
-  }
-};
-       
-template<class T> vi manacher(const T& s) {
-  int n = sz(s), p = 0;
-  vi man(max(0, 2 * n - 1));
-  rep(i, 0, 2 * n - 1) {
-    int ri = i <= 2 * (p - man[p])
-      ? p - max(man[2 * p - i], man[p])
-      : i / 2;
-    man[i] = i - ri;
-    while (man[i] > 0 && ri + 1 < n &&
-      s[man[i] - 1] == s[ri + 1])
-      man[i]--, ri++, p = i;
-  }
-  return man;
+
+auto is prime = [&](int num) -> bool {
+	return num >= 2 && sieve[num] == num
 }
-       
-template<class T> struct longest_pal_query {
-  vi man, idx;
-  RMQ<int, function<int(int, int)>> rmq = {{}, nullptr};
-  longest_pal_query(const T& s):
-    man(manacher(s)), idx(sz(s)) {
-    iota(all(idx), 1);
-    vi init(sz(man));
-    iota(all(init), 0);
-    rmq = {init, [&](int i1, int i2) {
-             return len(i1) < len(i2) ? i2 : i1;
-           }};
-  }
-  int len(int i) { return i - 2 * man[i] + 1; }
-  pii longest_pal(int le, int ri) {
-    assert(le < ri);
-    int pal_len =
-      lower_bound(begin(idx), begin(idx) + (ri - le), 0,
-        [&](int mid, int) {
-          return len(rmq.query(2 * le + mid - 1,
-                   2 * ri - mid)) >= mid;
-        }) -
-      begin(idx);
-    int best_center =
-      rmq.query(2 * le + pal_len - 1, 2 * ri - pal_len);
-    return {(best_center + 1 - pal_len) / 2, pal_len};
-  }
-};
-       
-ll sum_consecutive(int le, int ri) {
-  return ll(ri - le) * (le + ri - 1) / 2;
+
+vi mobius(1'000'005)
+mobius[1] = 1
+rep(i, 1, sz(mobius)) for (int j = i + i; j < sz(mobius)
+													 j += i) mobius[j] -= mobius[i]
+
+template<class t> struct pal query {
+	vi man
+	pal query(const t& s): man(manacher(s)) {}
+	bool is pal(int le, int ri) {
+		return man[le + ri] <= le
+	}
 }
-template<class T> struct count_pal_query {
-  int n;
-  vi man;
-  wavelet_tree wt_le, wt_ri;
-  count_pal_query(const T& s):
-    n(sz(s)), man(manacher(s)), wt_le(man, 0, n),
-    wt_ri(init()) {}
-  wavelet_tree init() {
-    vi right(sz(man));
-    rep(i, 0, sz(man)) right[i] = i - man[i] + 1;
-    return {right, 1, n + 1};
-  }
-  ll count_pals(int le, int ri) {
-    assert(le < ri);
-    int man_le = 2 * le, man_ri = 2 * ri - 1,
-        man_mi = (man_le + man_ri) / 2;
-    ll cnt =
-      -1LL * wt_le.rect_count(man_le, man_mi, 0, le) * le;
-    cnt -= wt_le.rect_sum(man_le, man_mi, le, n);
-    cnt += sum_consecutive(le, man_mi / 2) +
-      sum_consecutive(le, (man_mi + 1) / 2);
-    cnt += man_mi - man_le;
-    cnt +=
-      ll(wt_ri.rect_count(man_mi, man_ri, ri, n + 1)) * ri;
-    cnt += wt_ri.rect_sum(man_mi, man_ri, 1, ri);
-    cnt -= sum_consecutive((man_mi + 1) / 2, ri) +
-      sum_consecutive(man_mi / 2 + 1, ri);
-    return cnt;
-  }
-};
-       
-template<class T> vi longest_from_index(pal_query<T>& pq) {
-  int n = (sz(pq.man) + 1) / 2;
-  vector longest(n, n - 1);
-  for (int i = n - 2; i >= 0; i--) {
-    longest[i] = min(longest[i + 1] + 1, n - 1);
-    while (!pq.is_pal(i, longest[i])) longest[i]--;
-  }
-  return longest;
+
+template<class t> vi manacher(const t& s) {
+	int n = sz(s), p = 0
+	vi man(max(0, 2 * n - 1))
+	rep(i, 0, 2 * n - 1) {
+		int ri = i <= 2 * (p - man[p])
+						 ? p - max(man[2 * p - i], man[p])
+						 : i / 2
+		man[i] = i - ri
+		while (man[i] > 0 && ri + 1 < n &&
+					 s[man[i] - 1] == s[ri + 1])
+			man[i]--, ri++, p = i
+	}
+	return man
 }
-       
-template<class T> struct sa_query {
-  T s;
-  int n;
-  vi sa, sa_inv, lcp;
-  RMQ<int, function<int(int, int)>> rmq;
-  sa_query(const T& a_s, const array<vi, 3>& d):
-    s(a_s), n(sz(s)), sa(d[0]), sa_inv(d[1]), lcp(d[2]),
-    rmq(lcp, [](int x, int y) { return min(x, y); }) {}
-  sa_query(const T& a_s, int max_val):
-    sa_query(a_s, get_sa(a_s, max_val)) {}
-  int len_lcp(int i1, int i2) {
-    if (i1 == i2) return n - i1;
-    auto [le, ri] = minmax(sa_inv[i1], sa_inv[i2]);
-    return rmq.query(le, ri);
-  }
-};
-       
-int cmp_sufs(int le1, int le2) {
-  return sa_inv[le1] - sa_inv[le2];
+
+template<class t> struct longest pal query {
+	vi man, idx
+	rmq<int, function<int(int, int)>> rmq = {{}, nullptr}
+	longest pal query(const t& s):
+		man(manacher(s)), idx(sz(s)) {
+		iota(all(idx), 1)
+		vi init(sz(man))
+		iota(all(init), 0)
+		rmq = {init, [&](int i1, int i2) {
+			return len(i1) < len(i2) ? i2 : i1
+		}
+					}
+	}
+	int len(int i) {
+		return i - 2 * man[i] + 1
+	}
+	pii longest pal(int le, int ri) {
+		assert(le < ri)
+		int pal len =
+			lower bound(begin(idx), begin(idx) + (ri - le), 0,
+		[&](int mid, int) {
+			return len(rmq.query(2 * le + mid - 1,
+													 2 * ri - mid)) >= mid
+		}) -
+		begin(idx)
+		int best center =
+			rmq.query(2 * le + pal len - 1, 2 * ri - pal len)
+		return {(best center + 1 - pal len) / 2, pal len}
+	}
 }
-       
-int cmp_substrs(int le1, int ri1, int le2, int ri2) {
-  int len1 = ri1 - le1, len2 = ri2 - le2;
-  return len_lcp(le1, le2) >= min(len1, len2)
-    ? len1 - len2
-    : cmp_sufs(le1, le2);
+
+ll sum consecutive(int le, int ri) {
+	return ll(ri - le) * (le + ri - 1) / 2
 }
-       
-pii find_substr(int s_le, int s_ri) {
-  auto cmp = [&](int i, bool flip) -> bool {
-    return flip ^ (len_lcp(i, s_le) < s_ri - s_le);
-  };
-  int le = lower_bound(begin(sa), begin(sa) + sa_inv[s_le],
-             0, cmp) -
-    begin(sa);
-  int ri =
-    lower_bound(sa_inv[s_le] + 1 + all(sa), 1, cmp) -
-    begin(sa);
-  return {le, ri};
+template<class t> struct count pal query {
+	int n
+	vi man
+	wavelet tree wt le, wt ri
+	count pal query(const t& s):
+		n(sz(s)), man(manacher(s)), wt le(man, 0, n),
+		wt ri(init()) {}
+	wavelet tree init() {
+		vi right(sz(man))
+		rep(i, 0, sz(man)) right[i] = i - man[i] + 1
+		return {right, 1, n + 1}
+	}
+	ll count pals(int le, int ri) {
+		assert(le < ri)
+		int man le = 2 * le, man ri = 2 * ri - 1,
+				man mi = (man le + man ri) / 2
+		ll cnt =
+			-1ll * wt le.rect count(man le, man mi, 0, le) * le
+		cnt -= wt le.rect sum(man le, man mi, le, n)
+		cnt += sum consecutive(le, man mi / 2) +
+					 sum consecutive(le, (man mi + 1) / 2)
+		cnt += man mi - man le
+		cnt +=
+			ll(wt ri.rect count(man mi, man ri, ri, n + 1)) * ri
+		cnt += wt ri.rect sum(man mi, man ri, 1, ri)
+		cnt -= sum consecutive((man mi + 1) / 2, ri) +
+					 sum consecutive(man mi / 2 + 1, ri)
+		return cnt
+	}
 }
-       
+
+template<class t> vi longest from index(pal query<t>& pq) {
+	int n = (sz(pq.man) + 1) / 2
+	vector longest(n, n - 1)
+	for (int i = n - 2; i >= 0; i--) {
+		longest[i] = min(longest[i + 1] + 1, n - 1)
+		while (!pq.is pal(i, longest[i])) longest[i]--
+	}
+	return longest
+}
+
+template<class t> struct sa query {
+	t s
+	int n
+	vi sa, sa inv, lcp
+	rmq<int, function<int(int, int)>> rmq
+	sa query(const t& a s, const array<vi, 3>& d):
+		s(a s), n(sz(s)), sa(d[0]), sa inv(d[1]), lcp(d[2]),
+		rmq(lcp, [](int x, int y) {
+		return min(x, y)
+	}) {}
+	sa query(const t& a s, int max val):
+		sa query(a s, get sa(a s, max val)) {}
+	int len lcp(int i1, int i2) {
+		if (i1 == i2) return n - i1
+		auto [le, ri] = minmax(sa inv[i1], sa inv[i2])
+		return rmq.query(le, ri)
+	}
+}
+
+int cmp sufs(int le1, int le2) {
+	return sa inv[le1] - sa inv[le2]
+}
+
+int cmp substrs(int le1, int ri1, int le2, int ri2) {
+	int len1 = ri1 - le1, len2 = ri2 - le2
+	return len lcp(le1, le2) >= min(len1, len2)
+				 ? len1 - len2
+				 : cmp sufs(le1, le2)
+}
+
+pii find substr(int s le, int s ri) {
+	auto cmp = [&](int i, bool flip) -> bool {
+		return flip ^ (len lcp(i, s le) < s ri - s le)
+	}
+	int le = lower bound(begin(sa), begin(sa) + sa inv[s le],
+											 0, cmp) -
+					 begin(sa)
+	int ri =
+		lower bound(sa inv[s le] + 1 + all(sa), 1, cmp) -
+		begin(sa)
+	return {le, ri}
+}
+
 struct match {
-  int sa_le, sa_ri, s_le, s_ri;
-};
-       
-match find_substrs_concated(const vector<pii>& substrs) {
-  using dt = array<int, 3>;
-  int sa_le = 0, sa_ri = n, s_le = 0, s_ri = 0,
-      sum_len = 0;
-  auto cmp = [&](int i, const dt& x) -> bool {
-    int j = i + sum_len,
-        lcp_len = j == n ? 0 : min(len_lcp(j, x[0]), x[1]);
-    if (lcp_len + sum_len > s_ri - s_le)
-      s_le = i, s_ri = j + lcp_len;
-    if (lcp_len < min(n - j, x[1]))
-      return sa_inv[j] - sa_inv[x[0]] < x[2];
-    return x[2] ^ (n - j < x[1]);
-  };
-  for (auto [le, ri] : substrs) {
-    sa_le = lower_bound(begin(sa) + sa_le,
-              begin(sa) + sa_ri, dt{le, ri - le, 0}, cmp) -
-      begin(sa);
-    sa_ri = lower_bound(begin(sa) + sa_le,
-              begin(sa) + sa_ri, dt{le, ri - le, 1}, cmp) -
-      begin(sa);
-    sum_len += ri - le;
-  }
-  return {sa_le, sa_ri, s_le, s_ri};
+	int sa le, sa ri, s le, s ri
 }
-       
-pii find_str(const T& t) {
-  int le =
-    lower_bound(all(sa), 0,
-      [&](int i, int) -> bool {
-        return lexicographical_compare(i + all(s), all(t));
-      }) -
-    begin(sa);
-  int ri = lower_bound(le + all(sa), 0,
-             [&](int i, int) -> bool {
-               return mismatch(all(t), i + all(s)).first ==
-                 end(t);
-             }) -
-    begin(sa);
-  return {le, ri};
+
+match find substrs concated(const vector<pii>& substrs) {
+	using dt = array<int, 3>
+	int sa le = 0, sa ri = n, s le = 0, s ri = 0,
+			sum len = 0
+	auto cmp = [&](int i, const dt& x) -> bool {
+		int j = i + sum len,
+		lcp len = j == n ? 0 : min(len lcp(j, x[0]), x[1])
+		if (lcp len + sum len > s ri - s le)
+			s le = i, s ri = j + lcp len
+		if (lcp len < min(n - j, x[1]))
+			return sa inv[j] - sa inv[x[0]] < x[2]
+		return x[2] ^ (n - j < x[1])
+	}
+	for (auto [le, ri] : substrs) {
+		sa le = lower bound(begin(sa) + sa le,
+												begin(sa) + sa ri, dt{le, ri - le, 0}, cmp) -
+						begin(sa)
+		sa ri = lower bound(begin(sa) + sa le,
+												begin(sa) + sa ri, dt{le, ri - le, 1}, cmp) -
+						begin(sa)
+		sum len += ri - le
+	}
+	return {sa le, sa ri, s le, s ri}
 }
-       
-match find_str_fast(const T& t) {
-  int s_le = n, s_len = 0;
-  auto cmp = [&](int i, int) -> bool {
-    if (int lcp_len = s_le == n ? 0 : len_lcp(s_le, i);
-        lcp_len != s_len)
-      return (lcp_len < s_len) ^ (cmp_sufs(s_le, i) < 0);
-    auto [it_s, it_t] =
-      mismatch(i + s_len + all(s), s_len + all(t));
-    s_le = i, s_len = it_t - begin(t);
-    return lexicographical_compare(it_s, end(s), it_t,
-      end(t));
-  };
-  int sa_le = lower_bound(all(sa), 0, cmp) - begin(sa),
-      sa_ri = sa_le;
-  if (s_len == sz(t))
-    sa_ri = lower_bound(sa_le + all(sa), 0,
-              [&](int i, int) -> bool {
-                return len_lcp(s_le, i) >= sz(t);
-              }) -
-      begin(sa);
-  return {sa_le, sa_ri, s_le, s_le + s_len};
+
+pii find str(const t& t) {
+	int le =
+		lower bound(all(sa), 0,
+	[&](int i, int) -> bool {
+		return lexicographical compare(i + all(s), all(t))
+	}) -
+	begin(sa)
+	int ri = lower bound(le + all(sa), 0,
+	[&](int i, int) -> bool {
+		return mismatch(all(t), i + all(s)).first ==
+		end(t)
+	}) -
+	begin(sa)
+	return {le, ri}
 }
-       
-template<class T>
-array<vi, 3> get_sa(const T& s, int max_num) {
-  int n = sz(s);
-  vi sa(n), sa_inv(all(s)), lcp(max(0, n - 1));
-  iota(all(sa), 0);
-  for (int ln = 0; ln < n; ln = max(1, 2 * ln)) {
-    vi tmp(n), freq(max_num);
-    iota(begin(tmp), begin(tmp) + ln, n - ln);
-    copy_if(all(sa), begin(tmp) + ln,
-      [&](int& x) { return (x -= ln) >= 0; });
-    for (int x : sa_inv) freq[x]++;
-    partial_sum(all(freq), begin(freq));
-    for_each(rbegin(tmp), rend(tmp),
-      [&](int x) { sa[--freq[sa_inv[x]]] = x; });
-    swap(sa_inv, tmp);
-    max_num = 1, sa_inv[sa[0]] = 0;
-    auto prev_inv = [&](int i) {
-      return pair(tmp[i], i + ln < n ? tmp[i + ln] : -1);
-    };
-    rep(i, 1, n) {
-      max_num += prev_inv(sa[i - 1]) != prev_inv(sa[i]);
-      sa_inv[sa[i]] = max_num - 1;
-    }
-    if (max_num == n) break;
-  }
-  int sz = 0;
-  rep(i, 0, n) {
-    if (sz > 0) sz--;
-    if (sa_inv[i] == 0) continue;
-    for (int j = sa[sa_inv[i] - 1];
-         max(i, j) + sz < n && s[i + sz] == s[j + sz];)
-      sz++;
-    lcp[sa_inv[i] - 1] = sz;
-  }
-  return {sa, sa_inv, lcp};
+
+match find str fast(const t& t) {
+	int s le = n, s len = 0
+	auto cmp = [&](int i, int) -> bool {
+		if (int lcp len = s le == n ? 0 : len lcp(s le, i)
+				lcp len != s len)
+			return (lcp len < s len) ^ (cmp sufs(s le, i) < 0)
+		auto [it s, it t] =
+		mismatch(i + s len + all(s), s len + all(t))
+		s le = i, s len = it t - begin(t)
+		return lexicographical compare(it s, end(s), it t,
+																	 end(t))
+	}
+	int sa le = lower bound(all(sa), 0, cmp) - begin(sa),
+			sa ri = sa le
+	if (s len == sz(t))
+		sa ri = lower bound(sa le + all(sa), 0,
+		[&](int i, int) -> bool {
+		return len lcp(s le, i) >= sz(t)
+	}) -
+	begin(sa)
+	return {sa le, sa ri, s le, s le + s len}
 }
-       
-int get_child(int v, char c) {
-  return v < sf_a.n - 1 ? adj[v][c - mn] : -1;
+
+template<class t>
+array<vi, 3> get sa(const t& s, int max num) {
+	int n = sz(s)
+	vi sa(n), sa inv(all(s)), lcp(max(0, n - 1))
+	iota(all(sa), 0)
+	for (int ln = 0; ln < n; ln = max(1, 2 * ln)) {
+		vi tmp(n), freq(max num)
+		iota(begin(tmp), begin(tmp) + ln, n - ln)
+		copy if(all(sa), begin(tmp) + ln,
+		[&](int& x) {
+			return (x -= ln) >= 0
+		})
+		for (int x : sa inv) freq[x]++
+		partial sum(all(freq), begin(freq))
+		for each(rbegin(tmp), rend(tmp),
+		[&](int x) {
+			sa[--freq[sa inv[x]]] = x
+		})
+		swap(sa inv, tmp)
+		max num = 1, sa inv[sa[0]] = 0
+		auto prev inv = [&](int i) {
+			return pair(tmp[i], i + ln < n ? tmp[i + ln] : -1)
+		}
+		rep(i, 1, n) {
+			max num += prev inv(sa[i - 1]) != prev inv(sa[i])
+			sa inv[sa[i]] = max num - 1
+		}
+		if (max num == n) break
+	}
+	int sz = 0
+	rep(i, 0, n) {
+		if (sz > 0) sz--
+		if (sa inv[i] == 0) continue
+		for (int j = sa[sa inv[i] - 1]
+				 max(i, j) + sz < n && s[i + sz] == s[j + sz];)
+			sz++
+		lcp[sa inv[i] - 1] = sz
+	}
+	return {sa, sa inv, lcp}
 }
-       
+
+int get child(int v, char c) {
+	return v < sf a.n - 1 ? adj[v][c - mn] : -1
+}
+
 const int mn = '0',
-          cnt_let =
-            36;
-struct lcp_tree {
-  sa_query<string> sf_a;
-  vi le, ri;
-  int root;
-  vector<vi> adj;
-  lcp_tree(const string& s):
-    sf_a(s, mn + cnt_let), le(mono_st(sf_a.lcp, less())),
-    ri(mono_range(le)),
-    adj(max(sf_a.n - 1, 0), vector(cnt_let, -1)) {
-    vi p = cart_k_ary_tree(sf_a.lcp, le);
-    root = find(all(p), -1) - begin(p);
-    auto node = [&](int i) -> int {
-      return p[i] < i || sf_a.lcp[i] != sf_a.lcp[p[i]]
-        ? i
-        : p[i];
-    };
-    rep(i, 0, sz(p)) if (node(i) == i && i != root)
-      adj[p[i]][s[sf_a.sa[i] + sf_a.lcp[p[i]]] - mn] = i;
-    rep(i, 0, sf_a.n) {
-      int prev_lcp = (i ? sf_a.lcp[i - 1] : 0);
-      int next_lcp = (i < sz(sf_a.lcp) ? sf_a.lcp[i] : -1);
-      int v = (prev_lcp > next_lcp) ? i - 1 : node(i);
-      int idx = sf_a.sa[i] + max(prev_lcp, next_lcp);
-      if (v == -1 || idx == sf_a.n) continue;
-      adj[v][s[idx] - mn] = sf_a.n - 1 + i;
-    }
-  }
-};
-       
-int len_lcp_range(int v) {
-  return v < sf_a.n - 1 ? sf_a.lcp[v]
-                        : sf_a.n - sf_a.sa[v - sf_a.n + 1];
+					cnt let =
+						36
+struct lcp tree {
+	sa query<string> sf a
+	vi le, ri
+	int root
+	vector<vi> adj
+	lcp tree(const string& s):
+		sf a(s, mn + cnt let), le(mono st(sf a.lcp, less())),
+		ri(mono range(le)),
+		adj(max(sf a.n - 1, 0), vector(cnt let, -1)) {
+		vi p = cart k ary tree(sf a.lcp, le)
+		root = find(all(p), -1) - begin(p)
+		auto node = [&](int i) -> int {
+			return p[i] < i || sf a.lcp[i] != sf a.lcp[p[i]]
+			? i
+			: p[i]
+		}
+		rep(i, 0, sz(p)) if (node(i) == i && i != root)
+			adj[p[i]][s[sf a.sa[i] + sf a.lcp[p[i]]] - mn] = i
+		rep(i, 0, sf a.n) {
+			int prev lcp = (i ? sf a.lcp[i - 1] : 0)
+			int next lcp = (i < sz(sf a.lcp) ? sf a.lcp[i] : -1)
+			int v = (prev lcp > next lcp) ? i - 1 : node(i)
+			int idx = sf a.sa[i] + max(prev lcp, next lcp)
+			if (v == -1 || idx == sf a.n) continue
+			adj[v][s[idx] - mn] = sf a.n - 1 + i
+		}
+	}
 }
-       
-pii sa_range(int v) {
-  if (v < sf_a.n - 1) return {le[v] + 1, ri[v] + 1};
-  return {v - sf_a.n + 1, v - sf_a.n + 2};
+
+int len lcp range(int v) {
+	return v < sf a.n - 1 ? sf a.lcp[v]
+				 : sf a.n - sf a.sa[v - sf a.n + 1]
 }
-       
-pii find_str(const string& t) {
-  int v = root;
-  rep(i, 0, sz(t)) {
-    if (i == len_lcp_range(v)) {
-      v = get_child(v, t[i]);
-      if (v == -1) return {0, 0};
-    }
-    int sa_le = sa_range(v).first;
-    if (sf_a.s[sf_a.sa[sa_le] + i] != t[i]) return {0, 0};
-  }
-  return sa_range(v);
+
+pii sa range(int v) {
+	if (v < sf a.n - 1) return {le[v] + 1, ri[v] + 1}
+	return {v - sf a.n + 1, v - sf a.n + 2}
 }
-       
+
+pii find str(const string& t) {
+	int v = root
+	rep(i, 0, sz(t)) {
+		if (i == len lcp range(v)) {
+			v = get child(v, t[i])
+			if (v == -1) return {0, 0}
+		}
+		int sa le = sa range(v).first
+		if (sf a.s[sf a.sa[sa le] + i] != t[i]) return {0, 0}
+	}
+	return sa range(v)
+}
+
 const int mn = '0',
-          cnt_let =
-            36;
+					cnt let =
+						36
 struct bwt {
-  int n;
-  char last;
-  vector<array<int, cnt_let>> occ;
-  array<int, cnt_let + 1> cnt{};
-  bwt(const string& s, const vi& sa):
-    n(sz(s)), last(empty(s) ? -1 : s.back() - mn),
-    occ(n + 1) {
-    rep(i, 0, n) {
-      cnt[s[i] + 1 - mn]++;
-      occ[i + 1] = occ[i];
-      if (sa[i] == 0) continue;
-      occ[i + 1][s[sa[i] - 1] - mn]++;
-    }
-    partial_sum(all(cnt), begin(cnt));
-  }
-  array<vi, 2> find_str(const string& t) {
-    vi le(sz(t) + 1, 0), ri(sz(t) + 1, n);
-    for (int i = sz(t) - 1; i >= 0; i--) {
-      char c = t[i] - mn;
-      le[i] = cnt[c] + occ[le[i + 1]][c] +
-        (c == last && i < sz(t) - 1);
-      ri[i] = cnt[c] + occ[ri[i + 1]][c] + (c == last);
-    }
-    return {le, ri};
-  }
-};
-       
-const int mn = 'A',
-          cnt_let = 26;
+	int n
+	char last
+	vector<array<int, cnt let>> occ
+	array<int, cnt let + 1> cnt{}
+	bwt(const string& s, const vi& sa):
+		n(sz(s)), last(empty(s) ? -1 : s.back() - mn),
+		occ(n + 1) {
+		rep(i, 0, n) {
+			cnt[s[i] + 1 - mn]++
+			occ[i + 1] = occ[i]
+			if (sa[i] == 0) continue
+			occ[i + 1][s[sa[i] - 1] - mn]++
+		}
+		partial sum(all(cnt), begin(cnt))
+	}
+	array<vi, 2> find str(const string& t) {
+		vi le(sz(t) + 1, 0), ri(sz(t) + 1, n)
+		for (int i = sz(t) - 1; i >= 0; i--) {
+			char c = t[i] - mn
+			le[i] = cnt[c] + occ[le[i + 1]][c] +
+							(c == last && i < sz(t) - 1)
+			ri[i] = cnt[c] + occ[ri[i + 1]][c] + (c == last)
+		}
+		return {le, ri}
+	}
+}
+
+const int mn = 'a',
+					cnt let = 26
 struct trie {
-  struct node {
-    array<int, cnt_let> next;
-    int cnt_words = 0, par = -1;
-    char ch;
-    node(int a_par = -1, char a_ch = '#'):
-      par(a_par), ch(a_ch) {
-      fill(all(next), -1);
-    }
-  };
-  vector<node> t;
-  trie(): t(1) {}
-  void insert(const string& s) {
-    int v = 0;
-    for (char ch : s) {
-      int u = ch - mn;
-      if (t[v].next[u] == -1) {
-        t[v].next[u] = sz(t);
-        t.emplace_back(v, ch);
-      }
-      v = t[v].next[u];
-    }
-    t[v].cnt_words++;
-  }
-  int find(const string& s) {
-    int v = 0;
-    for (char ch : s) {
-      int u = ch - mn;
-      if (t[v].next[u] == -1) return 0;
-      v = t[v].next[u];
-    }
-    return t[v].cnt_words;
-  }
-};
-       
-template<class T> vi prefix_function(const T& s) {
-  vi pi(sz(s));
-  rep(i, 1, sz(s)) {
-    int j = pi[i - 1];
-    while (j > 0 && s[i] != s[j]) j = pi[j - 1];
-    pi[i] = j + (s[i] == s[j]);
-  }
-  return pi;
+	struct node {
+		array<int, cnt let> next
+		int cnt words = 0, par = -1
+		char ch
+		node(int a par = -1, char a ch = '#'):
+			par(a par), ch(a ch) {
+			fill(all(next), -1)
+		}
+	}
+	vector<node> t
+	trie(): t(1) {}
+	void insert(const string& s) {
+		int v = 0
+		for (char ch : s) {
+			int u = ch - mn
+			if (t[v].next[u] == -1) {
+				t[v].next[u] = sz(t)
+				t.emplace back(v, ch)
+			}
+			v = t[v].next[u]
+		}
+		t[v].cnt words++
+	}
+	int find(const string& s) {
+		int v = 0
+		for (char ch : s) {
+			int u = ch - mn
+			if (t[v].next[u] == -1) return 0
+			v = t[v].next[u]
+		}
+		return t[v].cnt words
+	}
 }
-       
-template<class T>
-vi lcs_queries(const T& s, const T& t,
-  const vector<array<int, 3>>& queries) {
-  int n = sz(s), m = sz(t), q = sz(queries);
-  vector<vector<array<int, 3>>> qs(n);
-  rep(i, 0, q) {
-    auto [s_ri, t_le, t_ri] = queries[i];
-    if (s_ri == 0 || t_le == m) continue;
-    qs[s_ri - 1].push_back({t_le, t_ri, i});
-  }
-  lcs_dp lcs(t);
-  vi res(q);
-  rep(i, 0, n) {
-    lcs.push_onto_s(s[i]);
-    vi init(m), dp_inv(m, -1);
-    rep(j, 0, m) {
-      if (lcs.dp[j] == -1) init[j] = 1;
-      else dp_inv[lcs.dp[j]] = j;
-    }
-    BIT<int> bit(init);
-    sort(all(qs[i]));
-    int j = 0;
-    rep(t_le, 0, m) {
-      while (j < sz(qs[i]) && qs[i][j][0] == t_le)
-        res[qs[i][j][2]] = bit.query(t_le, qs[i][j][1]),
-        j++;
-      if (dp_inv[t_le] != -1) bit.update(dp_inv[t_le], 1);
-    }
-  }
-  return res;
+
+template<class t> vi prefix function(const t& s) {
+	vi pi(sz(s))
+	rep(i, 1, sz(s)) {
+		int j = pi[i - 1]
+		while (j > 0 && s[i] != s[j]) j = pi[j - 1]
+		pi[i] = j + (s[i] == s[j])
+	}
+	return pi
 }
-       
-template<class T> struct lcs_dp {
-  T t;
-  vi dp;
-  lcs_dp(const T& a_t): t(a_t), dp(sz(t)) {
-    iota(all(dp), 0);
-  }
-  void push_onto_s(int c) {
-    int v = -1;
-    rep(i, 0, sz(t)) if (c == t[i] || dp[i] < v)
-      swap(dp[i], v);
-  }
-};
-       
-template<class T> struct KMP {
-  T t;
-  vi pi;
-  KMP(const T& a_t): t(a_t), pi(prefix_function(t)) {}
-  vi find_str(const T& s) {
-    vi matches;
-    int j = 0;
-    rep(i, 0, sz(s)) {
-      while (j > 0 && t[j] != s[i]) j = pi[j - 1];
-      j += (t[j] == s[i]);
-      if (j == sz(t)) {
-        matches.push_back(i - sz(t) + 1);
-        j = pi[j - 1];
-      }
-    }
-    return matches;
-  }
-};
-       
-vector<vl> make_powers(const vl& v) {
-  int n = sz(v);
-  vector<vl> pws(3, vl(n));
-  rep(i, 0, n) {
-    pws[0][i] = v[i];
-    pws[1][i] = v[i] * v[i];
-    pws[2][i] = v[i] * v[i] * v[i];
-  }
-  return pws;
+
+template<class t>
+vi lcs queries(const t& s, const t& t,
+							 const vector<array<int, 3>>& queries) {
+	int n = sz(s), m = sz(t), q = sz(queries)
+	vector<vector<array<int, 3>>> qs(n)
+	rep(i, 0, q) {
+		auto [s ri, t le, t ri] = queries[i]
+		if (s ri == 0 || t le == m) continue
+		qs[s ri - 1].push back({t le, t ri, i})
+	}
+	lcs dp lcs(t)
+	vi res(q)
+	rep(i, 0, n) {
+		lcs.push onto s(s[i])
+		vi init(m), dp inv(m, -1)
+		rep(j, 0, m) {
+			if (lcs.dp[j] == -1) init[j] = 1
+			else dp inv[lcs.dp[j]] = j
+		}
+		bit<int> bit(init)
+		sort(all(qs[i]))
+		int j = 0
+		rep(t le, 0, m) {
+			while (j < sz(qs[i]) && qs[i][j][0] == t le)
+				res[qs[i][j][2]] = bit.query(t le, qs[i][j][1]),
+													 j++
+			if (dp inv[t le] != -1) bit.update(dp inv[t le], 1)
+		}
+	}
+	return res
 }
-template<class F>
-vector<bool> wildcard_pattern_matching(const vl& s,
-  const vl& t, F conv) {
-  int n = sz(s), m = sz(t);
-  auto s_pws = make_powers(s);
-  auto t_pws = make_powers(t);
-  for (auto& t_pw : t_pws) reverse(all(t_pw));
-  vector<vl> res(3);
-  rep(pw_hay, 0, 3) res[pw_hay] =
-    conv(s_pws[pw_hay], t_pws[2 - pw_hay]);
-  vector<bool> mtch(n - m + 1);
-  rep(i, 0, n - m + 1) {
-    int id = i + m - 1;
-    auto num = res[0][id] - 2 * res[1][id] + res[2][id];
-    mtch[i] = num == 0;
-  }
-  return mtch;
+
+template<class t> struct lcs dp {
+	t t
+	vi dp
+	lcs dp(const t& a t): t(a t), dp(sz(t)) {
+		iota(all(dp), 0)
+	}
+	void push onto s(int c) {
+		int v = -1
+		rep(i, 0, sz(t)) if (c == t[i] || dp[i] < v)
+			swap(dp[i], v)
+	}
 }
-       
+
+template<class t> struct kmp {
+	t t
+	vi pi
+	kmp(const t& a t): t(a t), pi(prefix function(t)) {}
+	vi find str(const t& s) {
+		vi matches
+		int j = 0
+		rep(i, 0, sz(s)) {
+			while (j > 0 && t[j] != s[i]) j = pi[j - 1]
+			j += (t[j] == s[i])
+			if (j == sz(t)) {
+				matches.push back(i - sz(t) + 1)
+				j = pi[j - 1]
+			}
+		}
+		return matches
+	}
+}
+
+vector<vl> make powers(const vl& v) {
+	int n = sz(v)
+	vector<vl> pws(3, vl(n))
+	rep(i, 0, n) {
+		pws[0][i] = v[i]
+		pws[1][i] = v[i] * v[i]
+		pws[2][i] = v[i] * v[i] * v[i]
+	}
+	return pws
+}
+template<class f>
+vector<bool> wildcard pattern matching(const vl& s,
+																			 const vl& t, f conv) {
+	int n = sz(s), m = sz(t)
+	auto s pws = make powers(s)
+	auto t pws = make powers(t)
+	for (auto& t pw : t pws) reverse(all(t pw))
+	vector<vl> res(3)
+	rep(pw hay, 0, 3) res[pw hay] =
+		conv(s pws[pw hay], t pws[2 - pw hay])
+	vector<bool> mtch(n - m + 1)
+	rep(i, 0, n - m + 1) {
+		int id = i + m - 1
+		auto num = res[0][id] - 2 * res[1][id] + res[2][id]
+		mtch[i] = num == 0
+	}
+	return mtch
+}
+
 mt19937 rng(
-  chrono::steady_clock::now().time_since_epoch().count());
-template<class T> T rnd(T le, T ri) {
-  assert(le <= ri);
-  return uniform_int_distribution<T>(le, ri)(rng);
+	chrono::steady clock::now().time since epoch().count())
+template<class t> t rnd(t le, t ri) {
+	assert(le <= ri)
+	return uniform int distribution<t>(le, ri)(rng)
 }
-       
+
 struct ladder {
-  int n;
-  vector<vi> b_tbl, l_tbl;
-  vi d, p, dl;
-  ladder(const vector<vi>& adj):
-    n(sz(adj)), l_tbl(n), d(n), p(n, -1), dl(n) {
-    auto dfs = [&](auto&& self, int v) -> void {
-      dl[v] = v;
-      for (int u : adj[v])
-        if (u != p[v]) {
-          d[u] = d[p[u] = v] + 1;
-          self(self, u);
-          if (d[dl[u]] > d[dl[v]]) dl[v] = dl[u];
-        }
-    };
-    rep(i, 0, n) if (p[i] == -1) p[i] = i, dfs(dfs, i);
-    b_tbl = treeJump(p);
-    rep(i, 0, n) if (p[i] == i || dl[p[i]] != dl[i]) {
-      int leaf = dl[i];
-      vi& lad = l_tbl[leaf];
-      lad.resize(min(2 * (d[leaf] - d[i]), d[leaf] + 1),
-        leaf);
-      rep(j, 1, sz(lad)) lad[j] = p[lad[j - 1]];
-    }
-  }
-  int kth_par(int v, int k) {
-    if (k == 0) return v;
-    int bit = __lg(k);
-    v = b_tbl[bit][v], k -= (1 << bit);
-    int leaf = dl[v];
-    return l_tbl[leaf][k + d[leaf] - d[v]];
-  }
-};
-       
-struct linear_kth_par {
-  struct node {
-    int d, p = -1, idx, dl;
-    vi lad;
-  };
-  vector<node> t;
-  vi j;
-  linear_kth_par(const vector<vi>& adj):
-    t(sz(adj)), j(2 * sz(t)) {
-    vi st;
-    int pos = 1;
-    auto add_j = [&]() -> void {
-      j[pos] = st[max(0, sz(st) - 1 - 2 * (pos & -pos))];
-      pos++;
-    };
-    auto dfs = [&](auto&& self, int v) -> void {
-      st.push_back(v);
-      t[v].idx = pos;
-      t[v].dl = v;
-      add_j();
-      for (int u : adj[v])
-        if (u != t[v].p) {
-          t[u].d = t[t[u].p = v].d + 1;
-          self(self, u);
-          if (t[t[u].dl].d > t[t[v].dl].d)
-            t[v].dl = t[u].dl;
-          add_j();
-        }
-      st.pop_back();
-    };
-    rep(i, 0, sz(t)) if (t[i].p == -1) t[i].p = i,
-                                       dfs(dfs, i);
-    rep(i, 0, sz(t)) if (
-      t[i].p == i || t[t[i].p].dl != t[i].dl) {
-      int leaf = t[i].dl;
-      vi& lad = t[leaf].lad;
-      lad.resize(
-        min((t[leaf].d - t[i].d) * 7 / 2, t[leaf].d + 1),
-        leaf);
-      rep(k, 1, sz(lad)) lad[k] = t[lad[k - 1]].p;
-    }
-  }
-  int kth_par(int v, int k) {
-    switch (k) {
-    case 0: return v;
-    case 1: return t[v].p;
-    case 2: return t[t[v].p].p;
-    default:
-      int i = 1 << __lg(k / 3),
-          leaf = t[j[(t[v].idx & -i) | i]].dl;
-      return t[leaf].lad[k + t[leaf].d - t[v].d];
-    }
-  }
-};
-       
-int lsb(int x) { return x & -x; }
-struct linear_lca {
-  struct node {
-    int d, label, asc;
-  };
-  vector<node> t;
-  vi head;
-  linear_lca(const vector<vi>& adj):
-    t(sz(adj)), head(sz(t) + 1) {
-    vector<pii> order;
-    auto dfs = [&](auto&& self, int v, int p) -> void {
-      order.emplace_back(v, p);
-      t[v].label = sz(order);
-      for (int u : adj[v])
-        if (u != p) {
-          t[u].d = 1 + t[v].d;
-          self(self, u, v);
-          head[t[u].label] = v;
-          if (lsb(t[u].label) > lsb(t[v].label))
-            t[v].label = t[u].label;
-        }
-    };
-    rep(i, 0, sz(t)) if (t[i].d == 0) dfs(dfs, i, i);
-    for (auto [v, p] : order)
-      t[v].asc = t[p].asc | lsb(t[v].label);
-  }
-  int lca(int u, int v) {
-    if (int j = t[u].label ^ t[v].label; j) {
-      j = t[u].asc & t[v].asc & -(1 << __lg(j));
-      if (int k = t[u].asc ^ j; k)
-        k = 1 << __lg(k), u = head[(t[u].label & -k) | k];
-      if (int k = t[v].asc ^ j; k)
-        k = 1 << __lg(k), v = head[(t[v].label & -k) | k];
-    }
-    return t[u].d < t[v].d ? u : v;
-  }
-};
-bool in_subtree(int u, int v) {
-  return t[u].in <= t[v].in &&
-    t[v].in < t[u].in + t[u].sub_sz;
+	int n
+	vector<vi> b tbl, l tbl
+	vi d, p, dl
+	ladder(const vector<vi>& adj):
+		n(sz(adj)), l tbl(n), d(n), p(n, -1), dl(n) {
+		auto dfs = [&](auto&& self, int v) -> void {
+			dl[v] = v
+			for (int u : adj[v])
+				if (u != p[v]) {
+					d[u] = d[p[u] = v] + 1
+					self(self, u)
+					if (d[dl[u]] > d[dl[v]]) dl[v] = dl[u]
+				}
+		}
+		rep(i, 0, n) if (p[i] == -1) p[i] = i, dfs(dfs, i)
+		b tbl = treejump(p)
+		rep(i, 0, n) if (p[i] == i || dl[p[i]] != dl[i]) {
+			int leaf = dl[i]
+			vi& lad = l tbl[leaf]
+			lad.resize(min(2 * (d[leaf] - d[i]), d[leaf] + 1),
+								 leaf)
+			rep(j, 1, sz(lad)) lad[j] = p[lad[j - 1]]
+		}
+	}
+	int kth par(int v, int k) {
+		if (k == 0) return v
+		int bit =   lg(k)
+		v = b tbl[bit][v], k -= (1 << bit)
+		int leaf = dl[v]
+		return l tbl[leaf][k + d[leaf] - d[v]]
+	}
 }
-bool on_path(int u, int v, int w) {
-  return (in_subtree(w, u) || in_subtree(w, v)) &&
-    in_subtree(lca(u, v), w);
+
+struct linear kth par {
+	struct node {
+		int d, p = -1, idx, dl
+		vi lad
+	}
+	vector<node> t
+	vi j
+	linear kth par(const vector<vi>& adj):
+		t(sz(adj)), j(2 * sz(t)) {
+		vi st
+		int pos = 1
+		auto add j = [&]() -> void {
+			j[pos] = st[max(0, sz(st) - 1 - 2 * (pos & -pos))]
+			pos++
+		}
+		auto dfs = [&](auto&& self, int v) -> void {
+			st.push back(v)
+			t[v].idx = pos
+			t[v].dl = v
+			add j()
+			for (int u : adj[v])
+				if (u != t[v].p) {
+					t[u].d = t[t[u].p = v].d + 1
+					self(self, u)
+					if (t[t[u].dl].d > t[t[v].dl].d)
+						t[v].dl = t[u].dl
+					add j()
+				}
+			st.pop back()
+		}
+		rep(i, 0, sz(t)) if (t[i].p == -1) t[i].p = i,
+																						 dfs(dfs, i)
+		rep(i, 0, sz(t)) if (
+			t[i].p == i || t[t[i].p].dl != t[i].dl) {
+			int leaf = t[i].dl
+			vi& lad = t[leaf].lad
+			lad.resize(
+				min((t[leaf].d - t[i].d) * 7 / 2, t[leaf].d + 1),
+				leaf)
+			rep(k, 1, sz(lad)) lad[k] = t[lad[k - 1]].p
+		}
+	}
+	int kth par(int v, int k) {
+		switch (k) {
+		case 0:
+			return v
+		case 1:
+			return t[v].p
+		case 2:
+			return t[t[v].p].p
+		default:
+			int i = 1 <<   lg(k / 3),
+					leaf = t[j[(t[v].idx & -i) | i]].dl
+			return t[leaf].lad[k + t[leaf].d - t[v].d]
+		}
+	}
 }
-array<vi, 2> compress_tree(vi subset) {
-  auto cmp = [&](int u, int v) {
-    return t[u].in < t[v].in;
-  };
-  sort(all(subset), cmp);
-  int siz = sz(subset);
-  rep(i, 1, siz)
-    subset.push_back(lca(subset[i - 1], subset[i]));
-  sort(all(subset), cmp);
-  subset.erase(unique(all(subset)), end(subset));
-  return {
-    mono_st(subset,
-      [&](int u, int v) { return in_subtree(u, v); }),
-    subset};
+
+int lsb(int x) {
+	return x & -x
 }
-int dist_edges(int u, int v) {
-  return t[u].d + t[v].d - 2 * t[lca(u, v)].d;
+struct linear lca {
+	struct node {
+		int d, label, asc
+	}
+	vector<node> t
+	vi head
+	linear lca(const vector<vi>& adj):
+		t(sz(adj)), head(sz(t) + 1) {
+		vector<pii> order
+		auto dfs = [&](auto&& self, int v, int p) -> void {
+			order.emplace back(v, p)
+			t[v].label = sz(order)
+			for (int u : adj[v])
+				if (u != p) {
+					t[u].d = 1 + t[v].d
+					self(self, u, v)
+					head[t[u].label] = v
+					if (lsb(t[u].label) > lsb(t[v].label))
+						t[v].label = t[u].label
+				}
+		}
+		rep(i, 0, sz(t)) if (t[i].d == 0) dfs(dfs, i, i)
+		for (auto [v, p] : order)
+			t[v].asc = t[p].asc | lsb(t[v].label)
+	}
+	int lca(int u, int v) {
+		if (int j = t[u].label ^ t[v].label; j) {
+			j = t[u].asc & t[v].asc & -(1 <<   lg(j))
+			if (int k = t[u].asc ^ j; k)
+				k = 1 <<   lg(k), u = head[(t[u].label & -k) | k]
+			if (int k = t[v].asc ^ j; k)
+				k = 1 <<   lg(k), v = head[(t[v].label & -k) | k]
+		}
+		return t[u].d < t[v].d ? u : v
+	}
 }
-       
-template<class F> struct centroid {
-  vector<vi> adj;
-  F f;
-  vi sub_sz;
-  centroid(const vector<vi>& a_adj, F a_f):
-    adj(a_adj), f(a_f), sub_sz(sz(adj), -1) {
-    rep(i, 0, sz(adj)) if (sub_sz[i] == -1) dfs(i);
-  }
-  void calc_sz(int v, int p) {
-    sub_sz[v] = 1;
-    for (int u : adj[v])
-      if (u != p) calc_sz(u, v), sub_sz[v] += sub_sz[u];
-  }
-  void dfs(int v) {
-    calc_sz(v, -1);
-    for (int p = -1, sz_root = sub_sz[v];;) {
-      auto big_ch = find_if(all(adj[v]), [&](int u) {
-        return u != p && 2 * sub_sz[u] > sz_root;
-      });
-      if (big_ch == end(adj[v])) break;
-      p = v, v = *big_ch;
-    }
-    f(adj, v);
-    for (int u : adj[v]) {
-      iter_swap(find(all(adj[u]), v), rbegin(adj[u]));
-      adj[u].pop_back();
-      dfs(u);
-    }
-  }
-};
-       
-vector<ll> count_paths_per_length(const vector<vi>& adj) {
-  vector<ll> num_paths(sz(adj));
-  centroid(adj, [&](const vector<vi>& cd_adj, int cent) {
-    vector<vector<double>> child_depths;
-    for (int v : cd_adj[cent]) {
-      child_depths.emplace_back(1, 0.0);
-      for (queue<pii> q({{v, cent}}); !empty(q);) {
-        child_depths.back().push_back(sz(q));
-        queue<pii> new_q;
-        while (!empty(q)) {
-          auto [u, p] = q.front();
-          q.pop();
-          for (int w : cd_adj[u]) {
-            if (w == p) continue;
-            new_q.push({w, u});
-          }
-        }
-        swap(q, new_q);
-      }
-    }
-    sort(all(child_depths),
-      [&](auto& x, auto& y) { return sz(x) < sz(y); });
-    vector total_depth(1, 1.0);
-    for (auto& cnt_depth : child_depths) {
-      auto prod = conv(total_depth, cnt_depth);
-      rep(i, 1, sz(prod)) num_paths[i] += llround(prod[i]);
-      total_depth.resize(sz(cnt_depth));
-      rep(i, 1, sz(cnt_depth)) total_depth[i] +=
-        cnt_depth[i];
-    }
-  });
-  return num_paths;
+bool in subtree(int u, int v) {
+	return t[u].in <= t[v].in &&
+				 t[v].in < t[u].in + t[u].sub sz
 }
-       
-struct cd_lca {
-  vi d;
-  vector<vi> mn_d, to_cent;
-  int cmp(int u, int v) { return d[u] < d[v] ? u : v; }
-  cd_lca(const vector<vi>& adj):
-    d(sz(adj)), mn_d(sz(adj)), to_cent(sz(adj)) {
-    auto dfs_d = [&](auto&& self, int v, int p) -> void {
-      for (int u : adj[v])
-        if (u != p) d[u] = 1 + d[v], self(self, u, v);
-    };
-    dfs_d(dfs_d, 0, -1);
-    centroid(adj, [&](const vector<vi>& cd_adj, int cent) {
-      auto dfs = [&](auto&& self, int v, int p) -> void {
-        mn_d[v].push_back(
-          p == -1 ? v : cmp(mn_d[p].back(), v));
-        to_cent[v].push_back(cent);
-        for (int u : cd_adj[v])
-          if (u != p) self(self, u, v);
-      };
-      dfs(dfs, cent, -1);
-    });
-  }
-  int lca(int u, int v) {
-    for (int i = min(sz(mn_d[u]), sz(mn_d[v])) - 1;; i--)
-      if (to_cent[u][i] == to_cent[v][i])
-        return cmp(mn_d[u][i], mn_d[v][i]);
-  }
-};
-       
-vector<ll> count_paths_per_node(const vector<vi>& adj,
-  int k) {
-  vector<ll> num_paths(sz(adj));
-  centroid(adj, [&](const vector<vi>& cd_adj, int cent) {
-    vector pre_d{1}, cur_d{0};
-    auto dfs = [&](auto&& self, int v, int p,
-                 int d) -> ll {
-      if (d > k) return 0LL;
-      if (sz(cur_d) <= d) cur_d.push_back(0);
-      cur_d[d]++;
-      ll cnt = 0;
-      if (k - d < sz(pre_d)) cnt += pre_d[k - d];
-      for (int u : cd_adj[v])
-        if (u != p) cnt += self(self, u, v, d + 1);
-      num_paths[v] += cnt;
-      return cnt;
-    };
-    auto dfs_child = [&](int child) -> ll {
-      ll cnt = dfs(dfs, child, cent, 1);
-      pre_d.resize(sz(cur_d));
-      for (int i = 1; i < sz(cur_d) && cur_d[i]; i++)
-        pre_d[i] += cur_d[i], cur_d[i] = 0;
-      return cnt;
-    };
-    for (int child : cd_adj[cent])
-      num_paths[cent] += dfs_child(child);
-    pre_d = cur_d = {0};
-    for_each(rbegin(cd_adj[cent]), rend(cd_adj[cent]),
-      dfs_child);
-  });
-  return num_paths;
+bool on path(int u, int v, int w) {
+	return (in subtree(w, u) || in subtree(w, v)) &&
+				 in subtree(lca(u, v), w)
 }
-       
-struct LCA {
-  struct node {
-    int in, sub_sz = 1, d, p = -1;
-  };
-  vector<node> t;
-  RMQ<int, function<int(int, int)>> rmq = {{}, nullptr};
-  LCA(const vector<vi>& adj): t(sz(adj)) {
-    vi order;
-    auto dfs = [&](auto&& self, int v) -> void {
-      t[v].in = sz(order), order.push_back(v);
-      for (int u : adj[v])
-        if (u != t[v].p)
-          t[u].d = t[t[u].p = v].d + 1, self(self, u),
-          t[v].sub_sz += t[u].sub_sz;
-    };
-    rep(i, 0, sz(t)) if (t[i].p == -1) dfs(dfs, i);
-    rmq = {order, [&](int u, int v) {
-             return t[u].d < t[v].d ? u : v;
-           }};
-  }
-  int lca(int u, int v) {
-    if (u == v) return u;
-    auto [x, y] = minmax(t[u].in, t[v].in);
-    return t[rmq.query(x + 1, y + 1)].p;
-  }
-};
-       
-int next_on_path(int u, int v) {
-  return in_subtree(u, v)
-    ? rmq.query(t[u].in + 1, t[v].in + 1)
-    : t[u].p;
+array<vi, 2> compress tree(vi subset) {
+	auto cmp = [&](int u, int v) {
+		return t[u].in < t[v].in
+	}
+	sort(all(subset), cmp)
+	int siz = sz(subset)
+	rep(i, 1, siz)
+	subset.push back(lca(subset[i - 1], subset[i]))
+	sort(all(subset), cmp)
+	subset.erase(unique(all(subset)), end(subset))
+	return {
+		mono st(subset,
+		[&](int u, int v) {
+			return in subtree(u, v)
+		}),
+		subset}
 }
-       
-int kth_path(int u, int v, int k) {
-  int lca_d = t[lca(u, v)].d;
-  int u_lca = t[u].d - lca_d;
-  int v_lca = t[v].d - lca_d;
-  if (k <= u_lca) return kth_par(u, k);
-  if (k <= u_lca + v_lca)
-    return kth_par(v, u_lca + v_lca - k);
-  return -1;
+int dist edges(int u, int v) {
+	return t[u].d + t[v].d - 2 * t[lca(u, v)].d
 }
-       
-struct tree_lift {
-  struct node {
-    int d, p = -1, j = -1;
-  };
-  vector<node> t;
-  tree_lift(const vector<vi>& adj): t(sz(adj)) {
-    auto dfs = [&](auto&& self, int v) -> void {
-      int jump =
-        (t[v].d + t[t[t[v].j].j].d == 2 * t[t[v].j].d)
-        ? t[t[v].j].j
-        : v;
-      for (int u : adj[v])
-        if (u != t[v].p)
-          t[u].d = t[t[u].p = v].d + 1, t[u].j = jump,
-          self(self, u);
-    };
-    rep(i, 0, sz(t)) if (t[i].j == -1) t[i].j = i,
-                                       dfs(dfs, i);
-  }
-  int kth_par(int v, int k) {
-    int anc_d = t[v].d - k;
-    while (t[v].d > anc_d)
-      v = t[t[v].j].d >= anc_d ? t[v].j : t[v].p;
-    return v;
-  }
-  int lca(int u, int v) {
-    if (t[u].d < t[v].d) swap(u, v);
-    u = kth_par(u, t[u].d - t[v].d);
-    while (u != v)
-      if (t[u].j != t[v].j) u = t[u].j, v = t[v].j;
-      else u = t[u].p, v = t[v].p;
-    return u;
-  }
-};
-       
-template<class F> struct edge_cd {
-  vector<vi> adj;
-  F f;
-  vi sub_sz;
-  edge_cd(const vector<vi>& a_adj, F a_f):
-    adj(a_adj), f(a_f), sub_sz(sz(adj)) {
-    dfs(0, sz(adj));
-  }
-  int find_cent(int v, int p, int siz) {
-    sub_sz[v] = 1;
-    for (int u : adj[v])
-      if (u != p) {
-        int cent = find_cent(u, v, siz);
-        if (cent != -1) return cent;
-        sub_sz[v] += sub_sz[u];
-      }
-    if (p == -1) return v;
-    return 2 * sub_sz[v] >= siz
-           ? sub_sz[p] = siz - sub_sz[v],
-             v : -1;
-  }
-  void dfs(int v, int siz) {
-    if (siz <= 2) return;
-    v = find_cent(v, -1, siz);
-    int sum = 0;
-    auto it = partition(all(adj[v]), [&](int u) {
-      bool ret = 2 * sum + sub_sz[u] < siz - 1 &&
-        3 * (sum + sub_sz[u]) <= 2 * (siz - 1);
-      if (ret) sum += sub_sz[u];
-      return ret;
-    });
-    f(adj, v, it - begin(adj[v]));
-    vi oth(it, end(adj[v]));
-    adj[v].erase(it, end(adj[v]));
-    dfs(v, sum + 1);
-    swap(adj[v], oth);
-    dfs(v, siz - sum);
-  }
-};
-       
-struct linear_kth_path {
-  linear_lca lin_lca;
-  linear_kth_par lin_kp;
-  linear_kth_path(const vector<vi>& adj):
-    lin_lca(adj), lin_kp(adj) {}
-  int kth_path(int u, int v, int k) {
-    int lca_d = lin_kp.t[lin_lca.lca(u, v)].d;
-    int u_lca = lin_kp.t[u].d - lca_d;
-    int v_lca = lin_kp.t[v].d - lca_d;
-    if (k <= u_lca) return lin_kp.kth_par(u, k);
-    if (k <= u_lca + v_lca)
-      return lin_kp.kth_par(v, u_lca + v_lca - k);
-    return -1;
-  }
-};
-       
-vector<ll> count_paths_per_length(const vector<vi>& adj) {
-  vector<ll> num_paths(sz(adj));
-  num_paths[1] = sz(adj) - 1;
-  edge_cd(adj,
-    [&](const vector<vi>& cd_adj, int cent, int split) {
-      vector<vector<double>> cnt(2, vector<double>(1));
-      auto dfs = [&](auto&& self, int v, int p, int d,
-                   int side) -> void {
-        if (sz(cnt[side]) == d) cnt[side].push_back(0.0);
-        cnt[side][d]++;
-        for (int u : cd_adj[v])
-          if (u != p) self(self, u, v, 1 + d, side);
-      };
-      rep(i, 0, sz(cd_adj[cent]))
-        dfs(dfs, cd_adj[cent][i], cent, 1, i < split);
-      vector<double> prod = conv(cnt[0], cnt[1]);
-      rep(i, 0, sz(prod)) num_paths[i] += llround(prod[i]);
-    });
-  return num_paths;
+
+template<class f> struct centroid {
+	vector<vi> adj
+	f f
+	vi sub sz
+	centroid(const vector<vi>& a adj, f a f):
+		adj(a adj), f(a f), sub sz(sz(adj), -1) {
+		rep(i, 0, sz(adj)) if (sub sz[i] == -1) dfs(i)
+	}
+	void calc sz(int v, int p) {
+		sub sz[v] = 1
+		for (int u : adj[v])
+			if (u != p) calc sz(u, v), sub sz[v] += sub sz[u]
+	}
+	void dfs(int v) {
+		calc sz(v, -1)
+		for (int p = -1, sz root = sub sz[v];;) {
+			auto big ch = find if(all(adj[v]), [&](int u) {
+				return u != p && 2 * sub sz[u] > sz root
+			})
+			if (big ch == end(adj[v])) break
+			p = v, v = *big ch
+		}
+		f(adj, v)
+		for (int u : adj[v]) {
+			iter swap(find(all(adj[u]), v), rbegin(adj[u]))
+			adj[u].pop back()
+			dfs(u)
+		}
+	}
 }
-       
-template<class T> struct contour_range_update {
-  int n;
-  vector<T> a;
-  sum_adj<T> sum_a;
-  vector<vector<array<int, 3>>> info;
-  vector<array<bit_rupq<T>, 2>> bits;
-  contour_range_update(const vector<vi>& adj,
-    const vector<T>& a_a):
-    n(sz(a_a)), a(a_a), sum_a(adj, vector<T>(n)), info(n) {
-    edge_cd(adj,
-      [&](const vector<vi>& cd_adj, int cent, int split) {
-        array<int, 2> mx_d = {0, 0};
-        auto dfs = [&](auto&& self, int v, int p, int d,
-                     int side) -> void {
-          mx_d[side] = max(mx_d[side], d);
-          info[v].push_back({sz(bits), d, side});
-          for (int u : cd_adj[v])
-            if (u != p) self(self, u, v, 1 + d, side);
-        };
-        rep(i, 0, sz(cd_adj[cent]))
-          dfs(dfs, cd_adj[cent][i], cent, 1, i < split);
-        bits.push_back({bit_rupq<T>(mx_d[0] + 1),
-          bit_rupq<T>(mx_d[1] + 1)});
-      });
-  }
-  void update(int v, int le, int ri, T delta) {
-    if (le <= 0 && 0 < ri) a[v] += delta;
-    if (le <= 1 && 1 < ri) sum_a.update(v, delta);
-    for (auto [decomp_id, d, side] : info[v]) {
-      auto& bit = bits[decomp_id][!side];
-      int my_l = clamp<int>(le - d, 1, bit.n);
-      int my_r = clamp<int>(ri - d, 1, bit.n);
-      bit.update(my_l, my_r, delta);
-    }
-  }
-  T query(int v) {
-    T sum = a[v] + sum_a.query(v);
-    for (auto [decomp_id, d, side] : info[v])
-      sum += bits[decomp_id][side].get_index(d);
-    return sum;
-  }
-};
-       
-template<class T> struct contour_range_query {
-  int n;
-  sum_adj<T> sum_a;
-  vector<vector<array<int, 3>>> info;
-  vector<array<BIT<T>, 2>> bits;
-  contour_range_query(const vector<vi>& adj,
-    const vector<T>& a): n(sz(a)), sum_a(adj, a), info(n) {
-    edge_cd(adj,
-      [&](const vector<vi>& cd_adj, int cent, int split) {
-        vector<vector<T>> sum_num(2, vector<T>(1));
-        auto dfs = [&](auto&& self, int v, int p, int d,
-                     int side) -> void {
-          info[v].push_back({sz(bits), d, side});
-          if (sz(sum_num[side]) == d)
-            sum_num[side].push_back(0);
-          sum_num[side][d] += a[v];
-          for (int u : cd_adj[v])
-            if (u != p) self(self, u, v, 1 + d, side);
-        };
-        rep(i, 0, sz(cd_adj[cent]))
-          dfs(dfs, cd_adj[cent][i], cent, 1, i < split);
-        bits.push_back(
-          {BIT<T>(sum_num[0]), BIT<T>(sum_num[1])});
-      });
-  }
-  void update(int v, T delta) {
-    sum_a.update(v, delta);
-    for (auto [decomp, d, side] : info[v])
-      bits[decomp][side].update(d, delta);
-  }
-  T query(int v, int le, int ri) {
-    T sum = 0;
-    if (le <= 0 && 0 < ri) sum += sum_a.sum[v];
-    if (le <= 1 && 1 < ri) sum += sum_a.query(v);
-    for (auto [decomp, d, side] : info[v]) {
-      auto& bit = bits[decomp][!side];
-      int my_l = clamp<int>(le - d, 1, sz(bit.s));
-      int my_r = clamp<int>(ri - d, 1, sz(bit.s));
-      sum += bit.query(my_l, my_r);
-    }
-    return sum;
-  }
-};
-       
-template<class T> struct sum_adj {
-  int n;
-  vector<T> sum, sum_ch;
-  vi p;
-  sum_adj(const vector<vi>& adj, const vector<T>& a_sum):
-    n(sz(a_sum)), sum(a_sum), sum_ch(n), p(n, -1) {
-    auto dfs = [&](auto&& self, int v) -> void {
-      for (int u : adj[v])
-        if (u != p[v])
-          p[u] = v, sum_ch[v] += sum[u], self(self, u);
-    };
-    dfs(dfs, 0);
-  }
-  void update(int v, T delta) {
-    sum[v] += delta;
-    if (p[v] != -1) sum_ch[p[v]] += delta;
-  }
-  T query(int v) {
-    return sum_ch[v] + (p[v] != -1 ? sum[p[v]] : 0);
-  }
-};
-       
-struct subtree_iso {
-  int num_distinct_subtrees;
-  vi iso_id;
-  subtree_iso(const vector<vi>& adj): iso_id(sz(adj), -1) {
-    map<vi, int> hashes;
-    auto dfs = [&](auto&& self, int v, int p) -> int {
-      vi ch_ids;
-      for (int u : adj[v])
-        if (u != p) ch_ids.push_back(self(self, u, v));
-      sort(all(ch_ids));
-      return iso_id[v] =
-               hashes.try_emplace(ch_ids, sz(hashes))
-                 .first->second;
-    };
-    rep(i, 0, sz(adj)) if (iso_id[i] == -1) dfs(dfs, i, i);
-    num_distinct_subtrees = sz(hashes);
-  }
-};
-       
-vi cart_binary_tree(const vi& le) {
-  vi p(le);
-  rep(i, 0, sz(p)) for (int j = i - 1; j != le[i];
-                        j = le[j]) if (le[j] == le[i])
-    p[j] = i;
-  return p;
+
+vector<ll> count paths per length(const vector<vi>& adj) {
+	vector<ll> num paths(sz(adj))
+	centroid(adj, [&](const vector<vi>& cd adj, int cent) {
+		vector<vector<double>> child depths
+		for (int v : cd adj[cent]) {
+			child depths.emplace back(1, 0.0)
+			for (queue<pii> q({{v, cent}}); !empty(q);) {
+				child depths.back().push back(sz(q))
+				queue<pii> new q
+				while (!empty(q)) {
+					auto [u, p] = q.front()
+					q.pop()
+					for (int w : cd adj[u]) {
+						if (w == p) continue
+						new q.push({w, u})
+					}
+				}
+				swap(q, new q)
+			}
+		}
+		sort(all(child depths),
+		[&](auto& x, auto& y) {
+			return sz(x) < sz(y)
+		})
+		vector total depth(1, 1.0)
+		for (auto& cnt depth : child depths) {
+			auto prod = conv(total depth, cnt depth)
+			rep(i, 1, sz(prod)) num paths[i] += llround(prod[i])
+			total depth.resize(sz(cnt depth))
+			rep(i, 1, sz(cnt depth)) total depth[i] +=
+				cnt depth[i]
+		}
+	})
+	return num paths
 }
-       
-vi mono_range(const vi& le) {
-  vi ri(sz(le), sz(le));
-  rep(i, 0, sz(le)) for (int j = i - 1; j != le[i];
-                         j = le[j]) ri[j] = i;
-  return ri;
+
+struct cd lca {
+	vi d
+	vector<vi> mn d, to cent
+	int cmp(int u, int v) {
+		return d[u] < d[v] ? u : v
+	}
+	cd lca(const vector<vi>& adj):
+		d(sz(adj)), mn d(sz(adj)), to cent(sz(adj)) {
+		auto dfs d = [&](auto&& self, int v, int p) -> void {
+			for (int u : adj[v])
+				if (u != p) d[u] = 1 + d[v], self(self, u, v)
+		}
+		dfs d(dfs d, 0, -1)
+		centroid(adj, [&](const vector<vi>& cd adj, int cent) {
+			auto dfs = [&](auto&& self, int v, int p) -> void {
+				mn d[v].push back(
+					p == -1 ? v : cmp(mn d[p].back(), v))
+				to cent[v].push back(cent)
+				for (int u : cd adj[v])
+					if (u != p) self(self, u, v)
+			}
+			dfs(dfs, cent, -1)
+		})
+	}
+	int lca(int u, int v) {
+		for (int i = min(sz(mn d[u]), sz(mn d[v])) - 1;; i--)
+			if (to cent[u][i] == to cent[v][i])
+				return cmp(mn d[u][i], mn d[v][i])
+	}
 }
-       
-template<class T>
-vi cart_k_ary_tree(const vector<T>& a, const vi& le) {
-  vi p(le);
-  for (int i = sz(a) - 1; i >= 0; i--)
-    for (int j = i - 1; j != le[i]; j = le[j])
-      if (le[j] == le[i] || a[i] == a[le[j]])
-        p[j] = (p[i] < i || a[i] != a[p[i]] ? i : p[i]);
-  return p;
+
+vector<ll> count paths per node(const vector<vi>& adj,
+																int k) {
+	vector<ll> num paths(sz(adj))
+	centroid(adj, [&](const vector<vi>& cd adj, int cent) {
+		vector pre d{1}, cur d{0}
+		auto dfs = [&](auto&& self, int v, int p,
+		int d) -> ll {
+			if (d > k) return 0ll
+			if (sz(cur d) <= d) cur d.push back(0)
+			cur d[d]++
+			ll cnt = 0
+			if (k - d < sz(pre d)) cnt += pre d[k - d]
+			for (int u : cd adj[v])
+				if (u != p) cnt += self(self, u, v, d + 1)
+			num paths[v] += cnt
+			return cnt
+		}
+		auto dfs child = [&](int child) -> ll {
+			ll cnt = dfs(dfs, child, cent, 1)
+			pre d.resize(sz(cur d))
+			for (int i = 1; i < sz(cur d) && cur d[i]; i++)
+				pre d[i] += cur d[i], cur d[i] = 0
+			return cnt
+		}
+		for (int child : cd adj[cent])
+			num paths[cent] += dfs child(child)
+		pre d = cur d = {0}
+		for each(rbegin(cd adj[cent]), rend(cd adj[cent]),
+						 dfs child)
+	})
+	return num paths
 }
-       
-template<class T, class F>
-vi mono_st(const vector<T>& a, F cmp) {
-  vi le(sz(a));
-  rep(i, 0, sz(a)) for (
-    le[i] = i - 1; le[i] >= 0 && !cmp(a[le[i]], a[i]);)
-    le[i] = le[le[i]];
-  return le;
+
+struct lca {
+	struct node {
+		int in, sub sz = 1, d, p = -1
+	}
+	vector<node> t
+	rmq<int, function<int(int, int)>> rmq = {{}, nullptr}
+	lca(const vector<vi>& adj): t(sz(adj)) {
+		vi order
+		auto dfs = [&](auto&& self, int v) -> void {
+			t[v].in = sz(order), order.push back(v)
+			for (int u : adj[v])
+				if (u != t[v].p)
+					t[u].d = t[t[u].p = v].d + 1, self(self, u),
+					t[v].sub sz += t[u].sub sz
+		}
+		rep(i, 0, sz(t)) if (t[i].p == -1) dfs(dfs, i)
+		rmq = {order, [&](int u, int v) {
+			return t[u].d < t[v].d ? u : v
+		}
+					}
+	}
+	int lca(int u, int v) {
+		if (u == v) return u
+		auto [x, y] = minmax(t[u].in, t[v].in)
+		return t[rmq.query(x + 1, y + 1)].p
+	}
 }
-       
-ll max_rect_histogram(const vi& a) {
-  vi le(mono_st(a, less())), ri(mono_range(le));
-  ll max_area = 0;
-  rep(i, 0, sz(a)) max_area =
-    max(max_area, ll(a[i]) * (ri[i] - le[i] - 1));
-  return max_area;
+
+int next on path(int u, int v) {
+	return in subtree(u, v)
+				 ? rmq.query(t[u].in + 1, t[v].in + 1)
+				 : t[u].p
 }
-       
-vector<vi> count_rectangles(
-  const vector<vector<bool>>& grid) {
-  int n = sz(grid), m = sz(grid[0]);
-  vector cnt(n + 1, vector(m + 1, 0));
-  vi h(m);
-  for (const auto& row : grid) {
-    transform(all(h), begin(row), begin(h),
-      [](int a, bool g) { return g * (a + 1); });
-    vi le(mono_st(h, less())), ri(mono_range(le));
-    rep(j, 0, m) {
-      int cnt_l = j - le[j] - 1, cnt_r = ri[j] - j - 1;
-      cnt[h[j]][cnt_l + cnt_r + 1]++;
-      cnt[h[j]][cnt_l]--;
-      cnt[h[j]][cnt_r]--;
-    }
-  }
-  rep(i, 1, n + 1) rep(k, 0, 2) for (int j = m; j > 1; j--)
-    cnt[i][j - 1] += cnt[i][j];
-  for (int i = n; i > 1; i--)
-    rep(j, 1, m + 1) cnt[i - 1][j] += cnt[i][j];
-  return cnt;
+
+int kth path(int u, int v, int k) {
+	int lca d = t[lca(u, v)].d
+	int u lca = t[u].d - lca d
+	int v lca = t[v].d - lca d
+	if (k <= u lca) return kth par(u, k)
+	if (k <= u lca + v lca)
+		return kth par(v, u lca + v lca - k)
+	return -1
 }
-       
-template<class T, class F> struct RMQ {
-  vector<vector<T>> dp;
-  F op;
-  RMQ(const vector<T>& a, F a_op): dp(1, a), op(a_op) {
-    for (int i = 0; (2 << i) <= sz(a); i++) {
-      dp.emplace_back(sz(a) - (2 << i) + 1);
-      transform(all(dp[i]) - (1 << i),
-        begin(dp[i]) + (1 << i), begin(dp[i + 1]), op);
-    }
-  }
-  T query(int le, int ri) {
-    assert(le < ri);
-    int lg = __lg(ri - le);
-    return op(dp[lg][le], dp[lg][ri - (1 << lg)]);
-  }
-};
-       
-template<class T, class F> struct tree {
-  int n;
-  T unit;
-  F f;
-  vector<T> s;
-  tree(int a_n, T a_unit, F a_f):
-    n(a_n), unit(a_unit), f(a_f), s(2 * n, unit) {}
-  void update(int pos, T val) {
-    for (s[pos += n] = val; pos /= 2;)
-      s[pos] = f(s[pos * 2], s[pos * 2 + 1]);
-  }
-  T query(int b, int e) {
-    T ra = unit, rb = unit;
-    for (b += n, e += n; b < e; b /= 2, e /= 2) {
-      if (b % 2) ra = f(ra, s[b++]);
-      if (e % 2) rb = f(s[--e], rb);
-    }
-    return f(ra, rb);
-  }
-};
-       
-template<int N> struct implicit_seg_tree {
-  using dt = array<ll, 2>;
-  static dt op(const dt& le, const dt& ri) {
-    if (le[0] == ri[0]) return {le[0], le[1] + ri[1]};
-    return min(le, ri);
-  }
-  static constexpr dt unit{LLONG_MAX, 0LL};
-  struct node {
-    dt num;
-    ll lazy = 0;
-    int lch = -1, rch = -1;
-  } tree[N];
-  int ptr = 0, root_l, root_r;
-  implicit_seg_tree(int le, int ri):
-    root_l(le), root_r(ri) {
-    tree[ptr++].num = {0, ri - le};
-  }
-  void apply(ll add, int v) {
-    tree[v].num[0] += add;
-    tree[v].lazy += add;
-  }
-  void push(int tl, int tm, int tr, int v) {
-    if (tr - tl > 1 && tree[v].lch == -1) {
-      tree[v].lch = ptr;
-      tree[ptr++].num = {0, tm - tl};
-      tree[v].rch = ptr;
-      tree[ptr++].num = {0, tr - tm};
-    }
-    if (tree[v].lazy) {
-      apply(tree[v].lazy, tree[v].lch);
-      apply(tree[v].lazy, tree[v].rch);
-      tree[v].lazy = 0;
-    }
-  }
-  void update(int le, int ri, ll add) {
-    update(le, ri, add, root_l, root_r, 0);
-  }
-  void update(int le, int ri, ll add, int tl, int tr,
-    int v) {
-    if (ri <= tl || tr <= le) return;
-    if (le <= tl && tr <= ri) return apply(add, v);
-    int tm = tl + (tr - tl) / 2;
-    push(tl, tm, tr, v);
-    update(le, ri, add, tl, tm, tree[v].lch);
-    update(le, ri, add, tm, tr, tree[v].rch);
-    tree[v].num =
-      op(tree[tree[v].lch].num, tree[tree[v].rch].num);
-  }
-  dt query(int le, int ri) {
-    return query(le, ri, root_l, root_r, 0);
-  }
-  dt query(int le, int ri, int tl, int tr, int v) {
-    if (ri <= tl || tr <= le) return unit;
-    if (le <= tl && tr <= ri) return tree[v].num;
-    int tm = tl + (tr - tl) / 2;
-    push(tl, tm, tr, v);
-    return op(query(le, ri, tl, tm, tree[v].lch),
-      query(le, ri, tm, tr, tree[v].rch));
-  }
-};
-       
-struct distinct_query {
-  int n;
-  PST pst;
-  distinct_query(const vi& a): n(sz(a)), pst(0, n + 1) {
-    map<int, int> last_idx;
-    rep(i, 0, n) {
-      int& idx = last_idx[a[i]];
-      pst.update(idx, 1, i);
-      idx = i + 1;
-    }
-  }
-  int query(int le, int ri) {
-    return pst.query(0, le + 1, ri) -
-      pst.query(0, le + 1, le);
-  }
-};
-       
-template<class F>
-int find_last(int le, int ri, const F& f) {
-  return find_last_in_range(le, ri, f, 0, n, 1);
+
+struct tree lift {
+	struct node {
+		int d, p = -1, j = -1
+	}
+	vector<node> t
+	tree lift(const vector<vi>& adj): t(sz(adj)) {
+		auto dfs = [&](auto&& self, int v) -> void {
+			int jump =
+			(t[v].d + t[t[t[v].j].j].d == 2 * t[t[v].j].d)
+			? t[t[v].j].j
+			: v
+			for (int u : adj[v])
+				if (u != t[v].p)
+					t[u].d = t[t[u].p = v].d + 1, t[u].j = jump,
+					self(self, u)
+		}
+		rep(i, 0, sz(t)) if (t[i].j == -1) t[i].j = i,
+																						 dfs(dfs, i)
+	}
+	int kth par(int v, int k) {
+		int anc d = t[v].d - k
+		while (t[v].d > anc d)
+			v = t[t[v].j].d >= anc d ? t[v].j : t[v].p
+		return v
+	}
+	int lca(int u, int v) {
+		if (t[u].d < t[v].d) swap(u, v)
+		u = kth par(u, t[u].d - t[v].d)
+		while (u != v)
+			if (t[u].j != t[v].j) u = t[u].j, v = t[v].j
+			else u = t[u].p, v = t[v].p
+		return u
+	}
 }
-template<class F>
-int find_last_in_subtree(const F& f, int tl, int tr,
-  int v) {
-  if (v >= n) return tl;
-  int tm = split(tl, tr);
-  push(tl, tm, tr, v);
-  if (f(tree[2 * v + 1], tm, tr))
-    return find_last_in_subtree(f, tm, tr, 2 * v + 1);
-  return find_last_in_subtree(f, tl, tm, 2 * v);
+
+template<class f> struct edge cd {
+	vector<vi> adj
+	f f
+	vi sub sz
+	edge cd(const vector<vi>& a adj, f a f):
+		adj(a adj), f(a f), sub sz(sz(adj)) {
+		dfs(0, sz(adj))
+	}
+	int find cent(int v, int p, int siz) {
+		sub sz[v] = 1
+		for (int u : adj[v])
+			if (u != p) {
+				int cent = find cent(u, v, siz)
+				if (cent != -1) return cent
+				sub sz[v] += sub sz[u]
+			}
+		if (p == -1) return v
+		return 2 * sub sz[v] >= siz
+					 ? sub sz[p] = siz - sub sz[v],
+												 v : -1
+	}
+	void dfs(int v, int siz) {
+		if (siz <= 2) return
+		v = find cent(v, -1, siz)
+		int sum = 0
+		auto it = partition(all(adj[v]), [&](int u) {
+			bool ret = 2 * sum + sub sz[u] < siz - 1 &&
+								 3 * (sum + sub sz[u]) <= 2 * (siz - 1)
+			if (ret) sum += sub sz[u]
+			return ret
+		})
+		f(adj, v, it - begin(adj[v]))
+		vi oth(it, end(adj[v]))
+		adj[v].erase(it, end(adj[v]))
+		dfs(v, sum + 1)
+		swap(adj[v], oth)
+		dfs(v, siz - sum)
+	}
 }
-template<class F>
-int find_last_in_range(int le, int ri, const F& f, int tl,
-  int tr, int v) {
-  if (ri <= tl || tr <= le) return le - 1;
-  if (le <= tl && tr <= ri)
-    return f(tree[v], tl, tr)
-      ? find_last_in_subtree(f, tl, tr, v)
-      : le - 1;
-  int tm = split(tl, tr);
-  push(tl, tm, tr, v);
-  int res =
-    find_last_in_range(le, ri, f, tm, tr, 2 * v + 1);
-  if (res >= le) return res;
-  return find_last_in_range(le, ri, f, tl, tm, 2 * v);
+
+struct linear kth path {
+	linear lca lin lca
+	linear kth par lin kp
+	linear kth path(const vector<vi>& adj):
+		lin lca(adj), lin kp(adj) {}
+	int kth path(int u, int v, int k) {
+		int lca d = lin kp.t[lin lca.lca(u, v)].d
+		int u lca = lin kp.t[u].d - lca d
+		int v lca = lin kp.t[v].d - lca d
+		if (k <= u lca) return lin kp.kth par(u, k)
+		if (k <= u lca + v lca)
+			return lin kp.kth par(v, u lca + v lca - k)
+		return -1
+	}
 }
-       
-struct PST {
-  struct node {
-    ll sum;
-    int lch, rch;
-    node(ll a_sum, int a_lch, int a_rch):
-      sum(a_sum), lch(a_lch), rch(a_rch) {}
-  };
-  int root_l, root_r;
-  vi roots;
-  deque<node> tree;
-  PST(int a_root_l, int a_root_r):
-    root_l(a_root_l), root_r(a_root_r), roots(1),
-    tree(1, {0LL, 0, 0}) {}
-  void update(int idx, ll change, int version) {
-    roots.push_back(update_impl(idx, change, root_l,
-      root_r, roots[version]));
-  }
-  int update_impl(int idx, ll change, int tl, int tr,
-    int v) {
-    if (tr - tl == 1) {
-      tree.emplace_back(tree[v].sum + change, 0, 0);
-      return sz(tree) - 1;
-    }
-    int tm = tl + (tr - tl) / 2;
-    int lch = tree[v].lch;
-    int rch = tree[v].rch;
-    if (idx < tm)
-      lch = update_impl(idx, change, tl, tm, lch);
-    else rch = update_impl(idx, change, tm, tr, rch);
-    tree.emplace_back(tree[lch].sum + tree[rch].sum, lch,
-      rch);
-    return sz(tree) - 1;
-  }
-  ll query(int le, int ri, int version) {
-    return query_impl(le, ri, root_l, root_r,
-      roots[version]);
-  }
-  ll query_impl(int le, int ri, int tl, int tr, int v) {
-    if (v == 0 || ri <= tl || tr <= le) return 0;
-    if (le <= tl && tr <= ri) return tree[v].sum;
-    int tm = tl + (tr - tl) / 2;
-    return query_impl(le, ri, tl, tm, tree[v].lch) +
-      query_impl(le, ri, tm, tr, tree[v].rch);
-  }
-};
-       
-tree(const vector<T>& a, T a_unit, F a_f):
-  n(sz(a)), unit(a_unit), f(a_f), s(2 * n) {
-  rep(i, 0, n) s[i + n] = a[i];
-  for (int i = n - 1; i > 0; i--)
-    s[i] = f(s[2 * i], s[2 * i + 1]);
+
+vector<ll> count paths per length(const vector<vi>& adj) {
+	vector<ll> num paths(sz(adj))
+	num paths[1] = sz(adj) - 1
+	edge cd(adj,
+	[&](const vector<vi>& cd adj, int cent, int split) {
+		vector<vector<double>> cnt(2, vector<double>(1))
+		auto dfs = [&](auto&& self, int v, int p, int d,
+		int side) -> void {
+			if (sz(cnt[side]) == d) cnt[side].push back(0.0)
+			cnt[side][d]++
+			for (int u : cd adj[v])
+				if (u != p) self(self, u, v, 1 + d, side)
+		}
+		rep(i, 0, sz(cd adj[cent]))
+		dfs(dfs, cd adj[cent][i], cent, 1, i < split)
+		vector<double> prod = conv(cnt[0], cnt[1])
+		rep(i, 0, sz(prod)) num paths[i] += llround(prod[i])
+	})
+	return num paths
 }
-       
-template<class F>
-int find_first(int le, int ri, const F& f) {
-  return find_first_in_range(le, ri, f, 0, n, 1);
+
+template<class t> struct contour range update {
+	int n
+	vector<t> a
+	sum adj<t> sum a
+	vector<vector<array<int, 3>>> info
+	vector<array<bit rupq<t>, 2>> bits
+	contour range update(const vector<vi>& adj,
+											 const vector<t>& a a):
+		n(sz(a a)), a(a a), sum a(adj, vector<t>(n)), info(n) {
+		edge cd(adj,
+		[&](const vector<vi>& cd adj, int cent, int split) {
+			array<int, 2> mx d = {0, 0}
+			auto dfs = [&](auto&& self, int v, int p, int d,
+			int side) -> void {
+				mx d[side] = max(mx d[side], d)
+				info[v].push back({sz(bits), d, side})
+				for (int u : cd adj[v])
+					if (u != p) self(self, u, v, 1 + d, side)
+			}
+			rep(i, 0, sz(cd adj[cent]))
+			dfs(dfs, cd adj[cent][i], cent, 1, i < split)
+			bits.push back({bit rupq<t>(mx d[0] + 1),
+											bit rupq<t>(mx d[1] + 1)})
+		})
+	}
+	void update(int v, int le, int ri, t delta) {
+		if (le <= 0 && 0 < ri) a[v] += delta
+		if (le <= 1 && 1 < ri) sum a.update(v, delta)
+		for (auto [decomp id, d, side] : info[v]) {
+			auto& bit = bits[decomp id][!side]
+			int my l = clamp<int>(le - d, 1, bit.n)
+			int my r = clamp<int>(ri - d, 1, bit.n)
+			bit.update(my l, my r, delta)
+		}
+	}
+	t query(int v) {
+		t sum = a[v] + sum a.query(v)
+		for (auto [decomp id, d, side] : info[v])
+			sum += bits[decomp id][side].get index(d)
+		return sum
+	}
 }
-template<class F>
-int find_first_in_subtree(const F& f, int tl, int tr,
-  int v) {
-  if (v >= n) return tl;
-  int tm = split(tl, tr);
-  push(tl, tm, tr, v);
-  if (f(tree[2 * v], tl, tm))
-    return find_first_in_subtree(f, tl, tm, 2 * v);
-  return find_first_in_subtree(f, tm, tr, 2 * v + 1);
+
+template<class t> struct contour range query {
+	int n
+	sum adj<t> sum a
+	vector<vector<array<int, 3>>> info
+	vector<array<bit<t>, 2>> bits
+	contour range query(const vector<vi>& adj,
+											const vector<t>& a): n(sz(a)), sum a(adj, a), info(n) {
+		edge cd(adj,
+		[&](const vector<vi>& cd adj, int cent, int split) {
+			vector<vector<t>> sum num(2, vector<t>(1))
+			auto dfs = [&](auto&& self, int v, int p, int d,
+			int side) -> void {
+				info[v].push back({sz(bits), d, side})
+				if (sz(sum num[side]) == d)
+					sum num[side].push back(0)
+				sum num[side][d] += a[v]
+				for (int u : cd adj[v])
+					if (u != p) self(self, u, v, 1 + d, side)
+			}
+			rep(i, 0, sz(cd adj[cent]))
+			dfs(dfs, cd adj[cent][i], cent, 1, i < split)
+			bits.push back(
+			{bit<t>(sum num[0]), bit<t>(sum num[1])})
+		})
+	}
+	void update(int v, t delta) {
+		sum a.update(v, delta)
+		for (auto [decomp, d, side] : info[v])
+			bits[decomp][side].update(d, delta)
+	}
+	t query(int v, int le, int ri) {
+		t sum = 0
+		if (le <= 0 && 0 < ri) sum += sum a.sum[v]
+		if (le <= 1 && 1 < ri) sum += sum a.query(v)
+		for (auto [decomp, d, side] : info[v]) {
+			auto& bit = bits[decomp][!side]
+			int my l = clamp<int>(le - d, 1, sz(bit.s))
+			int my r = clamp<int>(ri - d, 1, sz(bit.s))
+			sum += bit.query(my l, my r)
+		}
+		return sum
+	}
 }
-template<class F>
-int find_first_in_range(int le, int ri, const F& f, int tl,
-  int tr, int v) {
-  if (ri <= tl || tr <= le) return ri;
-  if (le <= tl && tr <= ri)
-    return f(tree[v], tl, tr)
-      ? find_first_in_subtree(f, tl, tr, v)
-      : ri;
-  int tm = split(tl, tr);
-  push(tl, tm, tr, v);
-  int res = find_first_in_range(le, ri, f, tl, tm, 2 * v);
-  if (res < ri) return res;
-  return find_first_in_range(le, ri, f, tm, tr, 2 * v + 1);
+
+template<class t> struct sum adj {
+	int n
+	vector<t> sum, sum ch
+	vi p
+	sum adj(const vector<vi>& adj, const vector<t>& a sum):
+		n(sz(a sum)), sum(a sum), sum ch(n), p(n, -1) {
+		auto dfs = [&](auto&& self, int v) -> void {
+			for (int u : adj[v])
+				if (u != p[v])
+					p[u] = v, sum ch[v] += sum[u], self(self, u)
+		}
+		dfs(dfs, 0)
+	}
+	void update(int v, t delta) {
+		sum[v] += delta
+		if (p[v] != -1) sum ch[p[v]] += delta
+	}
+	t query(int v) {
+		return sum ch[v] + (p[v] != -1 ? sum[p[v]] : 0)
+	}
 }
-       
-struct kth_smallest {
-  PST pst;
-  kth_smallest(const vi& a, int minv, int maxv):
-    pst(minv, maxv) {
-    rep(i, 0, sz(a)) pst.update(a[i], 1, i);
-  }
-  int query(int le, int ri, int k) {
-    return query_impl(k, pst.root_l, pst.root_r,
-      pst.roots[le], pst.roots[ri]);
-  }
-  int query_impl(int k, int tl, int tr, int vl, int vr) {
-    if (tr - tl == 1) return tl;
-    int tm = tl + (tr - tl) / 2;
-    int left_count = pst.tree[pst.tree[vr].lch].sum -
-      pst.tree[pst.tree[vl].lch].sum;
-    if (left_count >= k)
-      return query_impl(k, tl, tm, pst.tree[vl].lch,
-        pst.tree[vr].lch);
-    return query_impl(k - left_count, tm, tr,
-      pst.tree[vl].rch, pst.tree[vr].rch);
-  }
-};
-       
-template<class DS, class... ARGS> struct pq_updates {
-  DS ds;
-  using upd =
-    pair<tuple<ARGS...>, map<int, int>::iterator>;
-  vector<upd> upd_st;
-  map<int, int>
-    mp;
-  pq_updates(DS& a_ds): ds(a_ds) {}
-  void pop_update() {
-    vector<upd> extra;
-    int idx = sz(upd_st) - 1, lowest_pri = INT_MAX;
-    for (auto it = rbegin(mp);
-         2 * sz(extra) < sz(upd_st) - idx; it++) {
-      auto [pri, idx_sk] = *it;
-      extra.push_back(upd_st[idx_sk]);
-      idx = min(idx, idx_sk), lowest_pri = pri;
-    }
-    auto it =
-      remove_if(idx + all(upd_st), [&](auto& curr) {
-        return curr.second->first >= lowest_pri;
-      });
-    reverse_copy(all(extra), it);
-    rep(i, idx, sz(upd_st)) ds.undo();
-    upd_st.pop_back();
-    mp.erase(prev(end(mp)));
-    rep(i, idx, sz(upd_st)) {
-      apply(&DS::join,
-        tuple_cat(make_tuple(&ds), upd_st[i].first));
-      upd_st[i].second->second = i;
-    }
-  }
-  void push_update(ARGS... args, int priority) {
-    ds.join(args...);
-    auto [it, ins] = mp.emplace(priority, sz(upd_st));
-    assert(ins);
-    upd_st.emplace_back(make_tuple(args...), it);
-  }
-};
-       
-struct perm_tree {
-  struct node {
-    int mn_idx, mn_num, len;
-    bool is_join;
-  };
-  vector<node> p;
-  int root;
-  vector<vi> ch;
-  bool touches(int u, int v) {
-    return p[u].mn_num == p[v].mn_num + p[v].len ||
-      p[v].mn_num == p[u].mn_num + p[u].len;
-  }
-  int allocate(int mn_i, int mn_v, int ln, bool join,
-    const vi& chs) {
-    p.push_back({mn_i, mn_v, ln, join});
-    ch.push_back(chs);
-    return sz(ch) - 1;
-  }
-  perm_tree(const vi& a) {
-    int n = sz(a);
-    vi mn_i(n), mx_i(n);
-    {
-      vi a_inv(n, -1);
-      rep(i, 0, n) a_inv[a[i]] = i;
-      linear_rmq rmq_min(a_inv, less());
-      linear_rmq rmq_max(a_inv, greater());
-      rep(i, 1, n) {
-        mn_i[i] = a_inv[rmq_min.query_idx(a[i - 1], a[i])];
-        mx_i[i] = a_inv[rmq_max.query_idx(a[i - 1], a[i])];
-      }
-    }
-    rep(i, 0, n) allocate(i, a[i], 1, 0, {});
-    vector<array<int, 4>> st;
-    rep(i, 0, n) {
-      int v = i;
-      while (!empty(st)) {
-        int u = st.back()[0];
-        if (!empty(ch[u]) && touches(ch[u].back(), v)) {
-          p[u].mn_num = min(p[u].mn_num, p[v].mn_num);
-          p[u].len += p[v].len;
-          ch[u].push_back(v);
-          v = u;
-          st.pop_back();
-          continue;
-        }
-        if (touches(v, u)) {
-          v = allocate(p[u].mn_idx,
-            min(p[v].mn_num, p[u].mn_num),
-            p[v].len + p[u].len, 1, {u, v});
-          st.pop_back();
-          continue;
-        }
-        int le = min(p[u].mn_idx, mn_i[p[v].mn_idx]),
-            ri = max(i, mx_i[p[v].mn_idx]),
-            idx = sz(st) - 1;
-        while (ri == i && le != p[st[idx][0]].mn_idx)
-          le = min(le, st[idx][1]),
-          ri = max(ri, st[idx][2]), idx = st[idx][3];
-        if (ri > i) {
-          st.push_back({v, le, ri, idx});
-          break;
-        }
-        int min_num = p[v].mn_num;
-        vi chs(1 + sz(st) - idx, v);
-        rep(j, idx, sz(st)) min_num =
-          min(min_num, p[chs[j - idx] = st[j][0]].mn_num);
-        v = allocate(le, min_num, i - le + 1, 0, chs);
-        st.resize(idx);
-      }
-      if (empty(st)) st.push_back({v, -1, -1, -1});
-    }
-    assert(sz(st) == 1);
-    root = st[0][0];
-  }
-};
-       
-template<class T, class F> struct disjoint_rmq {
-  vector<vector<T>> dp;
-  F op;
-  disjoint_rmq(const vector<T>& a, F a_op): op(a_op) {
-    for (int len = 1, n = sz(a); len <= n; len *= 2) {
-      dp.emplace_back(n);
-      for (int le = 0; le < n; le += 2 * len) {
-        int mi = min(n, le + len),
-            ri = min(n, le + 2 * len);
-        partial_sum(rend(a) - mi, rend(a) - le,
-          rend(dp.back()) - mi,
-          [&](T x, T y) { return op(y, x); });
-        partial_sum(begin(a) + mi, begin(a) + ri,
-          begin(dp.back()) + mi, op);
-      }
-    }
-  }
-  T query(int le, int ri) {
-    assert(le < ri);
-    if (ri - le == 1) return dp[0][le];
-    int lg = __lg(le ^ (ri - 1));
-    return op(dp[lg][le], dp[lg][ri - 1]);
-  }
-};
-       
-const int b = 318;
-struct mode_query {
-  int n;
-  vi a, cnt, index_into_index;
-  vector<vi> index;
-  vector<vector<pii>>
-    mode_blocks;
-  mode_query(const vi& a_a):
-    n(sz(a_a)), a(a_a), cnt(n), index_into_index(n),
-    index(n), mode_blocks((n + b - 1) / b,
-                vector<pii>((n + b - 1) / b)) {
-    rep(i, 0, n) {
-      index_into_index[i] = sz(index[a[i]]);
-      index[a[i]].push_back(i);
-    }
-    for (int start = 0; start < n; start += b) {
-      int mode = a[start];
-      rep(i, start, n) {
-        cnt[a[i]]++;
-        if (cnt[a[i]] > cnt[mode]) mode = a[i];
-        if (
-          mode_blocks[start / b][i / b].second < cnt[mode])
-          mode_blocks[start / b][i / b] = {
-            mode, cnt[mode]};
-      }
-      rep(i, start, n) cnt[a[i]]--;
-    }
-  }
-  pii query(int le, int ri) {
-    assert(le < ri);
-    if (le / b >= (ri - 1) / b - 1) {
-      int mode = a[le];
-      rep(i, le, ri) {
-        cnt[a[i]]++;
-        if (cnt[a[i]] > cnt[mode]) mode = a[i];
-      }
-      int cnt_mode = cnt[mode];
-      rep(i, le, ri) cnt[a[i]]--;
-      return {mode, cnt_mode};
-    }
-    pii res = mode_blocks[le / b + 1][(ri - 1) / b - 1];
-    for (int i = le / b * b + b - 1; i >= le; i--)
-      cnt[a[i]]++;
-    for (int i = le / b * b + b - 1; i >= le; i--) {
-      int idx = index_into_index[i];
-      if (idx + res.second < sz(index[a[i]]) &&
-        index[a[i]][idx + res.second] < ri)
-        res = {a[i], cnt[a[i]] + res.second};
-      cnt[a[i]]--;
-    }
-    rep(i, (ri - 1) / b * b, ri) cnt[a[i]]++;
-    rep(i, (ri - 1) / b * b, ri) {
-      int idx = index_into_index[i];
-      if (idx >= res.second &&
-        index[a[i]][idx - res.second] >= le)
-        res = {a[i], cnt[a[i]] + res.second};
-      cnt[a[i]]--;
-    }
-    return res;
-  }
-};
-       
-template<class T, class F> struct linear_rmq {
-  vector<T> a;
-  F cmp;
-  vi head;
-  vector<array<int, 2>> t;
-  linear_rmq(const vector<T>& a_a, F a_cmp):
-    a(a_a), cmp(a_cmp), head(sz(a) + 1), t(sz(a)) {
-    vi st{-1};
-    for (int i = 0; i <= sz(a); i++) {
-      int prev = -1;
-      while (st.back() != -1 &&
-        (i == sz(a) || !cmp(a[st.back()], a[i]))) {
-        if (prev != -1) head[prev] = st.back();
-        int pw2 = 1 << __lg((end(st)[-2] + 1) ^ i);
-        t[st.back()][0] = prev = i & -pw2;
-        st.pop_back();
-        t[st.back() + 1][1] |= pw2;
-      }
-      if (prev != -1) head[prev] = i;
-      st.push_back(i);
-    }
-    rep(i, 1, sz(a)) t[i][1] =
-      (t[i][1] | t[i - 1][1]) & -(t[i][0] & -t[i][0]);
-  }
-  int query_idx(int le, int ri) {
-    if (int j = t[le][0] ^ t[ri][0]; j) {
-      j = t[le][1] & t[ri][1] & -(1 << __lg(j));
-      if (int k = t[le][1] ^ j; k)
-        k = 1 << __lg(k), le = head[(t[le][0] & -k) | k];
-      if (int k = t[ri][1] ^ j; k)
-        k = 1 << __lg(k), ri = head[(t[ri][0] & -k) | k];
-    }
-    return cmp(a[le], a[ri]) ? le : ri;
-  }
-  T query(int le, int ri) { return a[query_idx(le, ri)]; }
-};
-       
-T operator[](int i) {
-  return (
-    i < sz(le) ? le[sz(le) - i - 1] : ri[i - sz(le)])[0];
+
+struct subtree iso {
+	int num distinct subtrees
+	vi iso id
+	subtree iso(const vector<vi>& adj): iso id(sz(adj), -1) {
+		map<vi, int> hashes
+		auto dfs = [&](auto&& self, int v, int p) -> int {
+			vi ch ids
+			for (int u : adj[v])
+				if (u != p) ch ids.push back(self(self, u, v))
+			sort(all(ch ids))
+			return iso id[v] =
+				hashes.try emplace(ch ids, sz(hashes))
+				.first->second
+		}
+		rep(i, 0, sz(adj)) if (iso id[i] == -1) dfs(dfs, i, i)
+		num distinct subtrees = sz(hashes)
+	}
 }
-       
-T front() { return (empty(le) ? ri[0] : le.back())[0]; }
-       
-template<class T, class F> struct deq {
-  using dt = array<T, 2>;
-  F op;
-  vector<dt> le, ri;
-  deq(const vector<T>& a, F a_op): op(a_op) {
-    rebuild(a, sz(a) / 2);
-  }
-  T query() {
-    if (empty(le)) return ri.back()[1];
-    if (empty(ri)) return le.back()[1];
-    return op(le.back()[1], ri.back()[1]);
-  }
-  int siz() { return sz(le) + sz(ri); }
-  void push_back(T elem) {
-    ri.push_back(
-      {elem, empty(ri) ? elem : op(ri.back()[1], elem)});
-  }
-  void pop_front() {
-    if (empty(le)) {
-      vector<T> a(sz(ri));
-      transform(all(ri), begin(a),
-        [](dt& x) { return x[0]; });
-      rebuild(a, (sz(a) + 1) / 2);
-    }
-    le.pop_back();
-  }
-  void rebuild(const vector<T>& a, int sz_le) {
-    vector<T> presum(sz(a));
-    partial_sum(rend(a) - sz_le, rend(a),
-      rend(presum) - sz_le,
-      [&](T x, T y) { return op(y, x); });
-    partial_sum(sz_le + all(a), begin(presum) + sz_le, op);
-    le.resize(sz_le);
-    ri.resize(sz(a) - sz_le);
-    transform(begin(a), begin(a) + sz_le, begin(presum),
-      rbegin(le), [](T x, T y) { return dt{x, y}; });
-    transform(sz_le + all(a), begin(presum) + sz_le,
-      begin(ri), [](T x, T y) { return dt{x, y}; });
-  }
-};
-       
-T back() { return (empty(ri) ? le[0] : ri.back())[0]; }
-       
-void push_front(T elem) {
-  le.push_back(
-    {elem, empty(le) ? elem : op(elem, le.back()[1])});
+
+vi cart binary tree(const vi& le) {
+	vi p(le)
+	rep(i, 0, sz(p)) for (int j = i - 1; j != le[i]
+												j = le[j]) if (le[j] == le[i])
+			p[j] = i
+	return p
 }
-void pop_back() {
-  if (empty(ri)) {
-    vector<T> a(sz(le));
-    transform(all(le), rbegin(a),
-      [](dt& x) { return x[0]; });
-    rebuild(a, sz(a) / 2);
-  }
-  ri.pop_back();
+
+vi mono range(const vi& le) {
+	vi ri(sz(le), sz(le))
+	rep(i, 0, sz(le)) for (int j = i - 1; j != le[i]
+												 j = le[j]) ri[j] = i
+	return ri
 }
-       
-struct dsu_restorable {
-  int num_sets;
-  vi p;
-  vector<ll> subtree;
-  vector<optional<array<int, 3>>> st;
-  dsu_restorable(int n):
-    num_sets(n), p(n, -1), subtree(n) {}
-  int find(int v) {
-    while (p[v] >= 0) v = p[v];
-    return v;
-  }
-  bool join(int u, int v) {
-    st.emplace_back();
-    if ((u = find(u)) == (v = find(v))) return 0;
-    if (p[u] > p[v]) swap(u, v);
-    st.back() = {u, v, p[v]};
-    p[u] += p[v], p[v] = u, subtree[u] += subtree[v],
-                  num_sets--;
-    return 1;
-  }
-  void undo() {
-    if (st.back()) {
-      auto [u, v, sz_v] = st.back().value();
-      num_sets++, subtree[u] -= subtree[v], p[v] = sz_v,
-                                            p[u] -= p[v];
-    }
-    st.pop_back();
-  }
-  int size(int v) { return -p[find(v)]; }
-  bool same_set(int u, int v) {
-    return find(u) == find(v);
-  }
-  ll sum(int v) { return subtree[find(v)]; }
-  void add(int v, int d) {
-    while (v >= 0) subtree[v] += d, v = p[v];
-  }
-};
-       
-UF get_rp_dsu(const vector<array<int, 3>>& rests, int n) {
-  vector<vector<array<int, 2>>> rests_by_len(n + 1);
-  for (auto [l1, l2, len] : rests)
-    rests_by_len[len].push_back({l1, l2});
-  UF uf(n);
-  for (int len = n; len > 0; len--)
-    for (auto [l1, l2] : rests_by_len[len])
-      if (uf.join(l1, l2))
-        rests_by_len[len - 1].push_back({l1 + 1, l2 + 1});
-  return uf;
+
+template<class t>
+vi cart k ary tree(const vector<t>& a, const vi& le) {
+	vi p(le)
+	for (int i = sz(a) - 1; i >= 0; i--)
+		for (int j = i - 1; j != le[i]; j = le[j])
+			if (le[j] == le[i] || a[i] == a[le[j]])
+				p[j] = (p[i] < i || a[i] != a[p[i]] ? i : p[i])
+	return p
 }
-       
-struct dsu_bipartite {
-  int num_sets;
-  struct node {
-    int p = -1;
-    bool is_bi = 1, parity;
-  };
-  vector<node> t;
-  dsu_bipartite(int n): num_sets(n), t(n) {}
-  int find(int v) {
-    if (t[v].p < 0) return v;
-    int root = find(t[v].p);
-    t[v].parity ^= t[t[v].p].parity;
-    return t[v].p = root;
-  }
-  bool join(int u, int v) {
-    int root_u = find(u), root_v = find(v);
-    if (root_u == root_v) {
-      if (t[u].parity == t[v].parity) t[root_u].is_bi = 0;
-      return 0;
-    }
-    if (t[root_u].p > t[root_v].p) {
-      swap(u, v);
-      swap(root_u, root_v);
-    }
-    t[root_u].is_bi &= t[root_v].is_bi;
-    t[root_v].parity = t[v].parity ^ 1 ^ t[u].parity;
-    t[root_u].p += t[root_v].p, t[root_v].p = root_u,
-                                num_sets--;
-    return 1;
-  }
-  int size(int v) { return -t[find(v)].p; }
-  bool same_set(int u, int v) {
-    return find(u) == find(v);
-  }
-  bool is_bipartite(int v) { return t[find(v)].is_bi; }
-};
-       
-struct rp_dsu {
-  vector<UF> ufs;
-  rp_dsu(int n): ufs(__lg(n) + 1, UF(n)) {}
-  template<class F>
-  void join(int l1, int l2, int len, const F& f) {
-    if (len == 0) return;
-    int lg = __lg(len);
-    join_impl(lg, l1, l2, f);
-    join_impl(lg, l1 + len - (1 << lg),
-      l2 + len - (1 << lg), f);
-  }
-  template<class F>
-  void join_impl(int lvl, int u, int v, const F& f) {
-    if (lvl == 0) {
-      u = ufs[0].find(u);
-      v = ufs[0].find(v);
-      if (!ufs[0].join(v, u)) return;
-      int w = ufs[0].find(u);
-      return f(w, u ^ v ^ w);
-    }
-    if (!ufs[lvl].join(u, v)) return;
-    join_impl(lvl - 1, u, v, f);
-    join_impl(lvl - 1, u + (1 << (lvl - 1)),
-      v + (1 << (lvl - 1)), f);
-  }
-};
-       
-BIT(const vector<T>& a): s(a) {
-  rep(i, 0, sz(a)) {
-    int j = i | (i + 1);
-    if (j < sz(a)) s[j] += s[i];
-  }
+
+template<class t, class f>
+vi mono st(const vector<t>& a, f cmp) {
+	vi le(sz(a))
+	rep(i, 0, sz(a)) for (
+		le[i] = i - 1; le[i] >= 0 && !cmp(a[le[i]], a[i]);)
+		le[i] = le[le[i]]
+	return le
 }
-       
-int lower_bound(T sum) {
-  if (sum <= 0) return -1;
-  int pos = 0;
-  for (int pw = 1 << __lg(sz(s) | 1); pw; pw >>= 1)
-    if (pos + pw <= sz(s) && s[pos + pw - 1] < sum)
-      pos += pw, sum -= s[pos - 1];
-  return pos;
+
+ll max rect histogram(const vi& a) {
+	vi le(mono st(a, less())), ri(mono range(le))
+	ll max area = 0
+	rep(i, 0, sz(a)) max area =
+		max(max area, ll(a[i]) * (ri[i] - le[i] - 1))
+	return max area
 }
-       
-template<class T> struct bit_rupq {
-  int n;
-  BIT<T> bit = {0};
-  bit_rupq(int a_n): n(a_n), bit(n) {}
-  bit_rupq(vector<T> a): n(sz(a)) {
-    adjacent_difference(all(a), begin(a));
-    bit = {a};
-  }
-  void update(int le, int ri, T d) {
-    if (le < n) bit.update(le, d);
-    if (ri < n) bit.update(ri, -d);
-  }
-  T get_index(int i) { return bit.query(i + 1); }
-};
-       
-template<class T> struct bit_rurq {
-  int n;
-  BIT<T> bit1 = {0}, bit2 = {0};
-  bit_rurq(int a_n): n(a_n), bit1(n), bit2(n) {}
-  bit_rurq(vector<T> a): n(sz(a)) {
-    adjacent_difference(all(a), begin(a));
-    bit1 = {a};
-    rep(i, 0, n) a[i] *= i;
-    bit2 = {a};
-  }
-  void update(int le, int ri, T d) {
-    if (le < n) {
-      bit1.update(le, d);
-      bit2.update(le, d * le);
-    }
-    if (ri < n) {
-      bit1.update(ri, -d);
-      bit2.update(ri, -d * ri);
-    }
-  }
-  T query(int ri) {
-    return bit1.query(ri) * ri - bit2.query(ri);
-  }
-  T query(int le, int ri) { return query(ri) - query(le); }
-};
-       
-template<class T> struct BIT {
-  vector<T> s;
-  BIT(int n): s(n) {}
-  void update(int i, T d) {
-    for (; i < sz(s); i |= i + 1) s[i] += d;
-  }
-  T query(int ri) {
-    T ret = 0;
-    for (; ri > 0; ri &= ri - 1) ret += s[ri - 1];
-    return ret;
-  }
-  T query(int le, int ri) {
-    return query(ri) - query(le);
-  }
-};
-       
-template<class T> struct binary_trie {
-  int mx_bit;
-  struct node {
-    int sub_sz = 0;
-    array<int, 2> next = {-1, -1};
-  };
-  vector<node> t;
-  binary_trie(): mx_bit(8 * sizeof(T) - 2), t(1) {}
-  void update(T num, int delta) {
-    t[0].sub_sz += delta;
-    for (int v = 0, bit = mx_bit; bit >= 0; bit--) {
-      bool b = (num >> bit) & 1;
-      if (t[v].next[b] == -1) {
-        t[v].next[b] = sz(t);
-        t.emplace_back();
-      }
-      v = t[v].next[b];
-      t[v].sub_sz += delta;
-    }
-  }
-};
-       
-T walk(T num) {
-  T res = 0;
-  for (int v = 0, bit = mx_bit; bit >= 0; bit--) {
-    bool b = (num >> bit) & 1;
-    int u = t[v].next[b];
-    if (u != -1 && t[u].sub_sz > 0)
-      v = u, res |= T(b) << bit;
-    else v = t[v].next[!b], res |= T(!b) << bit;
-  }
-  return res;
+
+vector<vi> count rectangles(
+	const vector<vector<bool>>& grid) {
+	int n = sz(grid), m = sz(grid[0])
+	vector cnt(n + 1, vector(m + 1, 0))
+	vi h(m)
+	for (const auto& row : grid) {
+		transform(all(h), begin(row), begin(h),
+		[](int a, bool g) {
+			return g * (a + 1)
+		})
+		vi le(mono st(h, less())), ri(mono range(le))
+		rep(j, 0, m) {
+			int cnt l = j - le[j] - 1, cnt r = ri[j] - j - 1
+			cnt[h[j]][cnt l + cnt r + 1]++
+			cnt[h[j]][cnt l]--
+			cnt[h[j]][cnt r]--
+		}
+	}
+	rep(i, 1, n + 1) rep(k, 0, 2) for (int j = m; j > 1; j--)
+		cnt[i][j - 1] += cnt[i][j]
+	for (int i = n; i > 1; i--)
+		rep(j, 1, m + 1) cnt[i - 1][j] += cnt[i][j]
+	return cnt
 }
-       
-int count(T num) {
-  int v = 0;
-  for (int bit = mx_bit; bit >= 0; bit--) {
-    bool b = (num >> bit) & 1;
-    if (t[v].next[b] == -1) return 0;
-    v = t[v].next[b];
-  }
-  return t[v].sub_sz;
+
+template<class t, class f> struct rmq {
+	vector<vector<t>> dp
+	f op
+	rmq(const vector<t>& a, f a op): dp(1, a), op(a op) {
+		for (int i = 0; (2 << i) <= sz(a); i++) {
+			dp.emplace back(sz(a) - (2 << i) + 1)
+			transform(all(dp[i]) - (1 << i),
+								begin(dp[i]) + (1 << i), begin(dp[i + 1]), op)
+		}
+	}
+	t query(int le, int ri) {
+		assert(le < ri)
+		int lg =   lg(ri - le)
+		return op(dp[lg][le], dp[lg][ri - (1 << lg)])
+	}
 }
-       
-struct bool_presum {
-  int n;
-  vector<uint64_t> mask;
-  vi presum;
-  bool_presum(const vector<bool>& a):
-    n(sz(a)), mask(n / 64 + 1), presum(sz(mask)) {
-    rep(i, 0, n) mask[i >> 6] |=
-      (uint64_t(a[i]) << (i & 63));
-    rep(i, 0, sz(mask) - 1) presum[i + 1] =
-      __builtin_popcountll(mask[i]) + presum[i];
-  }
-  int popcount(int i) {
-    return presum[i >> 6] +
-      __builtin_popcountll(
-        mask[i >> 6] & ((1ULL << (i & 63)) - 1));
-  }
-  bool on(int i) { return (mask[i >> 6] >> (i & 63)) & 1; }
-};
-       
+
+template<class t, class f> struct tree {
+	int n
+	t unit
+	f f
+	vector<t> s
+	tree(int a n, t a unit, f a f):
+		n(a n), unit(a unit), f(a f), s(2 * n, unit) {}
+	void update(int pos, t val) {
+		for (s[pos += n] = val; pos /= 2;)
+			s[pos] = f(s[pos * 2], s[pos * 2 + 1])
+	}
+	t query(int b, int e) {
+		t ra = unit, rb = unit
+		for (b += n, e += n; b < e; b /= 2, e /= 2) {
+			if (b % 2) ra = f(ra, s[b++])
+			if (e % 2) rb = f(s[--e], rb)
+		}
+		return f(ra, rb)
+	}
+}
+
+template<int n> struct implicit seg tree {
+	using dt = array<ll, 2>
+	static dt op(const dt& le, const dt& ri) {
+		if (le[0] == ri[0]) return {le[0], le[1] + ri[1]}
+		return min(le, ri)
+	}
+	static constexpr dt unit{llong max, 0ll}
+	struct node {
+		dt num
+		ll lazy = 0
+		int lch = -1, rch = -1
+	} tree[n]
+	int ptr = 0, root l, root r
+	implicit seg tree(int le, int ri):
+		root l(le), root r(ri) {
+		tree[ptr++].num = {0, ri - le}
+	}
+	void apply(ll add, int v) {
+		tree[v].num[0] += add
+		tree[v].lazy += add
+	}
+	void push(int tl, int tm, int tr, int v) {
+		if (tr - tl > 1 && tree[v].lch == -1) {
+			tree[v].lch = ptr
+			tree[ptr++].num = {0, tm - tl}
+			tree[v].rch = ptr
+			tree[ptr++].num = {0, tr - tm}
+		}
+		if (tree[v].lazy) {
+			apply(tree[v].lazy, tree[v].lch)
+			apply(tree[v].lazy, tree[v].rch)
+			tree[v].lazy = 0
+		}
+	}
+	void update(int le, int ri, ll add) {
+		update(le, ri, add, root l, root r, 0)
+	}
+	void update(int le, int ri, ll add, int tl, int tr,
+							int v) {
+		if (ri <= tl || tr <= le) return
+		if (le <= tl && tr <= ri) return apply(add, v)
+		int tm = tl + (tr - tl) / 2
+		push(tl, tm, tr, v)
+		update(le, ri, add, tl, tm, tree[v].lch)
+		update(le, ri, add, tm, tr, tree[v].rch)
+		tree[v].num =
+			op(tree[tree[v].lch].num, tree[tree[v].rch].num)
+	}
+	dt query(int le, int ri) {
+		return query(le, ri, root l, root r, 0)
+	}
+	dt query(int le, int ri, int tl, int tr, int v) {
+		if (ri <= tl || tr <= le) return unit
+		if (le <= tl && tr <= ri) return tree[v].num
+		int tm = tl + (tr - tl) / 2
+		push(tl, tm, tr, v)
+		return op(query(le, ri, tl, tm, tree[v].lch),
+							query(le, ri, tm, tr, tree[v].rch))
+	}
+}
+
+struct distinct query {
+	int n
+	pst pst
+	distinct query(const vi& a): n(sz(a)), pst(0, n + 1) {
+		map<int, int> last idx
+		rep(i, 0, n) {
+			int& idx = last idx[a[i]]
+			pst.update(idx, 1, i)
+			idx = i + 1
+		}
+	}
+	int query(int le, int ri) {
+		return pst.query(0, le + 1, ri) -
+					 pst.query(0, le + 1, le)
+	}
+}
+
+template<class f>
+int find last(int le, int ri, const f& f) {
+	return find last in range(le, ri, f, 0, n, 1)
+}
+template<class f>
+int find last in subtree(const f& f, int tl, int tr,
+												 int v) {
+	if (v >= n) return tl
+	int tm = split(tl, tr)
+	push(tl, tm, tr, v)
+	if (f(tree[2 * v + 1], tm, tr))
+		return find last in subtree(f, tm, tr, 2 * v + 1)
+	return find last in subtree(f, tl, tm, 2 * v)
+}
+template<class f>
+int find last in range(int le, int ri, const f& f, int tl,
+											 int tr, int v) {
+	if (ri <= tl || tr <= le) return le - 1
+	if (le <= tl && tr <= ri)
+		return f(tree[v], tl, tr)
+					 ? find last in subtree(f, tl, tr, v)
+					 : le - 1
+	int tm = split(tl, tr)
+	push(tl, tm, tr, v)
+	int res =
+		find last in range(le, ri, f, tm, tr, 2 * v + 1)
+	if (res >= le) return res
+	return find last in range(le, ri, f, tl, tm, 2 * v)
+}
+
+struct pst {
+	struct node {
+		ll sum
+		int lch, rch
+		node(ll a sum, int a lch, int a rch):
+			sum(a sum), lch(a lch), rch(a rch) {}
+	}
+	int root l, root r
+	vi roots
+	deque<node> tree
+	pst(int a root l, int a root r):
+		root l(a root l), root r(a root r), roots(1),
+		tree(1, {
+		0ll, 0, 0
+	}) {}
+	void update(int idx, ll change, int version) {
+		roots.push back(update impl(idx, change, root l,
+																root r, roots[version]))
+	}
+	int update impl(int idx, ll change, int tl, int tr,
+									int v) {
+		if (tr - tl == 1) {
+			tree.emplace back(tree[v].sum + change, 0, 0)
+			return sz(tree) - 1
+		}
+		int tm = tl + (tr - tl) / 2
+		int lch = tree[v].lch
+		int rch = tree[v].rch
+		if (idx < tm)
+			lch = update impl(idx, change, tl, tm, lch)
+		else rch = update impl(idx, change, tm, tr, rch)
+		tree.emplace back(tree[lch].sum + tree[rch].sum, lch,
+											rch)
+		return sz(tree) - 1
+	}
+	ll query(int le, int ri, int version) {
+		return query impl(le, ri, root l, root r,
+											roots[version])
+	}
+	ll query impl(int le, int ri, int tl, int tr, int v) {
+		if (v == 0 || ri <= tl || tr <= le) return 0
+		if (le <= tl && tr <= ri) return tree[v].sum
+		int tm = tl + (tr - tl) / 2
+		return query impl(le, ri, tl, tm, tree[v].lch) +
+					 query impl(le, ri, tm, tr, tree[v].rch)
+	}
+}
+
+tree(const vector<t>& a, t a unit, f a f):
+	n(sz(a)), unit(a unit), f(a f), s(2 * n) {
+	rep(i, 0, n) s[i + n] = a[i]
+	for (int i = n - 1; i > 0; i--)
+		s[i] = f(s[2 * i], s[2 * i + 1])
+}
+
+template<class f>
+int find first(int le, int ri, const f& f) {
+	return find first in range(le, ri, f, 0, n, 1)
+}
+template<class f>
+int find first in subtree(const f& f, int tl, int tr,
+													int v) {
+	if (v >= n) return tl
+	int tm = split(tl, tr)
+	push(tl, tm, tr, v)
+	if (f(tree[2 * v], tl, tm))
+		return find first in subtree(f, tl, tm, 2 * v)
+	return find first in subtree(f, tm, tr, 2 * v + 1)
+}
+template<class f>
+int find first in range(int le, int ri, const f& f, int tl,
+												int tr, int v) {
+	if (ri <= tl || tr <= le) return ri
+	if (le <= tl && tr <= ri)
+		return f(tree[v], tl, tr)
+					 ? find first in subtree(f, tl, tr, v)
+					 : ri
+	int tm = split(tl, tr)
+	push(tl, tm, tr, v)
+	int res = find first in range(le, ri, f, tl, tm, 2 * v)
+	if (res < ri) return res
+	return find first in range(le, ri, f, tm, tr, 2 * v + 1)
+}
+
+struct kth smallest {
+	pst pst
+	kth smallest(const vi& a, int minv, int maxv):
+		pst(minv, maxv) {
+		rep(i, 0, sz(a)) pst.update(a[i], 1, i)
+	}
+	int query(int le, int ri, int k) {
+		return query impl(k, pst.root l, pst.root r,
+											pst.roots[le], pst.roots[ri])
+	}
+	int query impl(int k, int tl, int tr, int vl, int vr) {
+		if (tr - tl == 1) return tl
+		int tm = tl + (tr - tl) / 2
+		int left count = pst.tree[pst.tree[vr].lch].sum -
+										 pst.tree[pst.tree[vl].lch].sum
+		if (left count >= k)
+			return query impl(k, tl, tm, pst.tree[vl].lch,
+												pst.tree[vr].lch)
+		return query impl(k - left count, tm, tr,
+											pst.tree[vl].rch, pst.tree[vr].rch)
+	}
+}
+
+template<class ds, class... args> struct pq updates {
+	ds ds
+	using upd =
+		pair<tuple<args...>, map<int, int>::iterator>
+	vector<upd> upd st
+	map<int, int>
+	mp
+	pq updates(ds& a ds): ds(a ds) {}
+	void pop update() {
+		vector<upd> extra
+		int idx = sz(upd st) - 1, lowest pri = int max
+		for (auto it = rbegin(mp)
+				 2 * sz(extra) < sz(upd st) - idx; it++) {
+			auto [pri, idx sk] = *it
+			extra.push back(upd st[idx sk])
+			idx = min(idx, idx sk), lowest pri = pri
+		}
+		auto it =
+		remove if(idx + all(upd st), [&](auto& curr) {
+			return curr.second->first >= lowest pri
+		})
+		reverse copy(all(extra), it)
+		rep(i, idx, sz(upd st)) ds.undo()
+		upd st.pop back()
+		mp.erase(prev(end(mp)))
+		rep(i, idx, sz(upd st)) {
+			apply(&ds::join,
+						tuple cat(make tuple(&ds), upd st[i].first))
+			upd st[i].second->second = i
+		}
+	}
+	void push update(args... args, int priority) {
+		ds.join(args...)
+		auto [it, ins] = mp.emplace(priority, sz(upd st))
+		assert(ins)
+		upd st.emplace back(make tuple(args...), it)
+	}
+}
+
+struct perm tree {
+	struct node {
+		int mn idx, mn num, len
+		bool is join
+	}
+	vector<node> p
+	int root
+	vector<vi> ch
+	bool touches(int u, int v) {
+		return p[u].mn num == p[v].mn num + p[v].len ||
+					 p[v].mn num == p[u].mn num + p[u].len
+	}
+	int allocate(int mn i, int mn v, int ln, bool join,
+							 const vi& chs) {
+		p.push back({mn i, mn v, ln, join})
+		ch.push back(chs)
+		return sz(ch) - 1
+	}
+	perm tree(const vi& a) {
+		int n = sz(a)
+		vi mn i(n), mx i(n)
+		{
+			vi a inv(n, -1)
+			rep(i, 0, n) a inv[a[i]] = i
+			linear rmq rmq min(a inv, less())
+			linear rmq rmq max(a inv, greater())
+			rep(i, 1, n) {
+				mn i[i] = a inv[rmq min.query idx(a[i - 1], a[i])]
+				mx i[i] = a inv[rmq max.query idx(a[i - 1], a[i])]
+			}
+		}
+		rep(i, 0, n) allocate(i, a[i], 1, 0, {})
+		vector<array<int, 4>> st
+		rep(i, 0, n) {
+			int v = i
+			while (!empty(st)) {
+				int u = st.back()[0]
+				if (!empty(ch[u]) && touches(ch[u].back(), v)) {
+					p[u].mn num = min(p[u].mn num, p[v].mn num)
+					p[u].len += p[v].len
+					ch[u].push back(v)
+					v = u
+					st.pop back()
+					continue
+				}
+				if (touches(v, u)) {
+					v = allocate(p[u].mn idx,
+											 min(p[v].mn num, p[u].mn num),
+											 p[v].len + p[u].len, 1, {u, v})
+					st.pop back()
+					continue
+				}
+				int le = min(p[u].mn idx, mn i[p[v].mn idx]),
+						ri = max(i, mx i[p[v].mn idx]),
+						idx = sz(st) - 1
+				while (ri == i && le != p[st[idx][0]].mn idx)
+					le = min(le, st[idx][1]),
+					ri = max(ri, st[idx][2]), idx = st[idx][3]
+				if (ri > i) {
+					st.push back({v, le, ri, idx})
+					break
+				}
+				int min num = p[v].mn num
+				vi chs(1 + sz(st) - idx, v)
+				rep(j, idx, sz(st)) min num =
+					min(min num, p[chs[j - idx] = st[j][0]].mn num)
+				v = allocate(le, min num, i - le + 1, 0, chs)
+				st.resize(idx)
+			}
+			if (empty(st)) st.push back({v, -1, -1, -1})
+		}
+		assert(sz(st) == 1)
+		root = st[0][0]
+	}
+}
+
+template<class t, class f> struct disjoint rmq {
+	vector<vector<t>> dp
+	f op
+	disjoint rmq(const vector<t>& a, f a op): op(a op) {
+		for (int len = 1, n = sz(a); len <= n; len *= 2) {
+			dp.emplace back(n)
+			for (int le = 0; le < n; le += 2 * len) {
+				int mi = min(n, le + len),
+						ri = min(n, le + 2 * len)
+				partial sum(rend(a) - mi, rend(a) - le,
+										rend(dp.back()) - mi,
+				[&](t x, t y) {
+					return op(y, x)
+				})
+				partial sum(begin(a) + mi, begin(a) + ri,
+										begin(dp.back()) + mi, op)
+			}
+		}
+	}
+	t query(int le, int ri) {
+		assert(le < ri)
+		if (ri - le == 1) return dp[0][le]
+		int lg =   lg(le ^ (ri - 1))
+		return op(dp[lg][le], dp[lg][ri - 1])
+	}
+}
+
+const int b = 318
+struct mode query {
+	int n
+	vi a, cnt, index into index
+	vector<vi> index
+	vector<vector<pii>>
+	mode blocks
+	mode query(const vi& a a):
+		n(sz(a a)), a(a a), cnt(n), index into index(n),
+		index(n), mode blocks((n + b - 1) / b,
+													vector<pii>((n + b - 1) / b)) {
+		rep(i, 0, n) {
+			index into index[i] = sz(index[a[i]])
+			index[a[i]].push back(i)
+		}
+		for (int start = 0; start < n; start += b) {
+			int mode = a[start]
+			rep(i, start, n) {
+				cnt[a[i]]++
+				if (cnt[a[i]] > cnt[mode]) mode = a[i]
+				if (
+					mode blocks[start / b][i / b].second < cnt[mode])
+					mode blocks[start / b][i / b] = {
+					mode, cnt[mode]
+				}
+			}
+			rep(i, start, n) cnt[a[i]]--
+		}
+	}
+	pii query(int le, int ri) {
+		assert(le < ri)
+		if (le / b >= (ri - 1) / b - 1) {
+			int mode = a[le]
+			rep(i, le, ri) {
+				cnt[a[i]]++
+				if (cnt[a[i]] > cnt[mode]) mode = a[i]
+			}
+			int cnt mode = cnt[mode]
+			rep(i, le, ri) cnt[a[i]]--
+			return {mode, cnt mode}
+		}
+		pii res = mode blocks[le / b + 1][(ri - 1) / b - 1]
+		for (int i = le / b * b + b - 1; i >= le; i--)
+			cnt[a[i]]++
+		for (int i = le / b * b + b - 1; i >= le; i--) {
+			int idx = index into index[i]
+			if (idx + res.second < sz(index[a[i]]) &&
+					index[a[i]][idx + res.second] < ri)
+				res = {a[i], cnt[a[i]] + res.second}
+			cnt[a[i]]--
+		}
+		rep(i, (ri - 1) / b * b, ri) cnt[a[i]]++
+		rep(i, (ri - 1) / b * b, ri) {
+			int idx = index into index[i]
+			if (idx >= res.second &&
+					index[a[i]][idx - res.second] >= le)
+				res = {a[i], cnt[a[i]] + res.second}
+			cnt[a[i]]--
+		}
+		return res
+	}
+}
+
+template<class t, class f> struct linear rmq {
+	vector<t> a
+	f cmp
+	vi head
+	vector<array<int, 2>> t
+	linear rmq(const vector<t>& a a, f a cmp):
+		a(a a), cmp(a cmp), head(sz(a) + 1), t(sz(a)) {
+		vi st{-1}
+		for (int i = 0; i <= sz(a); i++) {
+			int prev = -1
+			while (st.back() != -1 &&
+						 (i == sz(a) || !cmp(a[st.back()], a[i]))) {
+				if (prev != -1) head[prev] = st.back()
+				int pw2 = 1 <<   lg((end(st)[-2] + 1) ^ i)
+				t[st.back()][0] = prev = i & -pw2
+				st.pop back()
+				t[st.back() + 1][1] |= pw2
+			}
+			if (prev != -1) head[prev] = i
+			st.push back(i)
+		}
+		rep(i, 1, sz(a)) t[i][1] =
+			(t[i][1] | t[i - 1][1]) & -(t[i][0] & -t[i][0])
+	}
+	int query idx(int le, int ri) {
+		if (int j = t[le][0] ^ t[ri][0]; j) {
+			j = t[le][1] & t[ri][1] & -(1 <<   lg(j))
+			if (int k = t[le][1] ^ j; k)
+				k = 1 <<   lg(k), le = head[(t[le][0] & -k) | k]
+			if (int k = t[ri][1] ^ j; k)
+				k = 1 <<   lg(k), ri = head[(t[ri][0] & -k) | k]
+		}
+		return cmp(a[le], a[ri]) ? le : ri
+	}
+	t query(int le, int ri) {
+		return a[query idx(le, ri)]
+	}
+}
+
+t operator[](int i) {
+	return (
+					 i < sz(le) ? le[sz(le) - i - 1] : ri[i - sz(le)])[0]
+}
+
+t front() {
+	return (empty(le) ? ri[0] : le.back())[0]
+}
+
+template<class t, class f> struct deq {
+	using dt = array<t, 2>
+	f op
+	vector<dt> le, ri
+	deq(const vector<t>& a, f a op): op(a op) {
+		rebuild(a, sz(a) / 2)
+	}
+	t query() {
+		if (empty(le)) return ri.back()[1]
+		if (empty(ri)) return le.back()[1]
+		return op(le.back()[1], ri.back()[1])
+	}
+	int siz() {
+		return sz(le) + sz(ri)
+	}
+	void push back(t elem) {
+		ri.push back(
+		{elem, empty(ri) ? elem : op(ri.back()[1], elem)})
+	}
+	void pop front() {
+		if (empty(le)) {
+			vector<t> a(sz(ri))
+			transform(all(ri), begin(a),
+			[](dt& x) {
+				return x[0]
+			})
+			rebuild(a, (sz(a) + 1) / 2)
+		}
+		le.pop back()
+	}
+	void rebuild(const vector<t>& a, int sz le) {
+		vector<t> presum(sz(a))
+		partial sum(rend(a) - sz le, rend(a),
+								rend(presum) - sz le,
+		[&](t x, t y) {
+			return op(y, x)
+		})
+		partial sum(sz le + all(a), begin(presum) + sz le, op)
+		le.resize(sz le)
+		ri.resize(sz(a) - sz le)
+		transform(begin(a), begin(a) + sz le, begin(presum),
+		rbegin(le), [](t x, t y) {
+			return dt{x, y}
+		})
+		transform(sz le + all(a), begin(presum) + sz le,
+		begin(ri), [](t x, t y) {
+			return dt{x, y}
+		})
+	}
+}
+
+t back() {
+	return (empty(ri) ? le[0] : ri.back())[0]
+}
+
+void push front(t elem) {
+	le.push back(
+	{elem, empty(le) ? elem : op(elem, le.back()[1])})
+}
+void pop back() {
+	if (empty(ri)) {
+		vector<t> a(sz(le))
+		transform(all(le), rbegin(a),
+		[](dt& x) {
+			return x[0]
+		})
+		rebuild(a, sz(a) / 2)
+	}
+	ri.pop back()
+}
+
+struct dsu restorable {
+	int num sets
+	vi p
+	vector<ll> subtree
+	vector<optional<array<int, 3>>> st
+	dsu restorable(int n):
+		num sets(n), p(n, -1), subtree(n) {}
+	int find(int v) {
+		while (p[v] >= 0) v = p[v]
+		return v
+	}
+	bool join(int u, int v) {
+		st.emplace back()
+		if ((u = find(u)) == (v = find(v))) return 0
+		if (p[u] > p[v]) swap(u, v)
+		st.back() = {u, v, p[v]}
+		p[u] += p[v], p[v] = u, subtree[u] += subtree[v],
+																					num sets--
+		return 1
+	}
+	void undo() {
+		if (st.back()) {
+			auto [u, v, sz v] = st.back().value()
+			num sets++, subtree[u] -= subtree[v], p[v] = sz v,
+																p[u] -= p[v]
+		}
+		st.pop back()
+	}
+	int size(int v) {
+		return -p[find(v)]
+	}
+	bool same set(int u, int v) {
+		return find(u) == find(v)
+	}
+	ll sum(int v) {
+		return subtree[find(v)]
+	}
+	void add(int v, int d) {
+		while (v >= 0) subtree[v] += d, v = p[v]
+	}
+}
+
+uf get rp dsu(const vector<array<int, 3>>& rests, int n) {
+	vector<vector<array<int, 2>>> rests by len(n + 1)
+	for (auto [l1, l2, len] : rests)
+		rests by len[len].push back({l1, l2})
+	uf uf(n)
+	for (int len = n; len > 0; len--)
+		for (auto [l1, l2] : rests by len[len])
+			if (uf.join(l1, l2))
+				rests by len[len - 1].push back({l1 + 1, l2 + 1})
+	return uf
+}
+
+struct dsu bipartite {
+	int num sets
+	struct node {
+		int p = -1
+		bool is bi = 1, parity
+	}
+	vector<node> t
+	dsu bipartite(int n): num sets(n), t(n) {}
+	int find(int v) {
+		if (t[v].p < 0) return v
+		int root = find(t[v].p)
+		t[v].parity ^= t[t[v].p].parity
+		return t[v].p = root
+	}
+	bool join(int u, int v) {
+		int root u = find(u), root v = find(v)
+		if (root u == root v) {
+			if (t[u].parity == t[v].parity) t[root u].is bi = 0
+			return 0
+		}
+		if (t[root u].p > t[root v].p) {
+			swap(u, v)
+			swap(root u, root v)
+		}
+		t[root u].is bi &= t[root v].is bi
+		t[root v].parity = t[v].parity ^ 1 ^ t[u].parity
+		t[root u].p += t[root v].p, t[root v].p = root u,
+																				 num sets--
+		return 1
+	}
+	int size(int v) {
+		return -t[find(v)].p
+	}
+	bool same set(int u, int v) {
+		return find(u) == find(v)
+	}
+	bool is bipartite(int v) {
+		return t[find(v)].is bi
+	}
+}
+
+struct rp dsu {
+	vector<uf> ufs
+	rp dsu(int n): ufs(  lg(n) + 1, uf(n)) {}
+	template<class f>
+	void join(int l1, int l2, int len, const f& f) {
+		if (len == 0) return
+		int lg =   lg(len)
+		join impl(lg, l1, l2, f)
+		join impl(lg, l1 + len - (1 << lg),
+							l2 + len - (1 << lg), f)
+	}
+	template<class f>
+	void join impl(int lvl, int u, int v, const f& f) {
+		if (lvl == 0) {
+			u = ufs[0].find(u)
+			v = ufs[0].find(v)
+			if (!ufs[0].join(v, u)) return
+			int w = ufs[0].find(u)
+			return f(w, u ^ v ^ w)
+		}
+		if (!ufs[lvl].join(u, v)) return
+		join impl(lvl - 1, u, v, f)
+		join impl(lvl - 1, u + (1 << (lvl - 1)),
+							v + (1 << (lvl - 1)), f)
+	}
+}
+
+bit(const vector<t>& a): s(a) {
+	rep(i, 0, sz(a)) {
+		int j = i | (i + 1)
+		if (j < sz(a)) s[j] += s[i]
+	}
+}
+
+int lower bound(t sum) {
+	if (sum <= 0) return -1
+	int pos = 0
+	for (int pw = 1 <<   lg(sz(s) | 1); pw; pw >>= 1)
+		if (pos + pw <= sz(s) && s[pos + pw - 1] < sum)
+			pos += pw, sum -= s[pos - 1]
+	return pos
+}
+
+template<class t> struct bit rupq {
+	int n
+	bit<t> bit = {0}
+	bit rupq(int a n): n(a n), bit(n) {}
+	bit rupq(vector<t> a): n(sz(a)) {
+		adjacent difference(all(a), begin(a))
+		bit = {a}
+	}
+	void update(int le, int ri, t d) {
+		if (le < n) bit.update(le, d)
+		if (ri < n) bit.update(ri, -d)
+	}
+	t get index(int i) {
+		return bit.query(i + 1)
+	}
+}
+
+template<class t> struct bit rurq {
+	int n
+	bit<t> bit1 = {0}, bit2 = {0}
+	bit rurq(int a n): n(a n), bit1(n), bit2(n) {}
+	bit rurq(vector<t> a): n(sz(a)) {
+		adjacent difference(all(a), begin(a))
+		bit1 = {a}
+		rep(i, 0, n) a[i] *= i
+		bit2 = {a}
+	}
+	void update(int le, int ri, t d) {
+		if (le < n) {
+			bit1.update(le, d)
+			bit2.update(le, d * le)
+		}
+		if (ri < n) {
+			bit1.update(ri, -d)
+			bit2.update(ri, -d * ri)
+		}
+	}
+	t query(int ri) {
+		return bit1.query(ri) * ri - bit2.query(ri)
+	}
+	t query(int le, int ri) {
+		return query(ri) - query(le)
+	}
+}
+
+template<class t> struct bit {
+	vector<t> s
+	bit(int n): s(n) {}
+	void update(int i, t d) {
+		for (; i < sz(s); i |= i + 1) s[i] += d
+	}
+	t query(int ri) {
+		t ret = 0
+		for (; ri > 0; ri &= ri - 1) ret += s[ri - 1]
+		return ret
+	}
+	t query(int le, int ri) {
+		return query(ri) - query(le)
+	}
+}
+
+template<class t> struct binary trie {
+	int mx bit
+	struct node {
+		int sub sz = 0
+		array<int, 2> next = {-1, -1}
+	}
+	vector<node> t
+	binary trie(): mx bit(8 * sizeof(t) - 2), t(1) {}
+	void update(t num, int delta) {
+		t[0].sub sz += delta
+		for (int v = 0, bit = mx bit; bit >= 0; bit--) {
+			bool b = (num >> bit) & 1
+			if (t[v].next[b] == -1) {
+				t[v].next[b] = sz(t)
+				t.emplace back()
+			}
+			v = t[v].next[b]
+			t[v].sub sz += delta
+		}
+	}
+}
+
+t walk(t num) {
+	t res = 0
+	for (int v = 0, bit = mx bit; bit >= 0; bit--) {
+		bool b = (num >> bit) & 1
+		int u = t[v].next[b]
+		if (u != -1 && t[u].sub sz > 0)
+			v = u, res |= t(b) << bit
+		else v = t[v].next[!b], res |= t(!b) << bit
+	}
+	return res
+}
+
+int count(t num) {
+	int v = 0
+	for (int bit = mx bit; bit >= 0; bit--) {
+		bool b = (num >> bit) & 1
+		if (t[v].next[b] == -1) return 0
+		v = t[v].next[b]
+	}
+	return t[v].sub sz
+}
+
+struct bool presum {
+	int n
+	vector<uint64 t> mask
+	vi presum
+	bool presum(const vector<bool>& a):
+		n(sz(a)), mask(n / 64 + 1), presum(sz(mask)) {
+		rep(i, 0, n) mask[i >> 6] |=
+			(uint64 t(a[i]) << (i & 63))
+		rep(i, 0, sz(mask) - 1) presum[i + 1] =
+			  builtin popcountll(mask[i]) + presum[i]
+	}
+	int popcount(int i) {
+		return presum[i >> 6] +
+					   builtin popcountll(
+						 mask[i >> 6] & ((1ull << (i & 63)) - 1))
+	}
+	bool on(int i) {
+		return (mask[i >> 6] >> (i & 63)) & 1
+	}
+}
+
 int split(int tl, int tr) {
-  int pw2 = 1 << __lg(tr - tl);
-  return min(tl + pw2, tr - pw2 / 2);
+	int pw2 = 1 <<   lg(tr - tl)
+	return min(tl + pw2, tr - pw2 / 2)
 }
-struct merge_sort_tree_updates {
-  int n;
-  vi sorted, perm;
-  vector<bool_presum> bool_presums;
-  vector<bool_bit> bool_bits;
-  merge_sort_tree_updates(const vi& a,
-    const vector<bool>& active):
-    n(sz(a)), sorted(n), perm(n),
-    bool_presums(n, vector<bool>()),
-    bool_bits(2 * n, vector<bool>()) {
-    if (!n) return;
-    vector<pair<int, bool>> cpy(n);
-    rep(i, 0, n) cpy[i].first = i;
-    build(a, active, cpy, 0, n, 1);
-    rep(i, 0, n) {
-      perm[cpy[i].first] = i;
-      sorted[i] = a[cpy[i].first];
-    }
-  }
-  void build(const vi& a, const vector<bool>& active,
-    vector<pair<int, bool>>& cpy, int tl, int tr, int v) {
-    if (tr - tl == 1) {
-      bool_bits[v] = bool_bit(vector<bool>(1, active[tl]));
-      return;
-    }
-    int tm = split(tl, tr);
-    build(a, active, cpy, tl, tm, 2 * v);
-    build(a, active, cpy, tm, tr, 2 * v + 1);
-    rep(i, tl, tr) cpy[i].second = i < tm;
-    inplace_merge(begin(cpy) + tl, begin(cpy) + tm,
-      begin(cpy) + tr, [&](auto& i, auto& j) {
-        return a[i.first] < a[j.first];
-      });
-    vector<bool> bools(tr - tl);
-    transform(begin(cpy) + tl, begin(cpy) + tr,
-      begin(bools), [](auto& num) { return num.second; });
-    bool_presums[v] = bool_presum(bools);
-    transform(begin(cpy) + tl, begin(cpy) + tr,
-      begin(bools),
-      [&](auto& num) { return active[num.first]; });
-    bool_bits[v] = bool_bit(bools);
-  }
-  void set_active(int i, bool is_active) {
-    if (bool_bits[1].on(perm[i]) == is_active) return;
-    set_active_impl(perm[i], is_active, 0, n, 1);
-  }
-  void set_active_impl(int i, bool is_active, int tl,
-    int tr, int v) {
-    bool_bits[v].set(i, is_active);
-    if (tr - tl == 1) return;
-    int tm = split(tl, tr),
-        pi = bool_presums[v].popcount(i);
-    if (bool_presums[v].on(i))
-      return set_active_impl(pi, is_active, tl, tm, 2 * v);
-    set_active_impl(i - pi, is_active, tm, tr, 2 * v + 1);
-  }
-  int rect_count(int le, int ri, int x, int y) {
-    int xi = lower_bound(all(sorted), x) - begin(sorted);
-    int yi = lower_bound(all(sorted), y) - begin(sorted);
-    return rect_count_impl(le, ri, xi, yi, 0, n, 1);
-  }
-  int rect_count_impl(int le, int ri, int xi, int yi,
-    int tl, int tr, int v) {
-    if (ri <= tl || tr <= le) return 0;
-    if (le <= tl && tr <= ri)
-      return bool_bits[v].popcount(xi, yi);
-    int tm = split(tl, tr),
-        pl = bool_presums[v].popcount(xi),
-        pr = bool_presums[v].popcount(yi);
-    return rect_count_impl(le, ri, pl, pr, tl, tm, 2 * v) +
-      rect_count_impl(le, ri, xi - pl, yi - pr, tm, tr,
-        2 * v + 1);
-  }
-  int kth_smallest(int x, int y, int k) {
-    int xi = lower_bound(all(sorted), x) - begin(sorted);
-    int yi = lower_bound(all(sorted), y) - begin(sorted);
-    return kth_smallest_impl(xi, yi, k, 0, n, 1);
-  }
-  int kth_smallest_impl(int xi, int yi, int k, int tl,
-    int tr, int v) {
-    if (tr - tl == 1) return tl;
-    int tm = split(tl, tr),
-        pl = bool_presums[v].popcount(xi),
-        pr = bool_presums[v].popcount(yi);
-    int cnt_left = bool_bits[2 * v].popcount(pl, pr);
-    if (k <= cnt_left)
-      return kth_smallest_impl(pl, pr, k, tl, tm, 2 * v);
-    return kth_smallest_impl(xi - pl, yi - pr,
-      k - cnt_left, tm, tr, 2 * v + 1);
-  }
-};
-       
+struct merge sort tree updates {
+	int n
+	vi sorted, perm
+	vector<bool presum> bool presums
+	vector<bool bit> bool bits
+	merge sort tree updates(const vi& a,
+													const vector<bool>& active):
+		n(sz(a)), sorted(n), perm(n),
+		bool presums(n, vector<bool>()),
+		bool bits(2 * n, vector<bool>()) {
+		if (!n) return
+		vector<pair<int, bool>> cpy(n)
+		rep(i, 0, n) cpy[i].first = i
+		build(a, active, cpy, 0, n, 1)
+		rep(i, 0, n) {
+			perm[cpy[i].first] = i
+			sorted[i] = a[cpy[i].first]
+		}
+	}
+	void build(const vi& a, const vector<bool>& active,
+						 vector<pair<int, bool>>& cpy, int tl, int tr, int v) {
+		if (tr - tl == 1) {
+			bool bits[v] = bool bit(vector<bool>(1, active[tl]))
+			return
+		}
+		int tm = split(tl, tr)
+		build(a, active, cpy, tl, tm, 2 * v)
+		build(a, active, cpy, tm, tr, 2 * v + 1)
+		rep(i, tl, tr) cpy[i].second = i < tm
+		inplace merge(begin(cpy) + tl, begin(cpy) + tm,
+		begin(cpy) + tr, [&](auto& i, auto& j) {
+			return a[i.first] < a[j.first]
+		})
+		vector<bool> bools(tr - tl)
+		transform(begin(cpy) + tl, begin(cpy) + tr,
+		begin(bools), [](auto& num) {
+			return num.second
+		})
+		bool presums[v] = bool presum(bools)
+		transform(begin(cpy) + tl, begin(cpy) + tr,
+							begin(bools),
+		[&](auto& num) {
+			return active[num.first]
+		})
+		bool bits[v] = bool bit(bools)
+	}
+	void set active(int i, bool is active) {
+		if (bool bits[1].on(perm[i]) == is active) return
+		set active impl(perm[i], is active, 0, n, 1)
+	}
+	void set active impl(int i, bool is active, int tl,
+											 int tr, int v) {
+		bool bits[v].set(i, is active)
+		if (tr - tl == 1) return
+		int tm = split(tl, tr),
+				pi = bool presums[v].popcount(i)
+		if (bool presums[v].on(i))
+			return set active impl(pi, is active, tl, tm, 2 * v)
+		set active impl(i - pi, is active, tm, tr, 2 * v + 1)
+	}
+	int rect count(int le, int ri, int x, int y) {
+		int xi = lower bound(all(sorted), x) - begin(sorted)
+		int yi = lower bound(all(sorted), y) - begin(sorted)
+		return rect count impl(le, ri, xi, yi, 0, n, 1)
+	}
+	int rect count impl(int le, int ri, int xi, int yi,
+											int tl, int tr, int v) {
+		if (ri <= tl || tr <= le) return 0
+		if (le <= tl && tr <= ri)
+			return bool bits[v].popcount(xi, yi)
+		int tm = split(tl, tr),
+				pl = bool presums[v].popcount(xi),
+				pr = bool presums[v].popcount(yi)
+		return rect count impl(le, ri, pl, pr, tl, tm, 2 * v) +
+					 rect count impl(le, ri, xi - pl, yi - pr, tm, tr,
+													 2 * v + 1)
+	}
+	int kth smallest(int x, int y, int k) {
+		int xi = lower bound(all(sorted), x) - begin(sorted)
+		int yi = lower bound(all(sorted), y) - begin(sorted)
+		return kth smallest impl(xi, yi, k, 0, n, 1)
+	}
+	int kth smallest impl(int xi, int yi, int k, int tl,
+												int tr, int v) {
+		if (tr - tl == 1) return tl
+		int tm = split(tl, tr),
+				pl = bool presums[v].popcount(xi),
+				pr = bool presums[v].popcount(yi)
+		int cnt left = bool bits[2 * v].popcount(pl, pr)
+		if (k <= cnt left)
+			return kth smallest impl(pl, pr, k, tl, tm, 2 * v)
+		return kth smallest impl(xi - pl, yi - pr,
+														 k - cnt left, tm, tr, 2 * v + 1)
+	}
+}
+
 int split(int tl, int tr) {
-  int pw2 = 1 << __lg(tr - tl);
-  return min(tl + pw2, tr - pw2 / 2);
+	int pw2 = 1 <<   lg(tr - tl)
+	return min(tl + pw2, tr - pw2 / 2)
 }
-struct wavelet_tree {
-  int n, minv, maxv;
-  vector<bool_presum> bool_presums;
-  vector<vector<ll>> presums;
-  wavelet_tree(vi a, int a_minv, int a_maxv):
-    n(sz(a)), minv(a_minv), maxv(a_maxv),
-    bool_presums(maxv - minv, vector<bool>()),
-    presums(maxv - minv) {
-    build(a, 0, n, minv, maxv, 1);
-  }
-  void build(vi& a, int le, int ri, int tl, int tr,
-    int v) {
-    if (tr - tl <= 1) return;
-    int tm = split(tl, tr);
-    auto low = [&](int num) { return num < tm; };
-    vector<bool> bools(ri - le);
-    transform(begin(a) + le, begin(a) + ri, begin(bools),
-      low);
-    bool_presums[v] = bool_presum(bools);
-    presums[v].resize(ri - le + 1);
-    inclusive_scan(begin(a) + le, begin(a) + ri,
-      begin(presums[v]) + 1, plus<ll>(), 0LL);
-    int mi =
-      stable_partition(begin(a) + le, begin(a) + ri, low) -
-      begin(a);
-    build(a, le, mi, tl, tm, 2 * v);
-    build(a, mi, ri, tm, tr, 2 * v + 1);
-  }
-  int rect_count(int le, int ri, int x, int y) {
-    return rect_count_impl(le, ri, x, y, minv, maxv, 1);
-  }
-  int rect_count_impl(int le, int ri, int x, int y, int tl,
-    int tr, int v) {
-    if (y <= tl || tr <= x) return 0;
-    if (x <= tl && tr <= y) return ri - le;
-    int tm = split(tl, tr),
-        pl = bool_presums[v].popcount(le),
-        pr = bool_presums[v].popcount(ri);
-    return rect_count_impl(pl, pr, x, y, tl, tm, 2 * v) +
-      rect_count_impl(le - pl, ri - pr, x, y, tm, tr,
-        2 * v + 1);
-  }
-  ll rect_sum(int le, int ri, int x, int y) {
-    return rect_sum_impl(le, ri, x, y, minv, maxv, 1);
-  }
-  ll rect_sum_impl(int le, int ri, int x, int y, int tl,
-    int tr, int v) {
-    if (y <= tl || tr <= x) return 0;
-    if (x <= tl && tr <= y)
-      return (tr - tl == 1
-          ? ll(tl) * (ri - le)
-          : presums[v][ri] - presums[v][le]);
-    int tm = split(tl, tr),
-        pl = bool_presums[v].popcount(le),
-        pr = bool_presums[v].popcount(ri);
-    return rect_sum_impl(pl, pr, x, y, tl, tm, 2 * v) +
-      rect_sum_impl(le - pl, ri - pr, x, y, tm, tr,
-        2 * v + 1);
-  }
-  int kth_smallest(int le, int ri, int k) {
-    return kth_smallest_impl(le, ri, k, minv, maxv, 1);
-  }
-  int kth_smallest_impl(int le, int ri, int k, int tl,
-    int tr, int v) {
-    if (tr - tl == 1) return tl;
-    int tm = split(tl, tr),
-        pl = bool_presums[v].popcount(le),
-        pr = bool_presums[v].popcount(ri);
-    if (k <= pr - pl)
-      return kth_smallest_impl(pl, pr, k, tl, tm, 2 * v);
-    return kth_smallest_impl(le - pl, ri - pr,
-      k - (pr - pl), tm, tr, 2 * v + 1);
-  }
-  ll kth_sum(int le, int ri, int k) {
-    return kth_sum_impl(le, ri, k, minv, maxv, 1);
-  }
-  ll kth_sum_impl(int le, int ri, int k, int tl, int tr,
-    int v) {
-    if (tr - tl == 1) return ll(k) * tl;
-    int tm = split(tl, tr),
-        pl = bool_presums[v].popcount(le),
-        pr = bool_presums[v].popcount(ri);
-    if (k <= pr - pl)
-      return kth_sum_impl(pl, pr, k, tl, tm, 2 * v);
-    ll sum_left = (tm - tl == 1
-        ? ll(tl) * (pr - pl)
-        : presums[2 * v][pr] - presums[2 * v][pl]);
-    return sum_left +
-      kth_sum_impl(le - pl, ri - pr, k - (pr - pl), tm, tr,
-        2 * v + 1);
-  }
-};
-       
-struct bool_bit {
-  int n;
-  vector<uint64_t> mask;
-  BIT<int> presum = {0};
-  bool_bit(const vector<bool>& a):
-    n(sz(a)), mask(n / 64 + 1) {
-    vi init((n + 63) / 64);
-    rep(i, 0, n) {
-      mask[i >> 6] |= (uint64_t(a[i]) << (i & 63));
-      init[i >> 6] += a[i];
-    }
-    presum = {init};
-  }
-  int popcount(int i) {
-    return presum.query(i >> 6) +
-      __builtin_popcountll(
-        mask[i >> 6] & ((1ULL << (i & 63)) - 1));
-  }
-  int popcount(int le, int ri) {
-    return popcount(ri) - popcount(le);
-  }
-  bool on(int i) { return (mask[i >> 6] >> (i & 63)) & 1; }
-  void set(int i, bool new_num) {
-    if (on(i) != new_num) {
-      mask[i >> 6] ^= 1ULL << (i & 63);
-      presum.update(i >> 6, new_num ? 1 : -1);
-    }
-  }
-};
-       
+struct wavelet tree {
+	int n, minv, maxv
+	vector<bool presum> bool presums
+	vector<vector<ll>> presums
+	wavelet tree(vi a, int a minv, int a maxv):
+		n(sz(a)), minv(a minv), maxv(a maxv),
+		bool presums(maxv - minv, vector<bool>()),
+		presums(maxv - minv) {
+		build(a, 0, n, minv, maxv, 1)
+	}
+	void build(vi& a, int le, int ri, int tl, int tr,
+						 int v) {
+		if (tr - tl <= 1) return
+		int tm = split(tl, tr)
+		auto low = [&](int num) {
+			return num < tm
+		}
+		vector<bool> bools(ri - le)
+		transform(begin(a) + le, begin(a) + ri, begin(bools),
+							low)
+		bool presums[v] = bool presum(bools)
+		presums[v].resize(ri - le + 1)
+		inclusive scan(begin(a) + le, begin(a) + ri,
+									 begin(presums[v]) + 1, plus<ll>(), 0ll)
+		int mi =
+			stable partition(begin(a) + le, begin(a) + ri, low) -
+			begin(a)
+		build(a, le, mi, tl, tm, 2 * v)
+		build(a, mi, ri, tm, tr, 2 * v + 1)
+	}
+	int rect count(int le, int ri, int x, int y) {
+		return rect count impl(le, ri, x, y, minv, maxv, 1)
+	}
+	int rect count impl(int le, int ri, int x, int y, int tl,
+											int tr, int v) {
+		if (y <= tl || tr <= x) return 0
+		if (x <= tl && tr <= y) return ri - le
+		int tm = split(tl, tr),
+				pl = bool presums[v].popcount(le),
+				pr = bool presums[v].popcount(ri)
+		return rect count impl(pl, pr, x, y, tl, tm, 2 * v) +
+					 rect count impl(le - pl, ri - pr, x, y, tm, tr,
+													 2 * v + 1)
+	}
+	ll rect sum(int le, int ri, int x, int y) {
+		return rect sum impl(le, ri, x, y, minv, maxv, 1)
+	}
+	ll rect sum impl(int le, int ri, int x, int y, int tl,
+									 int tr, int v) {
+		if (y <= tl || tr <= x) return 0
+		if (x <= tl && tr <= y)
+			return (tr - tl == 1
+							? ll(tl) * (ri - le)
+							: presums[v][ri] - presums[v][le])
+		int tm = split(tl, tr),
+				pl = bool presums[v].popcount(le),
+				pr = bool presums[v].popcount(ri)
+		return rect sum impl(pl, pr, x, y, tl, tm, 2 * v) +
+					 rect sum impl(le - pl, ri - pr, x, y, tm, tr,
+												 2 * v + 1)
+	}
+	int kth smallest(int le, int ri, int k) {
+		return kth smallest impl(le, ri, k, minv, maxv, 1)
+	}
+	int kth smallest impl(int le, int ri, int k, int tl,
+												int tr, int v) {
+		if (tr - tl == 1) return tl
+		int tm = split(tl, tr),
+				pl = bool presums[v].popcount(le),
+				pr = bool presums[v].popcount(ri)
+		if (k <= pr - pl)
+			return kth smallest impl(pl, pr, k, tl, tm, 2 * v)
+		return kth smallest impl(le - pl, ri - pr,
+														 k - (pr - pl), tm, tr, 2 * v + 1)
+	}
+	ll kth sum(int le, int ri, int k) {
+		return kth sum impl(le, ri, k, minv, maxv, 1)
+	}
+	ll kth sum impl(int le, int ri, int k, int tl, int tr,
+									int v) {
+		if (tr - tl == 1) return ll(k) * tl
+		int tm = split(tl, tr),
+				pl = bool presums[v].popcount(le),
+				pr = bool presums[v].popcount(ri)
+		if (k <= pr - pl)
+			return kth sum impl(pl, pr, k, tl, tm, 2 * v)
+		ll sum left = (tm - tl == 1
+									 ? ll(tl) * (pr - pl)
+									 : presums[2 * v][pr] - presums[2 * v][pl])
+		return sum left +
+					 kth sum impl(le - pl, ri - pr, k - (pr - pl), tm, tr,
+												2 * v + 1)
+	}
+}
+
+struct bool bit {
+	int n
+	vector<uint64 t> mask
+	bit<int> presum = {0}
+	bool bit(const vector<bool>& a):
+		n(sz(a)), mask(n / 64 + 1) {
+		vi init((n + 63) / 64)
+		rep(i, 0, n) {
+			mask[i >> 6] |= (uint64 t(a[i]) << (i & 63))
+			init[i >> 6] += a[i]
+		}
+		presum = {init}
+	}
+	int popcount(int i) {
+		return presum.query(i >> 6) +
+					   builtin popcountll(
+						 mask[i >> 6] & ((1ull << (i & 63)) - 1))
+	}
+	int popcount(int le, int ri) {
+		return popcount(ri) - popcount(le)
+	}
+	bool on(int i) {
+		return (mask[i >> 6] >> (i & 63)) & 1
+	}
+	void set(int i, bool new num) {
+		if (on(i) != new num) {
+			mask[i >> 6] ^= 1ull << (i & 63)
+			presum.update(i >> 6, new num ? 1 : -1)
+		}
+	}
+}
+
 int split(int tl, int tr) {
-  int pw2 = 1 << __lg(tr - tl);
-  return min(tl + pw2, tr - pw2 / 2);
+	int pw2 = 1 <<   lg(tr - tl)
+	return min(tl + pw2, tr - pw2 / 2)
 }
-struct merge_sort_tree {
-  int n;
-  vi sorted;
-  vector<bool_presum> bool_presums;
-  merge_sort_tree(const vi& a):
-    n(sz(a)), sorted(n), bool_presums(n, vector<bool>()) {
-    vector<pair<int, bool>> cpy(n);
-    transform(all(a), begin(cpy),
-      [](int num) { return pair(num, 0); });
-    build(cpy, 0, n, 1);
-    transform(all(cpy), begin(sorted),
-      [](auto& num) { return num.first; });
-  }
-  void build(vector<pair<int, bool>>& cpy, int tl, int tr,
-    int v) {
-    if (tr - tl <= 1) return;
-    int tm = split(tl, tr);
-    build(cpy, tl, tm, 2 * v);
-    build(cpy, tm, tr, 2 * v + 1);
-    rep(i, tl, tr) cpy[i].second = i < tm;
-    inplace_merge(begin(cpy) + tl, begin(cpy) + tm,
-      begin(cpy) + tr);
-    vector<bool> bools(tr - tl);
-    transform(begin(cpy) + tl, begin(cpy) + tr,
-      begin(bools), [](auto& num) { return num.second; });
-    bool_presums[v] = bool_presum(bools);
-  }
-  int rect_count(int le, int ri, int x, int y) {
-    int xi = lower_bound(all(sorted), x) - begin(sorted);
-    int yi = lower_bound(all(sorted), y) - begin(sorted);
-    return rect_count_impl(le, ri, xi, yi, 0, n, 1);
-  }
-  int rect_count_impl(int le, int ri, int xi, int yi,
-    int tl, int tr, int v) {
-    if (ri <= tl || tr <= le) return 0;
-    if (le <= tl && tr <= ri) return yi - xi;
-    int tm = split(tl, tr),
-        pl = bool_presums[v].popcount(xi),
-        pr = bool_presums[v].popcount(yi);
-    return rect_count_impl(le, ri, pl, pr, tl, tm, 2 * v) +
-      rect_count_impl(le, ri, xi - pl, yi - pr, tm, tr,
-        2 * v + 1);
-  }
-  int kth_smallest(int x, int y, int k) {
-    int xi = lower_bound(all(sorted), x) - begin(sorted);
-    int yi = lower_bound(all(sorted), y) - begin(sorted);
-    return kth_smallest_impl(xi, yi, k, 0, n, 1);
-  }
-  int kth_smallest_impl(int xi, int yi, int k, int tl,
-    int tr, int v) {
-    if (tr - tl == 1) return tl;
-    int tm = split(tl, tr),
-        pl = bool_presums[v].popcount(xi),
-        pr = bool_presums[v].popcount(yi);
-    if (k <= pr - pl)
-      return kth_smallest_impl(pl, pr, k, tl, tm, 2 * v);
-    return kth_smallest_impl(xi - pl, yi - pr,
-      k - (pr - pl), tm, tr, 2 * v + 1);
-  }
-};
-       
+struct merge sort tree {
+	int n
+	vi sorted
+	vector<bool presum> bool presums
+	merge sort tree(const vi& a):
+		n(sz(a)), sorted(n), bool presums(n, vector<bool>()) {
+		vector<pair<int, bool>> cpy(n)
+		transform(all(a), begin(cpy),
+		[](int num) {
+			return pair(num, 0)
+		})
+		build(cpy, 0, n, 1)
+		transform(all(cpy), begin(sorted),
+		[](auto& num) {
+			return num.first
+		})
+	}
+	void build(vector<pair<int, bool>>& cpy, int tl, int tr,
+						 int v) {
+		if (tr - tl <= 1) return
+		int tm = split(tl, tr)
+		build(cpy, tl, tm, 2 * v)
+		build(cpy, tm, tr, 2 * v + 1)
+		rep(i, tl, tr) cpy[i].second = i < tm
+		inplace merge(begin(cpy) + tl, begin(cpy) + tm,
+									begin(cpy) + tr)
+		vector<bool> bools(tr - tl)
+		transform(begin(cpy) + tl, begin(cpy) + tr,
+		begin(bools), [](auto& num) {
+			return num.second
+		})
+		bool presums[v] = bool presum(bools)
+	}
+	int rect count(int le, int ri, int x, int y) {
+		int xi = lower bound(all(sorted), x) - begin(sorted)
+		int yi = lower bound(all(sorted), y) - begin(sorted)
+		return rect count impl(le, ri, xi, yi, 0, n, 1)
+	}
+	int rect count impl(int le, int ri, int xi, int yi,
+											int tl, int tr, int v) {
+		if (ri <= tl || tr <= le) return 0
+		if (le <= tl && tr <= ri) return yi - xi
+		int tm = split(tl, tr),
+				pl = bool presums[v].popcount(xi),
+				pr = bool presums[v].popcount(yi)
+		return rect count impl(le, ri, pl, pr, tl, tm, 2 * v) +
+					 rect count impl(le, ri, xi - pl, yi - pr, tm, tr,
+													 2 * v + 1)
+	}
+	int kth smallest(int x, int y, int k) {
+		int xi = lower bound(all(sorted), x) - begin(sorted)
+		int yi = lower bound(all(sorted), y) - begin(sorted)
+		return kth smallest impl(xi, yi, k, 0, n, 1)
+	}
+	int kth smallest impl(int xi, int yi, int k, int tl,
+												int tr, int v) {
+		if (tr - tl == 1) return tl
+		int tm = split(tl, tr),
+				pl = bool presums[v].popcount(xi),
+				pr = bool presums[v].popcount(yi)
+		if (k <= pr - pl)
+			return kth smallest impl(pl, pr, k, tl, tm, 2 * v)
+		return kth smallest impl(xi - pl, yi - pr,
+														 k - (pr - pl), tm, tr, 2 * v + 1)
+	}
+}
+
 int split(int tl, int tr) {
-  int pw2 = 1 << __lg(tr - tl);
-  return min(tl + pw2, tr - pw2 / 2);
+	int pw2 = 1 <<   lg(tr - tl)
+	return min(tl + pw2, tr - pw2 / 2)
 }
-struct wavelet_tree_updates {
-  int n, minv, maxv;
-  vector<bool_presum> bool_presums;
-  vector<bool_bit> bool_bits;
-  wavelet_tree_updates(const vi& a, int a_minv, int a_maxv,
-    const vector<bool>& active):
-    n(sz(a)), minv(a_minv), maxv(a_maxv),
-    bool_presums(maxv - minv, vector<bool>()),
-    bool_bits(2 * (maxv - minv), vector<bool>()) {
-    vector<pair<int, bool>> cpy(n);
-    transform(all(a), begin(active), begin(cpy),
-      [](int x, bool y) { return pair(x, y); });
-    build(cpy, 0, n, minv, maxv, 1);
-  }
-  void build(vector<pair<int, bool>>& cpy, int le, int ri,
-    int tl, int tr, int v) {
-    vector<bool> bools(ri - le);
-    transform(begin(cpy) + le, begin(cpy) + ri,
-      begin(bools), [](auto& p) { return p.second; });
-    bool_bits[v] = bool_bit(bools);
-    if (tr - tl <= 1) return;
-    int tm = split(tl, tr);
-    auto low = [&](auto& p) { return p.first < tm; };
-    transform(begin(cpy) + le, begin(cpy) + ri,
-      begin(bools), low);
-    bool_presums[v] = bool_presum(bools);
-    int mi = stable_partition(begin(cpy) + le,
-               begin(cpy) + ri, low) -
-      begin(cpy);
-    build(cpy, le, mi, tl, tm, 2 * v);
-    build(cpy, mi, ri, tm, tr, 2 * v + 1);
-  }
-  void set_active(int i, bool is_active) {
-    if (bool_bits[1].on(i) == is_active) return;
-    set_active_impl(i, is_active, minv, maxv, 1);
-  }
-  void set_active_impl(int i, bool is_active, int tl,
-    int tr, int v) {
-    bool_bits[v].set(i, is_active);
-    if (tr - tl == 1) return;
-    int tm = split(tl, tr),
-        pi = bool_presums[v].popcount(i);
-    if (bool_presums[v].on(i))
-      return set_active_impl(pi, is_active, tl, tm, 2 * v);
-    set_active_impl(i - pi, is_active, tm, tr, 2 * v + 1);
-  }
-  int rect_count(int le, int ri, int x, int y) {
-    return rect_count_impl(le, ri, x, y, minv, maxv, 1);
-  }
-  int rect_count_impl(int le, int ri, int x, int y, int tl,
-    int tr, int v) {
-    if (y <= tl || tr <= x) return 0;
-    if (x <= tl && tr <= y)
-      return bool_bits[v].popcount(le, ri);
-    int tm = split(tl, tr),
-        pl = bool_presums[v].popcount(le),
-        pr = bool_presums[v].popcount(ri);
-    return rect_count_impl(pl, pr, x, y, tl, tm, 2 * v) +
-      rect_count_impl(le - pl, ri - pr, x, y, tm, tr,
-        2 * v + 1);
-  }
-  int kth_smallest(int le, int ri, int k) {
-    return kth_smallest_impl(le, ri, k, minv, maxv, 1);
-  }
-  int kth_smallest_impl(int le, int ri, int k, int tl,
-    int tr, int v) {
-    if (tr - tl == 1) return tl;
-    int tm = split(tl, tr),
-        pl = bool_presums[v].popcount(le),
-        pr = bool_presums[v].popcount(ri);
-    int cnt_left = bool_bits[2 * v].popcount(pl, pr);
-    if (k <= cnt_left)
-      return kth_smallest_impl(pl, pr, k, tl, tm, 2 * v);
-    return kth_smallest_impl(le - pl, ri - pr,
-      k - cnt_left, tm, tr, 2 * v + 1);
-  }
-};
-       
+struct wavelet tree updates {
+	int n, minv, maxv
+	vector<bool presum> bool presums
+	vector<bool bit> bool bits
+	wavelet tree updates(const vi& a, int a minv, int a maxv,
+											 const vector<bool>& active):
+		n(sz(a)), minv(a minv), maxv(a maxv),
+		bool presums(maxv - minv, vector<bool>()),
+		bool bits(2 * (maxv - minv), vector<bool>()) {
+		vector<pair<int, bool>> cpy(n)
+		transform(all(a), begin(active), begin(cpy),
+		[](int x, bool y) {
+			return pair(x, y)
+		})
+		build(cpy, 0, n, minv, maxv, 1)
+	}
+	void build(vector<pair<int, bool>>& cpy, int le, int ri,
+						 int tl, int tr, int v) {
+		vector<bool> bools(ri - le)
+		transform(begin(cpy) + le, begin(cpy) + ri,
+		begin(bools), [](auto& p) {
+			return p.second
+		})
+		bool bits[v] = bool bit(bools)
+		if (tr - tl <= 1) return
+		int tm = split(tl, tr)
+		auto low = [&](auto& p) {
+			return p.first < tm
+		}
+		transform(begin(cpy) + le, begin(cpy) + ri,
+							begin(bools), low)
+		bool presums[v] = bool presum(bools)
+		int mi = stable partition(begin(cpy) + le,
+															begin(cpy) + ri, low) -
+						 begin(cpy)
+		build(cpy, le, mi, tl, tm, 2 * v)
+		build(cpy, mi, ri, tm, tr, 2 * v + 1)
+	}
+	void set active(int i, bool is active) {
+		if (bool bits[1].on(i) == is active) return
+		set active impl(i, is active, minv, maxv, 1)
+	}
+	void set active impl(int i, bool is active, int tl,
+											 int tr, int v) {
+		bool bits[v].set(i, is active)
+		if (tr - tl == 1) return
+		int tm = split(tl, tr),
+				pi = bool presums[v].popcount(i)
+		if (bool presums[v].on(i))
+			return set active impl(pi, is active, tl, tm, 2 * v)
+		set active impl(i - pi, is active, tm, tr, 2 * v + 1)
+	}
+	int rect count(int le, int ri, int x, int y) {
+		return rect count impl(le, ri, x, y, minv, maxv, 1)
+	}
+	int rect count impl(int le, int ri, int x, int y, int tl,
+											int tr, int v) {
+		if (y <= tl || tr <= x) return 0
+		if (x <= tl && tr <= y)
+			return bool bits[v].popcount(le, ri)
+		int tm = split(tl, tr),
+				pl = bool presums[v].popcount(le),
+				pr = bool presums[v].popcount(ri)
+		return rect count impl(pl, pr, x, y, tl, tm, 2 * v) +
+					 rect count impl(le - pl, ri - pr, x, y, tm, tr,
+													 2 * v + 1)
+	}
+	int kth smallest(int le, int ri, int k) {
+		return kth smallest impl(le, ri, k, minv, maxv, 1)
+	}
+	int kth smallest impl(int le, int ri, int k, int tl,
+												int tr, int v) {
+		if (tr - tl == 1) return tl
+		int tm = split(tl, tr),
+				pl = bool presums[v].popcount(le),
+				pr = bool presums[v].popcount(ri)
+		int cnt left = bool bits[2 * v].popcount(pl, pr)
+		if (k <= cnt left)
+			return kth smallest impl(pl, pr, k, tl, tm, 2 * v)
+		return kth smallest impl(le - pl, ri - pr,
+														 k - cnt left, tm, tr, 2 * v + 1)
+	}
+}
+
 int split(int tl, int tr) {
-  int pw2 = 1 << __lg(tr - tl);
-  return min(tl + pw2, tr - pw2 / 2);
+	int pw2 = 1 <<   lg(tr - tl)
+	return min(tl + pw2, tr - pw2 / 2)
 }
-ll op(ll vl, ll vr) { return vl + vr; }
-struct seg_tree {
-  int n;
-  vector<ll> tree, lazy;
-  seg_tree(int a_n): n(a_n), tree(2 * n), lazy(n) {}
-  seg_tree(const vi& a): n(sz(a)), tree(2 * n), lazy(n) {
-    int pw2 = 1;
-    while (pw2 < n) pw2 *= 2;
-    rep(i, 0, n) tree[(i + pw2) % n + n] = a[i];
-    for (int i = n - 1; i >= 1; i--)
-      tree[i] = op(tree[2 * i], tree[2 * i + 1]);
-  }
-  void apply(ll change, int tl, int tr, int v) {
-    tree[v] += (tr - tl) * change;
-    if (v < n) lazy[v] += change;
-  }
-  void push(int tl, int tm, int tr, int v) {
-    if (lazy[v]) {
-      apply(lazy[v], tl, tm, 2 * v);
-      apply(lazy[v], tm, tr, 2 * v + 1);
-      lazy[v] = 0;
-    }
-  }
-  void update(int le, int ri, ll change) {
-    update_impl(le, ri, change, 0, n, 1);
-  }
-  void update_impl(int le, int ri, ll change, int tl,
-    int tr, int v) {
-    if (ri <= tl || tr <= le) return;
-    if (le <= tl && tr <= ri)
-      return apply(change, tl, tr, v);
-    int tm = split(tl, tr);
-    push(tl, tm, tr, v);
-    update_impl(le, ri, change, tl, tm, 2 * v);
-    update_impl(le, ri, change, tm, tr, 2 * v + 1);
-    tree[v] = op(tree[2 * v], tree[2 * v + 1]);
-  }
-  ll query(int le, int ri) {
-    return query_impl(le, ri, 0, n, 1);
-  }
-  ll query_impl(int le, int ri, int tl, int tr, int v) {
-    if (ri <= tl || tr <= le) return 0;
-    if (le <= tl && tr <= ri) return tree[v];
-    int tm = split(tl, tr);
-    push(tl, tm, tr, v);
-    return op(query_impl(le, ri, tl, tm, 2 * v),
-      query_impl(le, ri, tm, tr, 2 * v + 1));
-  }
-};
-       
-struct hopcroft_karp {
-  int m_sz = 0;
-  vi to_r, to_l;
-  vector<bool> mvc_l, mvc_r;
-  hopcroft_karp(const vector<vi>& adj, int rsz):
-    to_r(sz(adj), -1), to_l(rsz, -1) {
-    int lsz = sz(adj);
-    while (1) {
-      queue<int> q;
-      vector level(lsz, -1);
-      rep(i, 0, lsz) if (to_r[i] == -1) level[i] = 0,
-                                        q.push(i);
-      bool found = 0;
-      mvc_l.assign(lsz, 1);
-      mvc_r.assign(rsz, 0);
-      while (!empty(q)) {
-        int v = q.front();
-        q.pop();
-        mvc_l[v] = 0;
-        for (int u : adj[v]) {
-          mvc_r[u] = 1;
-          int w = to_l[u];
-          if (w == -1) found = 1;
-          else if (level[w] == -1) {
-            level[w] = level[v] + 1;
-            q.push(w);
-          }
-        }
-      }
-      if (!found) break;
-      auto dfs = [&](auto&& self, int v) -> bool {
-        for (int u : adj[v]) {
-          int w = to_l[u];
-          if (w == -1 ||
-            (level[v] + 1 == level[w] && self(self, w))) {
-            to_r[v] = u;
-            to_l[u] = v;
-            return 1;
-          }
-        }
-        level[v] = INT_MAX;
-        return 0;
-      };
-      rep(i, 0, lsz) m_sz +=
-        (to_r[i] == -1 && dfs(dfs, i));
-    }
-  }
-};
-       
+ll op(ll vl, ll vr) {
+	return vl + vr
+}
+struct seg tree {
+	int n
+	vector<ll> tree, lazy
+	seg tree(int a n): n(a n), tree(2 * n), lazy(n) {}
+	seg tree(const vi& a): n(sz(a)), tree(2 * n), lazy(n) {
+		int pw2 = 1
+		while (pw2 < n) pw2 *= 2
+		rep(i, 0, n) tree[(i + pw2) % n + n] = a[i]
+		for (int i = n - 1; i >= 1; i--)
+			tree[i] = op(tree[2 * i], tree[2 * i + 1])
+	}
+	void apply(ll change, int tl, int tr, int v) {
+		tree[v] += (tr - tl) * change
+		if (v < n) lazy[v] += change
+	}
+	void push(int tl, int tm, int tr, int v) {
+		if (lazy[v]) {
+			apply(lazy[v], tl, tm, 2 * v)
+			apply(lazy[v], tm, tr, 2 * v + 1)
+			lazy[v] = 0
+		}
+	}
+	void update(int le, int ri, ll change) {
+		update impl(le, ri, change, 0, n, 1)
+	}
+	void update impl(int le, int ri, ll change, int tl,
+									 int tr, int v) {
+		if (ri <= tl || tr <= le) return
+		if (le <= tl && tr <= ri)
+			return apply(change, tl, tr, v)
+		int tm = split(tl, tr)
+		push(tl, tm, tr, v)
+		update impl(le, ri, change, tl, tm, 2 * v)
+		update impl(le, ri, change, tm, tr, 2 * v + 1)
+		tree[v] = op(tree[2 * v], tree[2 * v + 1])
+	}
+	ll query(int le, int ri) {
+		return query impl(le, ri, 0, n, 1)
+	}
+	ll query impl(int le, int ri, int tl, int tr, int v) {
+		if (ri <= tl || tr <= le) return 0
+		if (le <= tl && tr <= ri) return tree[v]
+		int tm = split(tl, tr)
+		push(tl, tm, tr, v)
+		return op(query impl(le, ri, tl, tm, 2 * v),
+							query impl(le, ri, tm, tr, 2 * v + 1))
+	}
+}
+
+struct hopcroft karp {
+	int m sz = 0
+	vi to r, to l
+	vector<bool> mvc l, mvc r
+	hopcroft karp(const vector<vi>& adj, int rsz):
+		to r(sz(adj), -1), to l(rsz, -1) {
+		int lsz = sz(adj)
+		while (1) {
+			queue<int> q
+			vector level(lsz, -1)
+			rep(i, 0, lsz) if (to r[i] == -1) level[i] = 0,
+					q.push(i)
+			bool found = 0
+			mvc l.assign(lsz, 1)
+			mvc r.assign(rsz, 0)
+			while (!empty(q)) {
+				int v = q.front()
+				q.pop()
+				mvc l[v] = 0
+				for (int u : adj[v]) {
+					mvc r[u] = 1
+					int w = to l[u]
+					if (w == -1) found = 1
+					else if (level[w] == -1) {
+						level[w] = level[v] + 1
+						q.push(w)
+					}
+				}
+			}
+			if (!found) break
+			auto dfs = [&](auto&& self, int v) -> bool {
+				for (int u : adj[v]) {
+					int w = to l[u]
+					if (w == -1 ||
+							(level[v] + 1 == level[w] && self(self, w))) {
+						to r[v] = u
+						to l[u] = v
+						return 1
+					}
+				}
+				level[v] = int max
+				return 0
+			}
+			rep(i, 0, lsz) m sz +=
+				(to r[i] == -1 && dfs(dfs, i))
+		}
+	}
+}
+
 vector<ll> dijkstra(
-  const vector<vector<pair<int, ll>>>& adj, int s) {
-  using p = pair<ll, int>;
-  priority_queue<p, vector<p>, greater<>> pq;
-  pq.emplace(0, s);
-  vector<ll> d(sz(adj), LLONG_MAX);
-  while (!empty(pq)) {
-    auto [d_v, v] = pq.top();
-    pq.pop();
-    if (d[v] != LLONG_MAX) continue;
-    d[v] = d_v;
-    for (auto [u, w] : adj[v]) pq.emplace(w + d_v, u);
-  }
-  return d;
+	const vector<vector<pair<int, ll>>>& adj, int s) {
+	using p = pair<ll, int>
+	priority queue<p, vector<p>, greater<>> pq
+	pq.emplace(0, s)
+	vector<ll> d(sz(adj), llong max)
+	while (!empty(pq)) {
+		auto [d v, v] = pq.top()
+		pq.pop()
+		if (d[v] != llong max) continue
+		d[v] = d v
+		for (auto [u, w] : adj[v]) pq.emplace(w + d v, u)
+	}
+	return d
 }
-       
-vi get_complement_graph_ccs(const vector<vi> &adj) {
-  int n = sz(adj);
-  vi cc_id(n), unseen(n);
-  iota(all(unseen), 0);
-  vector<bool> is_adj(n);
-  for (int cnt = 0; !empty(unseen); cnt++) {
-    int s = unseen.back();
-    unseen.pop_back();
-    cc_id[s] = cnt;
-    for (queue<int> q({s}); !empty(q);) {
-      int v = q.front();
-      q.pop();
-      for (int u : adj[v]) is_adj[u] = 1;
-      vi nxt_unseen;
-      for (int u : unseen) {
-        if (is_adj[u]) {
-          nxt_unseen.push_back(u);
-        } else {
-          cc_id[u] = cnt;
-          q.push(u);
-        }
-      }
-      unseen = move(nxt_unseen);
-      for (int u : adj[v]) is_adj[u] = 0;
-    }
-  }
-  return cc_id;
+
+vi get complement graph ccs(const vector<vi> &adj) {
+	int n = sz(adj)
+	vi cc id(n), unseen(n)
+	iota(all(unseen), 0)
+	vector<bool> is adj(n)
+	for (int cnt = 0; !empty(unseen); cnt++) {
+		int s = unseen.back()
+		unseen.pop back()
+		cc id[s] = cnt
+		for (queue<int> q({s}); !empty(q);) {
+			int v = q.front()
+			q.pop()
+			for (int u : adj[v]) is adj[u] = 1
+			vi nxt unseen
+			for (int u : unseen) {
+				if (is adj[u]) {
+					nxt unseen.push back(u)
+				} else {
+					cc id[u] = cnt
+					q.push(u)
+				}
+			}
+			unseen = move(nxt unseen)
+			for (int u : adj[v]) is adj[u] = 0
+		}
+	}
+	return cc id
 }
-       
-pair<ll, vi> mst(const vector<array<int, 3>>& w_eds,
-  int n) {
-  vi order(sz(w_eds));
-  iota(all(order), 0);
-  sort(all(order), [&](int i, int j) {
-    return w_eds[i][2] < w_eds[j][2];
-  });
-  UF uf(n);
-  vi ids;
-  ll cost = 0;
-  for (int it : order) {
-    auto [u, v, w] = w_eds[it];
-    if (uf.join(u, v)) {
-      cost += w;
-      ids.push_back(it);
-    }
-  }
-  return {cost, ids};
+
+pair<ll, vi> mst(const vector<array<int, 3>>& w eds,
+								 int n) {
+	vi order(sz(w eds))
+	iota(all(order), 0)
+	sort(all(order), [&](int i, int j) {
+		return w eds[i][2] < w eds[j][2]
+	})
+	uf uf(n)
+	vi ids
+	ll cost = 0
+	for (int it : order) {
+		auto [u, v, w] = w eds[it]
+		if (uf.join(u, v)) {
+			cost += w
+			ids.push back(it)
+		}
+	}
+	return {cost, ids}
 }
-       
+
 struct sccs {
-  int num_sccs = 0;
-  vi scc_id;
-  sccs(const vector<vi>& adj): scc_id(sz(adj), -1) {
-    int n = sz(adj), timer = 1;
-    vi tin(n), st;
-    auto dfs = [&](auto&& self, int v) -> int {
-      int low = tin[v] = timer++, siz = sz(st);
-      st.push_back(v);
-      for (int u : adj[v])
-        if (scc_id[u] < 0)
-          low = min(low, tin[u] ? tin[u] : self(self, u));
-      if (tin[v] == low) {
-        rep(i, siz, sz(st)) scc_id[st[i]] = num_sccs;
-        st.resize(siz);
-        num_sccs++;
-      }
-      return low;
-    };
-    rep(i, 0, n) if (!tin[i]) dfs(dfs, i);
-  }
-};
-       
-vector<pii> extra_edges(const vector<vi>& adj,
-  int num_sccs, const vi& scc_id) {
-  if (num_sccs == 1) return {};
-  int n = sz(adj);
-  vector<vi> scc_adj(num_sccs);
-  vector<bool> zero_in(num_sccs, 1);
-  rep(i, 0, n) for (int u : adj[i]) {
-    if (scc_id[i] == scc_id[u]) continue;
-    scc_adj[scc_id[i]].push_back(scc_id[u]);
-    zero_in[scc_id[u]] = 0;
-  }
-  vector<bool> vis(num_sccs);
-  auto dfs = [&](auto&& self, int v) {
-    if (empty(scc_adj[v])) return v;
-    for (int u : scc_adj[v])
-      if (!vis[u]) {
-        vis[u] = 1;
-        int zero_out = self(self, u);
-        if (zero_out != -1) return zero_out;
-      }
-    return -1;
-  };
-  vector<pii> edges;
-  vi in_unused;
-  rep(i, 0, num_sccs) if (zero_in[i]) {
-    vis[i] = 1;
-    int zero_out = dfs(dfs, i);
-    if (zero_out != -1) edges.emplace_back(zero_out, i);
-    else in_unused.push_back(i);
-  }
-  rep(i, 1, sz(edges))
-    swap(edges[i].first, edges[i - 1].first);
-  rep(i, 0, num_sccs) if (empty(scc_adj[i]) && !vis[i]) {
-    if (!empty(in_unused)) {
-      edges.emplace_back(i, in_unused.back());
-      in_unused.pop_back();
-    } else edges.emplace_back(i, num_sccs - 1);
-  }
-  for (int v : in_unused) edges.emplace_back(0, v);
-  vi to_node(num_sccs);
-  rep(i, 0, n) to_node[scc_id[i]] = i;
-  for (auto& [u, v] : edges)
-    u = to_node[u], v = to_node[v];
-  return edges;
+	int num sccs = 0
+	vi scc id
+	sccs(const vector<vi>& adj): scc id(sz(adj), -1) {
+		int n = sz(adj), timer = 1
+		vi tin(n), st
+		auto dfs = [&](auto&& self, int v) -> int {
+			int low = tin[v] = timer++, siz = sz(st)
+			st.push back(v)
+			for (int u : adj[v])
+				if (scc id[u] < 0)
+					low = min(low, tin[u] ? tin[u] : self(self, u))
+			if (tin[v] == low) {
+				rep(i, siz, sz(st)) scc id[st[i]] = num sccs
+				st.resize(siz)
+				num sccs++
+			}
+			return low
+		}
+		rep(i, 0, n) if (!tin[i]) dfs(dfs, i)
+	}
 }
-       
-vi offline_incremental_scc(vector<array<int, 2>> eds,
-  int n) {
-  int m = sz(eds);
-  vi ids(n, -1), joins(m, m), idx(m);
-  iota(all(idx), 0);
-  auto divide_and_conquer = [&](auto&& self, auto el,
-                              auto er, int tl, int tr) {
-    int mid = tl + (tr - tl) / 2;
-    vi vs;
-    vector<vi> adj;
-    for (auto it = el; it != er; it++) {
-      auto& [u, v] = eds[*it];
-      for (int w : {u, v}) {
-        if (ids[w] != -1) continue;
-        ids[w] = sz(vs);
-        vs.push_back(w);
-        adj.emplace_back();
-      }
-      u = ids[u], v = ids[v];
-      if (*it <= mid) adj[u].push_back(v);
-    }
-    for (int v : vs) ids[v] = -1;
-    auto scc_id = sccs(adj).scc_id;
-    auto split = partition(el, er, [&](int i) {
-      return scc_id[eds[i][0]] == scc_id[eds[i][1]];
-    });
-    for (auto it = el; it != split; it++) joins[*it] = mid;
-    if (tr - tl == 1) return;
-    for (auto it = split; it != er; it++) {
-      auto& [u, v] = eds[*it];
-      u = scc_id[u], v = scc_id[v];
-    }
-    vi().swap(vs);
-    vector<vi>().swap(adj);
-    vi().swap(scc_id);
-    self(self, el, split, tl, mid);
-    self(self, split, er, mid, tr);
-  };
-  divide_and_conquer(divide_and_conquer, all(idx), -1, m);
-  return joins;
+
+vector<pii> extra edges(const vector<vi>& adj,
+												int num sccs, const vi& scc id) {
+	if (num sccs == 1) return {}
+	int n = sz(adj)
+	vector<vi> scc adj(num sccs)
+	vector<bool> zero in(num sccs, 1)
+	rep(i, 0, n) for (int u : adj[i]) {
+		if (scc id[i] == scc id[u]) continue
+		scc adj[scc id[i]].push back(scc id[u])
+		zero in[scc id[u]] = 0
+	}
+	vector<bool> vis(num sccs)
+	auto dfs = [&](auto&& self, int v) {
+		if (empty(scc adj[v])) return v
+		for (int u : scc adj[v])
+			if (!vis[u]) {
+				vis[u] = 1
+				int zero out = self(self, u)
+				if (zero out != -1) return zero out
+			}
+		return -1
+	}
+	vector<pii> edges
+	vi in unused
+	rep(i, 0, num sccs) if (zero in[i]) {
+		vis[i] = 1
+		int zero out = dfs(dfs, i)
+		if (zero out != -1) edges.emplace back(zero out, i)
+		else in unused.push back(i)
+	}
+	rep(i, 1, sz(edges))
+	swap(edges[i].first, edges[i - 1].first)
+	rep(i, 0, num sccs) if (empty(scc adj[i]) && !vis[i]) {
+		if (!empty(in unused)) {
+			edges.emplace back(i, in unused.back())
+			in unused.pop back()
+		} else edges.emplace back(i, num sccs - 1)
+	}
+	for (int v : in unused) edges.emplace back(0, v)
+	vi to node(num sccs)
+	rep(i, 0, n) to node[scc id[i]] = i
+	for (auto& [u, v] : edges)
+		u = to node[u], v = to node[v]
+	return edges
 }
-       
-vector<vi> block_vertex_tree(
-  const vector<vector<pii>>& adj, const cuts& cc) {
-  int n = sz(adj);
-  vector<vi> bvt(n + cc.num_bccs);
-  vector<bool> vis(cc.num_bccs);
-  rep(i, 0, n) {
-    for (auto [_, e_id] : adj[i]) {
-      int bccid = cc.bcc_id[e_id];
-      if (!vis[bccid]) {
-        vis[bccid] = 1;
-        bvt[i].push_back(bccid + n);
-        bvt[bccid + n].push_back(i);
-      }
-    }
-    for (int bccid : bvt[i]) vis[bccid - n] = 0;
-  }
-  return bvt;
+
+vi offline incremental scc(vector<array<int, 2>> eds,
+													 int n) {
+	int m = sz(eds)
+	vi ids(n, -1), joins(m, m), idx(m)
+	iota(all(idx), 0)
+	auto divide and conquer = [&](auto&& self, auto el,
+	auto er, int tl, int tr) {
+		int mid = tl + (tr - tl) / 2
+		vi vs
+		vector<vi> adj
+		for (auto it = el; it != er; it++) {
+			auto& [u, v] = eds[*it]
+			for (int w : {
+						 u, v
+					 }) {
+				if (ids[w] != -1) continue
+				ids[w] = sz(vs)
+				vs.push back(w)
+				adj.emplace back()
+			}
+			u = ids[u], v = ids[v]
+			if (*it <= mid) adj[u].push back(v)
+		}
+		for (int v : vs) ids[v] = -1
+		auto scc id = sccs(adj).scc id
+		auto split = partition(el, er, [&](int i) {
+			return scc id[eds[i][0]] == scc id[eds[i][1]]
+		})
+		for (auto it = el; it != split; it++) joins[*it] = mid
+		if (tr - tl == 1) return
+		for (auto it = split; it != er; it++) {
+			auto& [u, v] = eds[*it]
+			u = scc id[u], v = scc id[v]
+		}
+		vi().swap(vs)
+		vector<vi>().swap(adj)
+		vi().swap(scc id)
+		self(self, el, split, tl, mid)
+		self(self, split, er, mid, tr)
+	}
+	divide and conquer(divide and conquer, all(idx), -1, m)
+	return joins
 }
-       
+
+vector<vi> block vertex tree(
+	const vector<vector<pii>>& adj, const cuts& cc) {
+	int n = sz(adj)
+	vector<vi> bvt(n + cc.num bccs)
+	vector<bool> vis(cc.num bccs)
+	rep(i, 0, n) {
+		for (auto [ , e id] : adj[i]) {
+			int bccid = cc.bcc id[e id]
+			if (!vis[bccid]) {
+				vis[bccid] = 1
+				bvt[i].push back(bccid + n)
+				bvt[bccid + n].push back(i)
+			}
+		}
+		for (int bccid : bvt[i]) vis[bccid - n] = 0
+	}
+	return bvt
+}
+
 struct bridges {
-  int num_ccs = 0;
-  vector<bool> is_bridge;
-  vi br_id;
-  bridges(const vector<vector<pii>>& adj, int m):
-    is_bridge(m), br_id(sz(adj), -1) {
-    int n = sz(adj), timer = 1;
-    vi tin(n), st;
-    auto dfs = [&](auto&& self, int v, int p_id) -> int {
-      int low = tin[v] = timer++, siz = sz(st);
-      st.push_back(v);
-      for (auto [u, e_id] : adj[v]) {
-        if (e_id == p_id) continue;
-        if (!tin[u]) low = min(low, self(self, u, e_id));
-        low = min(low, tin[u]);
-      }
-      if (tin[v] == low) {
-        if (p_id != -1) is_bridge[p_id] = 1;
-        rep(i, siz, sz(st)) br_id[st[i]] = num_ccs;
-        st.resize(siz);
-        num_ccs++;
-      }
-      return low;
-    };
-    rep(i, 0, n) if (!tin[i]) dfs(dfs, i, -1);
-  }
-};
-       
+	int num ccs = 0
+	vector<bool> is bridge
+	vi br id
+	bridges(const vector<vector<pii>>& adj, int m):
+		is bridge(m), br id(sz(adj), -1) {
+		int n = sz(adj), timer = 1
+		vi tin(n), st
+		auto dfs = [&](auto&& self, int v, int p id) -> int {
+			int low = tin[v] = timer++, siz = sz(st)
+			st.push back(v)
+			for (auto [u, e id] : adj[v]) {
+				if (e id == p id) continue
+				if (!tin[u]) low = min(low, self(self, u, e id))
+				low = min(low, tin[u])
+			}
+			if (tin[v] == low) {
+				if (p id != -1) is bridge[p id] = 1
+				rep(i, siz, sz(st)) br id[st[i]] = num ccs
+				st.resize(siz)
+				num ccs++
+			}
+			return low
+		}
+		rep(i, 0, n) if (!tin[i]) dfs(dfs, i, -1)
+	}
+}
+
 struct cuts {
-  int num_bccs = 0;
-  vector<bool> is_cut;
-  vi bcc_id;
-  cuts(const vector<vector<pii>>& adj, int m):
-    is_cut(sz(adj)), bcc_id(m, -1) {
-    int n = sz(adj), timer = 1;
-    vi tin(n), st;
-    auto dfs = [&](auto&& self, int v, int p_id) -> int {
-      int low = tin[v] = timer++, deg = 0;
-      for (auto [u, e_id] : adj[v]) {
-        assert(v != u);
-        if (e_id == p_id) continue;
-        if (!tin[u]) {
-          int siz = sz(st);
-          st.push_back(e_id);
-          int low_ch = self(self, u, e_id);
-          if (low_ch >= tin[v]) {
-            is_cut[v] = 1;
-            rep(i, siz, sz(st)) bcc_id[st[i]] = num_bccs;
-            st.resize(siz);
-            num_bccs++;
-          }
-          low = min(low, low_ch);
-          deg++;
-        } else if (tin[u] < tin[v]) {
-          st.push_back(e_id);
-          low = min(low, tin[u]);
-        }
-      }
-      if (p_id == -1) is_cut[v] = (deg > 1);
-      return low;
-    };
-    rep(i, 0, n) if (!tin[i]) dfs(dfs, i, -1);
-  }
-};
-       
-vector<vi> bridge_tree(const vector<vector<pii>>& adj,
-  const bridges& br) {
-  vector<vi> tree(br.num_ccs);
-  rep(i, 0, sz(adj)) for (auto [u, e_id] : adj[i]) if (
-    br.is_bridge[e_id]) tree[br.br_id[i]]
-    .push_back(br.br_id[u]);
-  return tree;
+	int num bccs = 0
+	vector<bool> is cut
+	vi bcc id
+	cuts(const vector<vector<pii>>& adj, int m):
+		is cut(sz(adj)), bcc id(m, -1) {
+		int n = sz(adj), timer = 1
+		vi tin(n), st
+		auto dfs = [&](auto&& self, int v, int p id) -> int {
+			int low = tin[v] = timer++, deg = 0
+			for (auto [u, e id] : adj[v]) {
+				assert(v != u)
+				if (e id == p id) continue
+				if (!tin[u]) {
+					int siz = sz(st)
+					st.push back(e id)
+					int low ch = self(self, u, e id)
+					if (low ch >= tin[v]) {
+						is cut[v] = 1
+						rep(i, siz, sz(st)) bcc id[st[i]] = num bccs
+						st.resize(siz)
+						num bccs++
+					}
+					low = min(low, low ch)
+					deg++
+				} else if (tin[u] < tin[v]) {
+					st.push back(e id)
+					low = min(low, tin[u])
+				}
+			}
+			if (p id == -1) is cut[v] = (deg > 1)
+			return low
+		}
+		rep(i, 0, n) if (!tin[i]) dfs(dfs, i, -1)
+	}
 }
-       
-template<class F>
-void enumerate_triangles(const vector<pii>& edges, int n,
-  F f) {
-  vi deg(n);
-  for (auto [u, v] : edges) deg[u]++, deg[v]++;
-  vector<vi> adj(n);
-  for (auto [u, v] : edges) {
-    if (tie(deg[u], u) > tie(deg[v], v)) swap(u, v);
-    adj[u].push_back(v);
-  }
-  vector<bool> seen(n);
-  for (auto [u, v] : edges) {
-    for (int w : adj[u]) seen[w] = 1;
-    for (int w : adj[v])
-      if (seen[w]) f(u, v, w);
-    for (int w : adj[u]) seen[w] = 0;
-  }
+
+vector<vi> bridge tree(const vector<vector<pii>>& adj,
+											 const bridges& br) {
+	vector<vi> tree(br.num ccs)
+	rep(i, 0, sz(adj)) for (auto [u, e id] : adj[i]) if (
+			br.is bridge[e id]) tree[br.br id[i]]
+			.push back(br.br id[u])
+	return tree
 }
-       
+
+template<class f>
+void enumerate triangles(const vector<pii>& edges, int n,
+												 f f) {
+	vi deg(n)
+	for (auto [u, v] : edges) deg[u]++, deg[v]++
+	vector<vi> adj(n)
+	for (auto [u, v] : edges) {
+		if (tie(deg[u], u) > tie(deg[v], v)) swap(u, v)
+		adj[u].push back(v)
+	}
+	vector<bool> seen(n)
+	for (auto [u, v] : edges) {
+		for (int w : adj[u]) seen[w] = 1
+		for (int w : adj[v])
+			if (seen[w]) f(u, v, w)
+		for (int w : adj[u]) seen[w] = 0
+	}
+}
+
 pair<ll, vi> hungarian(const vector<vector<ll>>& cost) {
-  int n = sz(cost), m = sz(cost[0]);
-  vi p(m), way(m);
-  vector<ll> u(n), v(m);
-  rep(i, 1, n) {
-    p[0] = i;
-    int j0 = 0;
-    vector minv(m, LLONG_MAX);
-    vi used(m);
-    do {
-      used[j0] = 1;
-      int i0 = p[j0], j1 = 0;
-      ll delta = LLONG_MAX;
-      rep(j, 1, m) if (!used[j]) {
-        ll cur = cost[i0][j] - u[i0] - v[j];
-        if (cur < minv[j]) minv[j] = cur, way[j] = j0;
-        if (minv[j] < delta) delta = minv[j], j1 = j;
-      }
-      rep(j, 0, m) {
-        if (used[j]) u[p[j]] += delta, v[j] -= delta;
-        else minv[j] -= delta;
-      }
-      j0 = j1;
-    } while (p[j0] != 0);
-    do {
-      int j1 = way[j0];
-      p[j0] = p[j1];
-      j0 = j1;
-    } while (j0);
-  }
-  vi l_to_r(n);
-  rep(j, 1, m) l_to_r[p[j]] = j;
-  return {-v[0], l_to_r};
+	int n = sz(cost), m = sz(cost[0])
+	vi p(m), way(m)
+	vector<ll> u(n), v(m)
+	rep(i, 1, n) {
+		p[0] = i
+		int j0 = 0
+		vector minv(m, llong max)
+		vi used(m)
+		do {
+			used[j0] = 1
+			int i0 = p[j0], j1 = 0
+			ll delta = llong max
+			rep(j, 1, m) if (!used[j]) {
+				ll cur = cost[i0][j] - u[i0] - v[j]
+				if (cur < minv[j]) minv[j] = cur, way[j] = j0
+				if (minv[j] < delta) delta = minv[j], j1 = j
+			}
+			rep(j, 0, m) {
+				if (used[j]) u[p[j]] += delta, v[j] -= delta
+				else minv[j] -= delta
+			}
+			j0 = j1
+		} while (p[j0] != 0)
+		do {
+			int j1 = way[j0]
+			p[j0] = p[j1]
+			j0 = j1
+		} while (j0)
+	}
+	vi l to r(n)
+	rep(j, 1, m) l to r[p[j]] = j
+	return {-v[0], l to r}
 }
-       
+
 struct mcmf {
-  struct edge {
-    int u, v;
-    ll cap, cost, flow;
-    int back;
-  };
-  int n;
-  vector<edge> e;
-  vector<vi> adj;
-  mcmf(int a_n): n(a_n), adj(n) {}
-  void add_edge(int u, int v, ll cap, ll cost) {
-    edge e1 = {u, v, cap, cost, 0, sz(adj[v])};
-    edge e2 = {v, u, 0, -cost, 0, sz(adj[u])};
-    adj[u].push_back(sz(e));
-    e.push_back(e1);
-    adj[v].push_back(sz(e));
-    e.push_back(e2);
-  }
-  array<ll, 2> get_flow(int s, int t, ll total_flow) {
-    ll flow = 0, cost = 0;
-    while (flow < total_flow) {
-      vector d(n, LLONG_MAX);
-      vi p_edge(n), id(n), q(n), p(n);
-      int qh = 0, qt = 0;
-      q[qt++] = s;
-      d[s] = 0;
-      while (qh != qt) {
-        int u = q[qh++];
-        id[u] = 2;
-        if (qh == n) qh = 0;
-        rep(i, 0, sz(adj[u])) {
-          edge& r = e[adj[u][i]];
-          if (r.flow < r.cap && d[u] + r.cost < d[r.v]) {
-            d[r.v] = d[u] + r.cost;
-            if (id[r.v] == 0) {
-              q[qt++] = r.v;
-              if (qt == n) qt = 0;
-            } else if (id[r.v] == 2) {
-              if (--qh == -1) qh = n - 1;
-              q[qh] = r.v;
-            }
-            id[r.v] = 1;
-            p[r.v] = u;
-            p_edge[r.v] = i;
-          }
-        }
-      }
-      if (d[t] == LLONG_MAX) break;
-      ll addflow = total_flow - flow;
-      for (int u = t; u != s; u = p[u]) {
-        int pv = p[u], pr = p_edge[u];
-        addflow = min(addflow,
-          e[adj[pv][pr]].cap - e[adj[pv][pr]].flow);
-      }
-      for (int u = t; u != s; u = p[u]) {
-        int pv = p[u], pr = p_edge[u],
-            r = e[adj[pv][pr]].back;
-        e[adj[pv][pr]].flow += addflow;
-        e[adj[u][r]].flow -= addflow;
-        cost += e[adj[pv][pr]].cost * addflow;
-      }
-      flow += addflow;
-    }
-    return {flow, cost};
-  }
-};
+	struct edge {
+		int u, v
+		ll cap, cost, flow
+		int back
+	}
+	int n
+	vector<edge> e
+	vector<vi> adj
+	mcmf(int a n): n(a n), adj(n) {}
+	void add edge(int u, int v, ll cap, ll cost) {
+		edge e1 = {u, v, cap, cost, 0, sz(adj[v])}
+		edge e2 = {v, u, 0, -cost, 0, sz(adj[u])}
+		adj[u].push back(sz(e))
+		e.push back(e1)
+		adj[v].push back(sz(e))
+		e.push back(e2)
+	}
+	array<ll, 2> get flow(int s, int t, ll total flow) {
+		ll flow = 0, cost = 0
+		while (flow < total flow) {
+			vector d(n, llong max)
+			vi p edge(n), id(n), q(n), p(n)
+			int qh = 0, qt = 0
+			q[qt++] = s
+			d[s] = 0
+			while (qh != qt) {
+				int u = q[qh++]
+				id[u] = 2
+				if (qh == n) qh = 0
+				rep(i, 0, sz(adj[u])) {
+					edge& r = e[adj[u][i]]
+					if (r.flow < r.cap && d[u] + r.cost < d[r.v]) {
+						d[r.v] = d[u] + r.cost
+						if (id[r.v] == 0) {
+							q[qt++] = r.v
+							if (qt == n) qt = 0
+						} else if (id[r.v] == 2) {
+							if (--qh == -1) qh = n - 1
+							q[qh] = r.v
+						}
+						id[r.v] = 1
+						p[r.v] = u
+						p edge[r.v] = i
+					}
+				}
+			}
+			if (d[t] == llong max) break
+			ll addflow = total flow - flow
+			for (int u = t; u != s; u = p[u]) {
+				int pv = p[u], pr = p edge[u]
+				addflow = min(addflow,
+											e[adj[pv][pr]].cap - e[adj[pv][pr]].flow)
+			}
+			for (int u = t; u != s; u = p[u]) {
+				int pv = p[u], pr = p edge[u],
+						r = e[adj[pv][pr]].back
+				e[adj[pv][pr]].flow += addflow
+				e[adj[u][r]].flow -= addflow
+				cost += e[adj[pv][pr]].cost * addflow
+			}
+			flow += addflow
+		}
+		return {flow, cost}
+	}
+}
