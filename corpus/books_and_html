@@ -49998,1003 +49998,2212 @@ tom looks at me very grave, and says:
 "tom, didn't you just tell me he was all right? hasn't he got away?" 
 "him?" says aunt sally; "the runaway nigger? 'deed he hasn't. they've 
 got him back, safe and sound, and he's in that cabin again, on bread and 
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Segment Trees</title>
+		<link rel="stylesheet" href="/style.css">
+		<link rel="stylesheet" href="/highlight/styles/github.min.css">
+		<script src="/highlight/highlight.min.js"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', (event) => {
+				document.querySelectorAll('pre code').forEach((block) => {
+					hljs.highlightBlock(block)
+				})
+			})
+		</script>
+		<script src="/mathjax/es5/tex-chtml.js" id="MathJax-script" async></script>
+	</head>
+	<body>
+		<script type="text/javascript" language="javascript" src="/navagation_bar.js"></script>
+		<div class="body">
+			<div class="heading">
+				<h1 class="main_title">Coding Segment Trees with Optimal Memory</h1>
+				<h2 class="blog_date">2023 September 1</h2>
+			</div>
+			<br>
+			<div class="main_content">
+				<h3>Background</h3>
+				<p>
+				For background about what a segment tree is, I recommend the
+				<a href="https://cp-algorithms.com/data_structures/segment_tree.html">CP algorithms article</a>.
+				</p>
+				<hr>
+				<p>
+				The
+				<a href="https://cp-algorithms.com/data_structures/segment_tree.html#implementation">standard implementation</a>
+				of a segment tree uses an array \(t\) of size \(4 \cdot n\).
+				This blog discusses 3 different ways how to index the
+				nodes in a segment tree to achieve (optimal) \(2 \cdot n-1\) memory.
+				</p>
+				<details>
+					<summary>why is \(2 \cdot n-1\) optimal?</summary>
+					<ul>
+						<li>A segment tree has \(n\) leaf nodes; 1 for each of the \(n\) elements in the array</li>
+						<li>A segment tree is a <a href="https://en.wikipedia.org/wiki/Binary_tree#Types_of_binary_trees">full binary tree</a>; each internal node has exactly 2 children. Thus there are \(n-1\) internal nodes.</li>
+						<img src="bst_leaf_vs_internal_nodes.png" alt="leaf versus internal" style="width:540px;height:auto;">
+					</ul>
+				</details>
+				<p>
+				Let's look at the "standard" implementation:
+				</p>
 
-const int mod = 998'244'353
-vi lcm convolution(const vi& a, const vi& b) {
-	int n = sz(a)
-	vector<ll> sum a(n), sum b(n)
-	vi c(n)
-	rep(i, 1, n) {
-		for (int j = i; j < n; j += i)
-			sum a[j] += a[i], sum b[j] += b[i]
-		sum a[i] %= mod, sum b[i] %= mod
-		c[i] = (c[i] + sum a[i] * sum b[i]) % mod
-		for (int j = i + i; j < n; j += i)
-			if ((c[j] -= c[i]) < 0) c[j] += mod
-	}
-	return c
-}
+				<details>
+					<summary>code</summary>
+					<pre><code class="language-cpp">
+const int MAXN = 500'000
+int n
+long long t[4*MAXN]
 
-vi min plus(const vi& convex, const vi& arbitrary) {
-	int n = sz(convex)
-	int m = sz(arbitrary)
-	vi res(n + m - 1, int max)
-	auto dnc = [&](auto&& self, int res le, int res ri,
-	int arb le, int arb ri) -> void {
-		if (res le >= res ri) return
-		int mid res = (res le + res ri) / 2
-		int op arb = arb le
-		rep(i, arb le, min(mid res + 1, arb ri)) {
-			int j = mid res - i
-			if (j >= n) continue
-			if (res[mid res] > convex[j] + arbitrary[i]) {
-				res[mid res] = convex[j] + arbitrary[i]
-				op arb = i
-			}
-		}
-		self(self, res le, mid res, arb le,
-				 min(arb ri, op arb + 1))
-		self(self, mid res + 1, res ri, op arb, arb ri)
-	}
-	dnc(dnc, 0, n + m - 1, 0, m)
-	return res
-}
-
-const int mod = 998'244'353
-vi gcd convolution(const vi& a, const vi& b) {
-	int n = sz(a)
-	vi c(n)
-	for (int g = n - 1; g >= 1; g--) {
-		ll sum a = 0, sum b = 0
-		for (int i = g; i < n; i += g) {
-			sum a += a[i], sum b += b[i]
-			if ((c[g] -= c[i]) < 0) c[g] += mod
-		}
-		sum a %= mod, sum b %= mod
-		c[g] = (c[g] + sum a * sum b) % mod
-	}
-	return c
-}
-
-for (int mask = (1 << k) - 1; mask < (1 << n)
-		 mask = next subset(mask))
-
-	for (ll le = 1, ri; le <= n && (ri = n / (n / le))
-			 le = ri + 1)
-
-		int next subset(int mask) {
-		int c = mask & -mask, r = mask + c
-		return r | (((r ^ mask) >> 2) / c)
-	}
-
-for (int supermask = mask; supermask < (1 << n)
-		 supermask = (supermask + 1) | mask)
-
-	for (int submask = mask; submask
-			 submask = (submask - 1) & mask)
-
-		vector<ll> derangements(int n, int mod) {
-		vector<ll> dp(n)
-		dp[0] = 1
-		rep(i, 2, n) dp[i] =
-			(i - 1) * (dp[i - 1] + dp[i - 2]) % mod
-		return dp
-	}
-
-const int mod = 998244353
-struct mint {
-	int x
-	mint(int xx = 0): x(xx < 0 ? xx + mod : xx) {}
-	mint operator+(mint b) {
-		return x - mod + b.x
-	}
-	mint operator-(mint b) {
-		return x - b.x
-	}
-	mint operator*(mint b) {
-		return ll(x) * b.x % mod
-	}
-	mint operator/(mint b) {
-		int m = mod, u = 1, v = 0
-		while (m)
-			u = exchange(v, u - b.x / m * v),
-			b.x = exchange(m, b.x % m)
-		assert(b.x == 1)
-		return *this * u
+void build(int a[], int tl=0, int tr=n, int v=1) {
+	if (tr - tl == 1) {
+		t[v] = a[tl]
+	} else {
+		int tm = (tl+tr)/2
+		build(a, tl, tm, 2*v)
+		build(a, tm, tr, 2*v+1)
+		t[v] = t[2*v] + t[2*v+1]
 	}
 }
 
-const int mod = 998'244'353
-array<ll, 2> fib(ll n) {
-	if (n == 0) return {0ll, 1ll}
-	auto [x, y] = fib(n >> 1)
-	ll c = x * (2 * y - x + mod) % mod,
-		 d = (x * x + y * y) % mod
-	if (n & 1) return {d, (c + d) % mod}
-	return {c, d}
+long long query(int l, int r, int tl=0, int tr=n, int v=1) {
+	if (r &lt;= tl || tr &lt;= l) return 0LL
+	if (l &lt;= tl &amp;&amp; tr &lt;= r) return t[v]
+	int tm = (tl+tr)/2
+	return query(l, r, tl, tm, 2*v)
+		 + query(l, r, tm, tr, 2*v+1)
 }
 
-const int mod = 998'244'353
-vector<ll> partitions(int n) {
-	vector<ll> dp(n, 1)
-	rep(i, 1, n) {
-		ll sum = 0
-		for (int j = 1, pent = 1, sign = 1; pent <= i
-				 j++, pent += 3 * j - 2, sign = -sign) {
-			if (pent + j <= i)
-				sum += dp[i - pent - j] * sign + mod
-			sum += dp[i - pent] * sign + mod
-		}
-		dp[i] = sum % mod
-	}
-	return dp
-}
-
-template<class t>
-vector<vector<t>> operator*(const vector<vector<t>>& a,
-														const vector<vector<t>>& b) {
-	int n = sz(a), m = sz(b[0]), inner = sz(b)
-	vector<vector<t>> c(n, vector<t>(m))
-	rep(i, 0, n) rep(k, 0, inner) rep(j, 0, m) c[i][j] +=
-		a[i][k] * b[k][j]
-	return c
-}
-
-template<class t>
-basis<t> intersection(const basis<t>& u,
-											const basis<t>& v) {
-	vector<array<t, 2>> w(sz(u.b))
-	rep(i, 0, sz(w)) w[i] = {u.b[i], u.b[i]}
-	basis<t> res
-	for (t e : v.b) {
-		t s = 0
-		for (auto [x, y] : w)
-			if ((e ^ x) < e) e ^= x, s ^= y
-		if (e) w.push back({e, s})
-		else res.insert(s)
-	}
-	return res
-}
-
-struct solve linear mod {
-	int rank
-	mint det
-	vector<mint> sol
-	solve linear mod(vector<vector<mint>>& mat,
-									 const vector<mint>& rhs) {
-		int n = sz(mat), m = sz(mat[0])
-		rep(i, 0, n) mat[i].push back(rhs[i])
-		tie(rank, det) = row reduce(mat, m)
-		if (any of(rank + all(mat),
-		[](auto& v) {
-		return v.back().x
-		})) {
-			return
-		}
-		sol.resize(m)
-		int j = 0
-		for each(begin(mat), begin(mat) + rank, [&](auto& v) {
-			while (v[j].x == 0) j++
-			sol[j] = v.back()
-		})
+void update(int pos, int val, int tl=0, int tr=n, int v=1) {
+	if (tr - tl == 1) {
+		t[v] += val
+	} else {
+		int tm = (tl+tr)/2
+		if (pos &lt; tm)
+			update(pos, val, tl, tm, 2*v)
+		else
+			update(pos, val, tm, tr, 2*v+1)
+		t[v] = t[2*v] + t[2*v+1]
 	}
 }
+					</code></pre>
+				</details>
+				<p>
+				Notes:
+				</p>
+				<ul>
+					<li>Update: do \(a[pos]\) += \(val\)</li>
+					<li>Query: calculate \(\sum\limits_{i=l}^{r-1} a[i]\)</li>
+					<li>The node with index \(v\) has inclusive-exclusive range \([tl, tr)\)</li>
+					<li>Range \([tl, tr)\) splits into ranges \([tl, tm)\) and \([tm, tr)\)</li>
+					<li>Node \(v\) has children \(2 \cdot v\), \(2 \cdot v + 1\), and parent \(\lfloor\frac{v}{2}\rfloor\). This is known as the <a href="https://en.algorithmica.org/hpc/data-structures/binary-search/#eytzinger-layout">Eytzinger Layout</a>.</li>
+				</ul>
+				<hr>
+				<p>
+				Our approach to optimize the memory will be to take some traversial of the tree, and index the nodes \(0,1,...,2 \cdot n-2\) in order of this traversial. Now there many ways to traverse a binary tree:
+				</p>
+				<ul>
+					<li>Pre order (dfs)</li>
+					<li>In order (dfs)</li>
+					<li>Post order (dfs)</li>
+					<li>Level order (bfs)</li>
+				</ul>
+				<p>But pre order and post order are symmetrical, so I'll only focus on pre order.</p>
+				<h3>Pre Order</h3>
+				<p>First, the <a
+									  href="https://cp-algorithms.com/data_structures/segment_tree.html#memory-efficient-implementation">source</a>
+				for the idea for this approach. Now, an example of indexing the
+				pre-order of a full binary tree
+				\(0,1,2,...\)</p>
+				<img src="bst_pre_order.png" alt="bst pre order" style="width:540px;height:auto;">
+				<p>
+				First for segment trees, a node with range \([tl, tr)\) has subtree size = \[2*(tr-tl)-1\]
+				</p>
+				<details>
+					<summary>how to derive this</summary>
+					<ol>
+						<li>range \([tl, tr)\) contains \(tr-tl\) leaf nodes representing \(a[tl], a[tl+1], ..., a[tr-1]\)</li>
+						<li>In a full binary tree, any subtree with \(k\) leaves will have \(k-1\) internal nodes</li>
+					</ol>
+				</details>
+				<p>
+				Observations:
+				</p>
+				<ul>
+					<li>The root is \(0\)</li>
+					<li>A node \(v\)'s left child has index \(v+1\)</li>
+					<li>A node \(v\)'s right child has index \(v+1+(\text{size of left subtree}) = v+1+(2 \cdot (tm-tl)-1)\)</li>
+				</ul>
+				<p>So we can code segment trees with \(2*n-1\) memory like:</p>
 
-using ui = unsigned long int
-template<ui n, ui m, ui k>
-array<bitset<k>, n> operator*(const array<bitset<m>, n>& a,
-															const array<bitset<k>, m>& b) {
-	array<bitset<k>, n> c
-	rep(i, 0, int(n)) rep(j, 0, int(m)) if (a[i][j]) c[i] ^=
-			b[j]
-	return c
-}
+				<details>
+					<summary>code</summary>
+					<pre><code class="language-cpp">
+const int MAXN = 500'000
+int n
+long long t[2*MAXN-1]
 
-const int lg = 60
-template<class t> struct basis ordered {
-	t b[lg] {}
-	int siz = 0
-	int shrink(t& v) {
-		for (int i = lg - 1; i >= 0; i--)
-			if (((v >> i) & t(1)) != t(0)) {
-				if (b[i] == t(0)) return i
-				v ^= b[i]
-			}
-		return -1
-	}
-	bool insert(t v) {
-		int i = shrink(v)
-		return i >= 0 ? b[i] = v, ++siz : 0
+void build(int a[], int tl=0, int tr=n, int v=0) {
+	if (tr - tl == 1) {
+		t[v] = a[tl]
+	} else {
+		int tm = (tl+tr)/2
+		build(a, tl, tm, v+1)
+		build(a, tm, tr, v+2*(tm-tl))
+		t[v] = t[v+1] + t[v+2*(tm-tl)]
 	}
 }
 
-pair<int, mint> row reduce(vector<vector<mint>>& mat,
-													 int cols) {
-	int n = sz(mat), m = sz(mat[0]), rank = 0
-	mint det = 1
-	for (int col = 0; col < cols && rank < n; col++) {
-		auto it = find if(rank + all(mat),
-		[&](auto& v) {
-			return v[col].x
-		})
-		if (it == end(mat)) {
-			det = 0
-			continue
-		}
-		if (it != begin(mat) + rank) {
-			det = mint(0) - det
-			iter swap(begin(mat) + rank, it)
-		}
-		det = det * mat[rank][col]
-		mint a inv = mint(1) / mat[rank][col]
-		for (mint& num : mat[rank]) num = num * a inv
-		rep(i, 0, n) if (i != rank && mat[i][col].x != 0) {
-			mint num = mat[i][col]
-			rep(j, 0, m) mat[i][j] =
-				mat[i][j] - mat[rank][j] * num
-		}
-		rank++
-	}
-	return {rank, det}
+long long query(int l, int r, int tl=0, int tr=n, int v=0) {
+	if (r &lt;= tl || tr &lt;= l) return 0LL
+	if (l &lt;= tl &amp;&amp; tr &lt;= r) return t[v]
+	int tm = (tl+tr)/2
+	return query(l, r, tl, tm, v+1)
+		 + query(l, r, tm, tr, v+2*(tm-tl))
 }
 
-template<class t> struct basis {
-	vector<t> b
-	t shrink(t v) {
-		for (t x : b) v = min(v, v ^ x)
-		return v
-	}
-	bool insert(t v) {
-		return (v = shrink(v)) ? b.push back(v), 1 : 0
+void update(int pos, int val, int tl=0, int tr=n, int v=0) {
+	if (tr - tl == 1) {
+		t[v] += val
+	} else {
+		int tm = (tl+tr)/2
+		if (pos &lt; tm)
+			update(pos, val, tl, tm, v+1)
+		else
+			update(pos, val, tm, tr, v+2*(tm-tl))
+		t[v] = t[v+1] + t[v+2*(tm-tl)]
 	}
 }
-
-array<vl, 2> get right and top(vl left, vl bottom) {
-	array<vl, 2> ret
-	for (vl& res : ret) {
-		{
-			vl tr(sz(left))
-			rep(i, 0, sz(tr)) tr[i] = c(i + sz(bottom) - 1, i)
-			res = conv(left, tr)
-			res.resize(sz(left))
-		}
-		{
-			vl tr(sz(left) + sz(bottom))
-			grow(sz(tr))
-			rep(i, 0, sz(tr)) tr[i] = t[i].fact
-			vl dp(sz(bottom))
-			rep(i, 0, sz(dp)) dp[i] =
-				bottom[i] * t[sz(dp) - 1 - i].inv fact % mod
-			vl tmp res = conv(dp, tr)
-			rep(i, 0, sz(res)) res[i] =
-				(res[i] +
-				 tmp res[i + sz(bottom) - 1] * t[i].inv fact) %
-				mod
-		}
-		swap(left, bottom)
-	}
-	return ret
+					</code></pre>
+				</details>
+				<h3>Level Order</h3>
+				<p>Let's take inspiration from the "standard" max-heap implementation:</p>
+				<img src="bst_level_order.png" alt="bst level order" style="width:540px;height:auto;">
+				<ul>
+					<li>It's a <a href="https://en.wikipedia.org/wiki/Binary_tree#Types_of_binary_trees">complete binary tree</a></li>
+					<li>It uses the <a href="https://en.algorithmica.org/hpc/data-structures/binary-search/#eytzinger-layout">Eytzinger Layout</a> (in our case, shifted down by one), thus:
+						<ul>
+							<li>The root is \(0\)</li>
+							<li>node \(v\)'s left child has index \(2 \cdot v+1\), right child has index \(2 \cdot v+2\)
+								<details>
+									<summary>how to derive right child formula</summary>
+									<ol>
+										<li>"shift" up 1</li>
+										<li>apply right child formula</li>
+										<li>"shift" down 1</li>
+									</ol>
+									like: \((2 \cdot (v+1)+1)-1\)
+								</details>
+							</li>
+							<li>the \(k\) nodes have distinct indexes in range \([0, k-1]\) (this is only true because it's complete). For segment trees, \(k=2 \cdot n-1\)</li>
+						</ul>
+					</li>
+				</ul>
+				<hr>
+				<p>Let's try to make this indexing layout work for segment
+				trees. Usually for segtrees, each node \(v\) has midpoint
+				\(tm=\lfloor\frac{tl+tr}{2}\rfloor\).</p>
+				<details>
+					<summary>Do you see the problem with this midpoint?</summary>
+					<p>A complete binary tree's left subtree could be much
+					larger that the right; (and for segment trees, the subtree
+					size is proportional to the node's segment length) so the
+					midpoint isn't always exactly in the middle.</p>
+				</details>
+				<p>Let's split it into 2 cases:</p>
+				<div class="slide-container">
+					<img src="complete_bst_case_1.png" alt="complete BST case 1" style="width:460px;height:auto;">
+					<img src="complete_bst_case_2.png" alt="complete BST case 2" style="width:460px;height:auto;">
+				</div>
+				<p>Observe:</p>
+				<ul>
+					<li>
+						for complete binary trees, either the left or right child's subtree is a
+						<a href="https://youtu.be/dQw4w9WgXcQ">perfect binary tree</a>
+					</li>
+					<li>
+						for segment trees, if a node \(v\)'s subtree is
+						perfect, then it's range \([tl, tr)\) has length
+						\(=2^k=tr-tl\) for some \(k\)
+					</li>
+				</ul>
+				<p>Let's revisit the cases in more detail.</p>
+				<img src="complete_bst_case_1_with_ranges.png" alt="complete BST case 1" style="width:540px;height:auto;">
+				<p>Here, the left child's subtree is clearly bigger than the right child's subtree, so
+				\[\lceil\frac{tr-tl}{2}\rceil &le; 2^k &le; tr-tl\]</p>
+				<img src="number_line_case_1.png" alt="number line case 1" style="width:400px;height:auto;">
+				<hr>
+				<img src="complete_bst_case_2_with_ranges.png" alt="complete BST case 2" style="width:540px;height:auto;">
+				<p>Again the left child's subtree is clearly bigger, so
+				\(2^k &le; \lfloor\frac{tr-tl}{2}\rfloor\).</p>
+				<img src="number_line_case_2.png" alt="number line case 2" style="width:400px;height:auto;">
+				<hr>
+				<p>But how to know which case we're in? And how to know which
+				power of 2? Well it turns out we can just take whichever case gives the smaller midpoint:</p>
+				<pre><code class="language-cpp">
+int split(int tl, int tr) {
+	int pow_2 = 1 &lt;&lt; __lg(tr-tl)
+	return min(tl+pow_2, tr-pow_2/2)
+}
+				</code></pre>
+				<p>
+				Note it is no longer the middle of range (e.g. "mid" point), hence the name "split". For a full proof, see my <a href="https://codeforces.com/blog/entry/112755">codeforces blog</a>.
+				</p>
+				<p>We can code segment trees like:</p>
+				<details>
+					<summary>code</summary>
+					<pre><code class="language-cpp">
+int split(int tl, int tr) {
+	int pow_2 = 1 &lt;&lt; __lg(tr-tl)
+	return min(tl+pow_2, tr-pow_2/2)
 }
 
-vl divide and conquer(vl h, vl bottom) {
-	{
-		int start =
-		find if(all(h), [](ll x) {
-			return x
-		}) - begin(h)
-		h.erase(begin(h), begin(h) + start)
-		bottom.erase(begin(bottom), begin(bottom) + start)
-	}
-	int n = sz(h)
-	if (n == 0) return {}
-	if (n == 1) return vl(h[0], bottom[0])
-	int mid = n / 2
-	auto rect left =
-		divide and conquer(vl(begin(h), begin(h) + mid),
-											 vl(begin(bottom), begin(bottom) + mid))
-	auto [rect right, rect top] =
-		get right and top(rect left, vl(mid + all(bottom)))
-	vl h right(mid + all(h))
-	for (ll& hh : h right) hh -= h[mid - 1]
-	auto upper right = divide and conquer(h right, rect top)
-	rect right.insert(end(rect right), all(upper right))
-	return rect right
-}
+const int MAXN = 500'000
+int n
+long long t[2*MAXN-1]
 
-int totient(int n) {
-	int res = n
-	for (int i = 2; i * i <= n; i++)
-		if (n % i == 0) {
-			while (n % i == 0) n /= i
-			res -= res / i
-		}
-	if (n > 1) res -= res / n
-	return res
-}
-
-ll bin exp(ll b, ll e, int mod) {
-	ll res = 1
-	if ((b %= mod) < 0) b += mod
-	for (; e; b = b * b % mod, e /= 2)
-		if (e & 1) res = res * b % mod
-	return res
-}
-ll tetration(ll b, ll e, int mod) {
-	if (mod == 1) return 0
-	if (b == 0) return (e + 1) % 2 % mod
-	if (b == 1 || e == 0) return 1
-	if (e == 1) return b % mod
-	if (b == 2 && e == 2) return 4 % mod
-	if (b == 2 && e == 3) return 16 % mod
-	if (b == 3 && e == 2) return 27 % mod
-	int t = totient(mod)
-	ll exp = tetration(b, e - 1, t)
-	return bin exp(b, exp + t, mod)
-}
-
-mint mpow(mint b, ll e) {
-	mint res = 1
-	for (; e; e /= 2, b = b * b)
-		if (e & 1) res = res * b
-	return res
-}
-
-ll c small k(ll n, int k) {
-	if (k < 0 || n < k || (n %= mod) < k) return 0
-	grow(k)
-	ll res = t[k].inv fact
-	rep(i, 0, k) res = res * (n - i) % mod
-	return res
-}
-
-const int mod = 17
-struct comb {
-	ll inv = 1, fact = 1, inv fact = 1
-}
-vector<comb> t(2)
-void grow(int n) {
-	while (sz(t) <= n) {
-		ll i = sz(t),
-			 inv = mod - (mod / i) * t[mod % i].inv % mod
-		t.push back({inv, i * t[i - 1].fact % mod,
-								 inv * t[i - 1].inv fact % mod})
+void build(int a[], int tl=0, int tr=n, int v=0) {
+	if (tr - tl == 1) {
+		t[v] = a[tl]
+	} else {
+		int tm = split(tl, tr)
+		build(a, tl, tm, 2*v+1)
+		build(a, tm, tr, 2*v+2)
+		t[v] = t[2*v+1] + t[2*v+2]
 	}
 }
 
-ll lucas(ll n, ll k) {
-	if (k < 0 || n < k) return 0
-	ll res = 1
-	for (; k && k < n && res; n /= mod, k /= mod)
-		res = res * c(n % mod, k % mod) % mod
-	return res
+long long query(int l, int r, int tl=0, int tr=n, int v=0) {
+	if (r &lt;= tl || tr &lt;= l) return 0LL
+	if (l &lt;= tl && tr &lt;= r) return t[v]
+	int tm = split(tl, tr)
+	return query(l, r, tl, tm, 2*v+1)
+		 + query(l, r, tm, tr, 2*v+2)
 }
 
-ll c(int n, int k) {
-	if (k < 0 || n < k) return 0
-	grow(n)
-	return t[n].fact * t[k].inv fact % mod *
-				 t[n - k].inv fact % mod
-}
-
-const int mod = 17
-vector<vector<ll>> ch(1010)
-rep(i, 0, sz(ch)) {
-	ch[i].resize(i + 1, 1)
-	rep(j, 1, i) ch[i][j] =
-		(ch[i - 1][j] + ch[i - 1][j - 1]) % mod
-}
-
-int num subsequences(const vi& a, int mod) {
-	vector dp(sz(a) + 1, 1)
-	map<int, int> last
-	rep(i, 0, sz(a)) {
-		int& curr = dp[i + 1] = 2 * dp[i]
-		if (curr >= mod) curr -= mod
-		auto it = last.find(a[i])
-		if (it != end(last)) {
-			curr -= dp[it->second]
-			if (curr < 0) curr += mod
-			it->second = i
-		} else last[a[i]] = i
-	}
-	return dp.back()
-}
-
-vi sieve(1001)
-iota(all(sieve), 0)
-for (int i = 2; i * i < sz(sieve); i++)
-	if (sieve[i] == i)
-		for (int j = i * i; j < sz(sieve); j += i)
-			sieve[j] = min(sieve[j], i)
-
-for (int left = num, fac = sieve[left]; left > 1
-		 fac = sieve[left /= fac])
-
-	vi primes, sieve(1001)
-iota(all(sieve), 0)
-rep(i, 2, sz(sieve)) {
-	if (sieve[i] == i) primes.push back(i)
-	for (int prime : primes) {
-		if (prime * i >= sz(sieve)) break
-		sieve[prime * i] = prime
-		if (i % prime == 0) break
+void update(int pos, int val, int tl=0, int tr=n, int v=0) {
+	if (tr - tl == 1) {
+		t[v] += val
+	} else {
+		int tm = split(tl, tr)
+		if (pos &lt; tm)
+			update(pos, val, tl, tm, 2*v+1)
+		else
+			update(pos, val, tm, tr, 2*v+2)
+		t[v] = t[2*v+1] + t[2*v+2]
 	}
 }
-
-auto is prime = [&](int num) -> bool {
-	return num >= 2 && sieve[num] == num
+					</code></pre>
+				</details>
+				<h3>In Order</h3>
+				<p>First, the <a href="https://codeforces.com/blog/entry/112755#comment-1004569">source</a> for the idea for this approach. An example of indexing the in-order of a full binary tree
+				\(0,1,2,...\)</p>
+				<img src="bst_inorder.png" alt="bst in order" style="width:540px;height:auto;">
+				<p>
+				Observations:
+				</p>
+				<ul>
+					<li>BST-property: for every node \(v\):
+						<ul>
+							<li>All nodes in \(v\)'s left subtree have index \(&lt;v\)</li>
+							<li>All nodes in \(v\)'s right subtree have index \(&gt;v\)</li>
+						</ul>
+					</li>
+					<li>the total number of nodes is odd; leaves have even indexes; internal nodes have odd indexes (this is only true because it's full)
+						<details>
+							<summary>Proof by induction</summary>
+							<p>
+							Base case 1:
+							<br>
+							<img src="bst_base_case_1.png" alt="base case 1" style="width:60px;height:auto;">
+							<br>
+							Base case 2:
+							<br>
+							<img src="bst_base_case_2.png" alt="base case 2" style="width:200px;height:auto;">
+							<br>
+							Now assume \(T1\), \(T2\) are full binary trees. Imagine
+							creating a new full binary tree \(T\) by creating a new
+							root, and setting \(T1\) as the root's left subtree, \(T2\)
+							as the root's right subtree.
+							</p>
+							<p>Denode \(|T|\) as the total number of
+							nodes in \(T\). \(|T| = 1+|T1|+|T2| = 1+odd+odd = odd\)</p>
+							<p>The root's index = \(|T1|\) = odd</p>
+							<p>The indexes of nodes in \(T1\) doesn't change.</p>
+							<p>The indexes of nodes in \(T2\) each increase by \(1+|T1| = 1+odd = even\), so their parody doesn't change.</p>
+						</details>
+					</li>
+				</ul>
+				<hr>
+				<p>
+				Let's look at the same tree, with ranges and midpoints
+				included. What can you observe about the midpoints?
+				</p>
+				<img src="bst_midpoints.png" alt="bst midpoints" style="width:540px;height:auto;">
+				<p>
+				Observations:
+				</p>
+				<ul>
+					<li>
+						BST-property for midpoints: for an internal node \(v\) with midpoint \(tm\):
+						<ul>
+							<li>All internal nodes in \(v\)'s left subtree have midpoint \(&lt;tm\)</li>
+							<li>All internal nodes in \(v\)'s right subtree have midpoint \(&gt;tm\)</li>
+						</ul>
+						<details>
+							<summary>How to derive this</summary>
+							<p>Each internal node \(v\) has:</p>
+							<ul>
+								<li>range \([tl, tr)\) with \(tr - tl &ge; 2\)</li>
+								<li>\(tl &lt; tm = \lfloor\frac{tl+tr}{2}\rfloor &lt; tr\), e.g. the midpoint is strictly inside the range</li>
+							</ul>
+							<p>Each node in \(v\)'s left child's subtree has midpoint strictly inside \([tl, tm)\), so it's \(&lt; tm\). (and similarly for \(v\)'s right child)</p>
+						</details>
+					</li>
+					<li>the set of \(n-1\) midpoints (\(tm\)) are distinct, and lie in \([1, n-1]\)
+						<details>
+							<summary>How to derive this</summary>
+							<p>The distinct property follows directly from the above BST-property</p>
+							<hr>
+							<p>Each internal node \(v\) has range \([tl, tr) ⊆ [0, n)\), and its midpoint
+							is strictly inside \([tl, tr)\). So \(0 &le; tl &lt; tm &lt; tr &le; n\), so \(0 &lt; tm &lt; n\).</p>
+						</details>
+					</li>
+				</ul>
+				<p>So we have to map the midpoints in \([1, n-1]\) to odd indexes in \([0,2 \cdot n-2]\) with the function \(f(midpoint) = 2 \cdot midpoint-1\) = in-order index</p>
+				<p>Leaves each have range \([tl, tl+1)\) which we can map to an even index \(2 \cdot tl\). So we can write a function like:</p>
+				<pre><code class="language-cpp">
+int in_order(int tl, int tr) {
+	return tr-tl &gt; 1 ? (tl+tr)/2*2-1 : 2*tl
+}
+				</code></pre>
+				<p>And we can code segment trees like:</p>
+				<details>
+					<summary>code</summary>
+					<pre><code class="language-cpp">
+int in_order(int tl, int tr) {
+	return tr-tl &gt; 1 ? (tl+tr)/2*2-1 : 2*tl
 }
 
-vi mobius(1'000'005)
-mobius[1] = 1
-rep(i, 1, sz(mobius)) for (int j = i + i; j < sz(mobius)
-													 j += i) mobius[j] -= mobius[i]
+const int MAXN = 500'000
+int n
+long long t[2*MAXN-1]
 
-template<class t> struct pal query {
-	vi man
-	pal query(const t& s): man(manacher(s)) {}
-	bool is pal(int le, int ri) {
-		return man[le + ri] <= le
-	}
-}
-
-template<class t> vi manacher(const t& s) {
-	int n = sz(s), p = 0
-	vi man(max(0, 2 * n - 1))
-	rep(i, 0, 2 * n - 1) {
-		int ri = i <= 2 * (p - man[p])
-						 ? p - max(man[2 * p - i], man[p])
-						 : i / 2
-		man[i] = i - ri
-		while (man[i] > 0 && ri + 1 < n &&
-					 s[man[i] - 1] == s[ri + 1])
-			man[i]--, ri++, p = i
-	}
-	return man
-}
-
-template<class t> struct longest pal query {
-	vi man, idx
-	rmq<int, function<int(int, int)>> rmq = {{}, nullptr}
-	longest pal query(const t& s):
-		man(manacher(s)), idx(sz(s)) {
-		iota(all(idx), 1)
-		vi init(sz(man))
-		iota(all(init), 0)
-		rmq = {init, [&](int i1, int i2) {
-			return len(i1) < len(i2) ? i2 : i1
-		}
-					}
-	}
-	int len(int i) {
-		return i - 2 * man[i] + 1
-	}
-	pii longest pal(int le, int ri) {
-		assert(le < ri)
-		int pal len =
-			lower bound(begin(idx), begin(idx) + (ri - le), 0,
-		[&](int mid, int) {
-			return len(rmq.query(2 * le + mid - 1,
-													 2 * ri - mid)) >= mid
-		}) -
-		begin(idx)
-		int best center =
-			rmq.query(2 * le + pal len - 1, 2 * ri - pal len)
-		return {(best center + 1 - pal len) / 2, pal len}
-	}
-}
-
-ll sum consecutive(int le, int ri) {
-	return ll(ri - le) * (le + ri - 1) / 2
-}
-template<class t> struct count pal query {
-	int n
-	vi man
-	wavelet tree wt le, wt ri
-	count pal query(const t& s):
-		n(sz(s)), man(manacher(s)), wt le(man, 0, n),
-		wt ri(init()) {}
-	wavelet tree init() {
-		vi right(sz(man))
-		rep(i, 0, sz(man)) right[i] = i - man[i] + 1
-		return {right, 1, n + 1}
-	}
-	ll count pals(int le, int ri) {
-		assert(le < ri)
-		int man le = 2 * le, man ri = 2 * ri - 1,
-				man mi = (man le + man ri) / 2
-		ll cnt =
-			-1ll * wt le.rect count(man le, man mi, 0, le) * le
-		cnt -= wt le.rect sum(man le, man mi, le, n)
-		cnt += sum consecutive(le, man mi / 2) +
-					 sum consecutive(le, (man mi + 1) / 2)
-		cnt += man mi - man le
-		cnt +=
-			ll(wt ri.rect count(man mi, man ri, ri, n + 1)) * ri
-		cnt += wt ri.rect sum(man mi, man ri, 1, ri)
-		cnt -= sum consecutive((man mi + 1) / 2, ri) +
-					 sum consecutive(man mi / 2 + 1, ri)
-		return cnt
+void build(int a[], int tl=0, int tr=n) {
+	if (tr - tl == 1) {
+		t[in_order(tl,tr)] = a[tl]
+	} else {
+		int tm = (tl+tr)/2
+		build(a, tl, tm)
+		build(a, tm, tr)
+		t[in_order(tl,tr)] = t[in_order(tl,tm)] + t[in_order(tm,tr)]
 	}
 }
 
-template<class t> vi longest from index(pal query<t>& pq) {
-	int n = (sz(pq.man) + 1) / 2
-	vector longest(n, n - 1)
-	for (int i = n - 2; i >= 0; i--) {
-		longest[i] = min(longest[i + 1] + 1, n - 1)
-		while (!pq.is pal(i, longest[i])) longest[i]--
-	}
-	return longest
+long long query(int l, int r, int tl=0, int tr=n) {
+	if (r &lt;= tl || tr &lt;= l) return 0LL
+	if (l &lt;= tl &amp;&amp; tr &lt;= r) return t[in_order(tl,tr)]
+	int tm = (tl+tr)/2
+	return query(l, r, tl, tm)
+		 + query(l, r, tm, tr)
 }
 
-template<class t> struct sa query {
-	t s
-	int n
-	vi sa, sa inv, lcp
-	rmq<int, function<int(int, int)>> rmq
-	sa query(const t& a s, const array<vi, 3>& d):
-		s(a s), n(sz(s)), sa(d[0]), sa inv(d[1]), lcp(d[2]),
-		rmq(lcp, [](int x, int y) {
-		return min(x, y)
-	}) {}
-	sa query(const t& a s, int max val):
-		sa query(a s, get sa(a s, max val)) {}
-	int len lcp(int i1, int i2) {
-		if (i1 == i2) return n - i1
-		auto [le, ri] = minmax(sa inv[i1], sa inv[i2])
-		return rmq.query(le, ri)
+void update(int pos, int val, int tl=0, int tr=n) {
+	if (tr - tl == 1) {
+		t[in_order(tl,tr)] += val
+	} else {
+		int tm = (tl+tr)/2
+		if (pos &lt; tm)
+			update(pos, val, tl, tm)
+		else
+			update(pos, val, tm, tr)
+		t[in_order(tl,tr)] = t[in_order(tl,tm)] + t[in_order(tm,tr)]
 	}
 }
-
-int cmp sufs(int le1, int le2) {
-	return sa inv[le1] - sa inv[le2]
+					</code></pre>
+				</details>
+				<hr>
+				<details>
+					<summary>How to further code golf this</summary>
+					<p>If we switch to inclusive-inclusive ranges (so node \(v\) has range \([tl, tr]\), which splits into ranges \([tl, tm]\) and \([tm+1, tr]\)) then, midpoints are distinct and lie in \([0, n-2]\).</p>
+					<p>We still map the midpoints in \([0, n-2]\) to odd indexes in \([0,2 \cdot n-2]\) with the <i>new</i> function \(f(midpoint) = 2 \cdot midpoint+1\). And for leaves, we map range \([tl, tl]\) to \(2 \cdot tl\). Our new function is:</p>
+					<pre><code class="language-cpp">
+int in_order(int tl, int tr) {
+	return tl != tr ? (tl+tr)/2*2+1 : 2*tl
 }
-
-int cmp substrs(int le1, int ri1, int le2, int ri2) {
-	int len1 = ri1 - le1, len2 = ri2 - le2
-	return len lcp(le1, le2) >= min(len1, len2)
-				 ? len1 - len2
-				 : cmp sufs(le1, le2)
+					</code></pre>
+					<ul>
+						<li>Observe \(\lfloor\frac{x}{2}\rfloor \cdot 2+1\) is like setting the
+							least significant bit of \(x\) to 1, so we
+							can replace it with \(x|1\)</li>
+						<li>For leaves, \(tl == tr\) so \(2 \cdot tl\) equals \(tl+tr\) which further equals \((tl+tr)|0\)</li>
+					</ul>
+					<pre><code class="language-cpp">
+int in_order(int tl, int tr) {
+	return tl != tr ? ((tl+tr)|1) : ((tl+tr)|0)
 }
-
-pii find substr(int s le, int s ri) {
-	auto cmp = [&](int i, bool flip) -> bool {
-		return flip ^ (len lcp(i, s le) < s ri - s le)
-	}
-	int le = lower bound(begin(sa), begin(sa) + sa inv[s le],
-											 0, cmp) -
-					 begin(sa)
-	int ri =
-		lower bound(sa inv[s le] + 1 + all(sa), 1, cmp) -
-		begin(sa)
-	return {le, ri}
+					</code></pre>
+					<p>Finally, let's combine the cases:</p>
+					<pre><code class="language-cpp">
+int in_order(int tl, int tr) {
+	return (tl+tr) | (tl!=tr)
 }
+					</code></pre>
+					<p>This is a way to derive <a href="https://codeforces.com/blog/entry/112755#comment-1004569">the comment</a>.</p>
+				</details>
+				<br>
+			</div>
+		</div>
+	</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Devanagari Keyboard</title>
+		<link rel="stylesheet" href="/style.css">
+	</head>
+	<body>
+		<script type="text/javascript" language="javascript" src="/navagation_bar.js"></script>
+		<div class="body">
+			<div class="heading">
+				<h1 class="main_title">Designing a Devanagari Keyboard on Mobile</h1>
+				<h2 class="blog_date">2023 August 21</h2>
+			</div>
+			<br>
+			<div class="main_content">
 
+				<h3>Background</h3>
+				<p>
+				Over a year ago, I started learning Hindi after becoming good
+				friends with this group of Indian boys in college. I wanted to be
+				able to hold a conversation in Hindi, as well as text/type in
+				Hindi.
+				</p>
+				<p>
+				Hindi uses a different script, namely
+				<a href="https://en.wikipedia.org/wiki/Devanagari">Devanagari</a>.
+				Although it's possible to write Hindi
+				<a href="https://en.wikipedia.org/wiki/Hindustani_orthography#The_Latin_Alphabet">using
+					the Latin/Roman alphabet</a> (e.g. <a href="https://en.wikipedia.org/wiki/Romanization">romanization</a>)
+				I didn't want this. I wanted to be able
+				to type in the real deal which is Devanagari. This meant learning
+				the Devanagari script as well as some new Devanagari keyboard layout on mobile.
+				</p>
+				<p>I'm only interested in typing on mobile (not desktop, nor
+				handwriting). It's 2023 - only relevant skills!</p>
+
+				<h3>Learning About Devanagari</h3>
+				<p>Devanagari a phonetic script, meaning:</p>
+				<ul>
+					<li>each character represents a specific sound</li>
+					<li>each sound has a specific character which represents it</li>
+				</ul>
+				<p>
+				By comparison, the <a href="https://en.wikipedia.org/wiki/Latin_alphabet">Latin/Roman alphabet</a> is not phonetic:
+				</p>
+				<img src="snoop_tweet.png" alt="snoop tweet" style="width:350px;height:auto;">
+				<br>
+				<p>The non-phonetic-ness of English has some interesting
+				consequences:</p>
+				<p>We have spelling bee's. This is because in English,
+				spelling is non-trivial. In phonetic languages like Hindi, spelling
+				is trivial: you just sound out the word and that is also the
+				spelling.</p>
+				<p>Q: Do you think they have spelling bee's in India?</p>
+				<details>
+					<summary>A:</summary>
+					Actually they do! (but in English)
+				</details>
+				<hr>
+				<p>
+				You can spell English words different ways in Devanagari depending on the accent:
+				</p>
+				<ul>
+					<li>niche can = नीश (neesh), निछ (nitch)</li>
+					<li>mobile can = मोबईयल (moh-bye-ul), मोबल (moh-buhl)</li>
+				</ul>
+				<hr>
+				<p>The spelling for certain Hindi words can change as their pronunciation evolves:</p>
+				<table>
+					<tr>
+						<th>word</th>
+						<th>formal spelling</th>
+						<th>colloquial spelling</th>
+					</tr>
+					<tr>
+						<td>why</td>
+						<td>क्यों (kyo)</td>
+						<td>क्युं (cue/queue)</td>
+					</tr>
+					<tr>
+						<td>he/she/it</td>
+						<td>वह (vaha)</td>
+						<td>वो (voh)</td>
+					</tr>
+					<tr>
+						<td>very</td>
+						<td>बहुत (bahut)</td>
+						<td>बहौत (bahaut)</td>
+					</tr>
+					<tr>
+						<td>no</td>
+						<td>नहीं (nahii)</td>
+						<td>ने (nay)</td>
+					</tr>
+				</table>
+				<hr>
+				<p>Rhyming words have equal suffixes when spelled in Devanagari
+				(not always in English):</p>
+				<table>
+					<tr>
+						<th>word</th>
+						<th>pronunciation in Devanagari</th>
+					</tr>
+					<tr>
+						<td>boar</td>
+						<td>बोर</td>
+					</tr>
+					<tr>
+						<td>core</td>
+						<td>कोर</td>
+					</tr>
+					<tr>
+						<td>door</td>
+						<td>डोर</td>
+					</tr>
+					<tr>
+						<td>four</td>
+						<td>फोर</td>
+					</tr>
+					<tr>
+						<td>nor</td>
+						<td>नोर</td>
+					</tr>
+					<tr>
+						<td>you're</td>
+						<td>योर</td>
+					</tr>
+				</table>
+				<hr>
+				<p>Every English word can be spelled in the Devanagari script
+				by just sounding it out.</p>
+				<hr>
+				<p>List of weird mistakes I make:</p>
+				<table>
+					<tr>
+						<th>word, correctly spelled</th>
+						<th>my weird mistake</th>
+						<th>explanation</th>
+					</tr>
+					<tr>
+						<td>शब्द (sh-ah-bd)</td>
+						<td>typed it like शुब्द (sh-uu-bd)</td>
+						<td>शब्द is stored like 'shubd' in my head, so my brain
+							sees 'shu' and thinks it is pronounced like
+							'shoe'</td>
+					</tr>
+					<tr>
+						<td>bull (बल)</td>
+						<td>typed it like बुल (b-uu-ll)</td>
+						<td>My brain sees the 'u' in 'bull' and wants to spell
+							it like बुल (b-uu-ll). But bull is pronounced like
+							'b-ah-ll' (बल)</td>
+					</tr>
+					<tr>
+						<td>pong (पौंग)</td>
+						<td>typed it like पोंग</td>
+						<td>My brain sees the 'o' in pong and thinks it's
+							spelled with the ' ो' symbol representing the 'o'
+							sound. When actually pong is pronounced 'p-aw-ng'
+						(पौंग)</td>
+					</tr>
+					<tr>
+						<td>Americans (अमेरिकन्ज़)</td>
+						<td>typed it like अमेरिकन्स</td>
+						<td>s=स in Devanagari, so my brain thinks 'Americans'
+							is spelled like अमेरिकन्स. When actually it's
+							pronounced like 'American-z' and z=ज़, so the
+						correct Devanagari spelling is अमेरिकन्ज़</td>
+					</tr>
+					<tr>
+						<td>आसमान (aas-maan)</td>
+						<td>pronounced it like आज़मान</td>
+						<td>My brain sees the 'sm' in आसमान and thinks it's
+							pronounced like the 'sm' in
+							<ul>
+								<li>co<b>sm</b>etic</li>
+								<li>journali<b>sm</b></li>
+								<li>pla<b>sm</b>a</li>
+							</ul>
+							e.g. like zm=ज़म
+						</td>
+					</tr>
+					<tr>
+						<td>अन्य (ah-nyah)</td>
+						<td>pronounced it like ऐनी (an-ee)</td>
+						<td>My brain sees the Romanization of अन्य='any', and
+							wants to pronounce it like that, e.g. like
+							'an-ee'.</td>
+					</tr>
+					<tr>
+						<td>सिर्फ (s-ee-rf)</td>
+						<td>pronounced it like सर्फ (sirf)</td>
+						<td>In my head, सिर्फ is stored like 'sirf', and my
+							brain sees 'sir' and pronounces it like that (e.g.
+							like सर)</td>
+					</tr>
+					<tr>
+						<td>कहावत (kuh-haa-vat)</td>
+						<td>pronounced like कहावित (kuh-haa-vit)</td>
+						<td>My brain sees the 'va' in the pronounciation
+							'kuh-haa-<b>va</b>t' and thinks it's pronounced
+							like the 'va' in a<b>va</b>tar, e.g. like 'vi'=वि
+						</td>
+					</tr>
+					<tr>
+						<td>लिपि (li-pi)</td>
+						<td>pronounced like लिपी (li-pee)</td>
+						<td>My brain thinks the 'pi' in the pronounciation
+							'li-<b>pi</b>' is pronounced like the 'pi' in words
+							like:
+							<ul>
+								<li>camp<b>in</b>g</li>
+								<li>play<b>in</b>g</li>
+							</ul>
+						</td>
+					</tr>
+					<tr>
+						<td>विशेष (vi-shay-sh)</td>
+						<td>typed it like वेशेष (vay-shay-sh)</td>
+						<td>This one is the hardest to explain. My brain starts
+							to sound out the word like 'vi..' and remembers
+							words like:
+							<ul>
+								<li>can<b>va</b>s (can-vi-s)</li>
+								<li>conser<b>va</b>tive (cuhn-ser-vi-tiv)</li>
+								<li>equi<b>va</b>lent (ee-kwi-vi-luhnt)</li>
+							</ul>
+							Then my brain further forgets that in these words,
+							'va' is pronounced somewhere in between 'vah',
+							'vih'; and instead thinks it's pronounced 'vay'=वे.
+						</td>
+					</tr>
+				</table>
+				<p>Conclusion: my brain stores words/sounds in some
+				disorganized way because of English's non-phonetic-ness. It
+				would be so awesome to have a phonetic language as your mother
+				tongue because then your brain would be much better
+				organized.</p>
+				<hr>
+				<p>It's possible to be able to read/pronounce Devanagari out
+				loud without understanding the meaning (by just sounding out
+				the script).</p>
+				<hr>
+				<h3>The Actual Layout</h3>
+				<p>behold! (Tap or swipe to the corner to type that character)</p>
+				<div class="slide-container">
+					<img src="devanagari_layout.png" alt="Devanagari layout" style="width:540px;height:auto;">
+					<img src="devanagari_layout_fn_layer.png" alt="Devanagari layout fn layer" style="width:540px;height:auto;">
+				</div>
+				<ul>
+					<li>on the <a href="https://play.google.com/store/apps/details?id=juloo.keyboard2">Google Play Store</a> (I only created this layout then <a href="https://github.com/Julow/Unexpected-Keyboard/pull/313">added it to that app</a>. I didn't create the app.)</li>
+					<li><a href="https://www.sttmedia.com/characterfrequency-hindi">More frequent characters</a> are a tap; less frequent characters are a swipe</li>
+					<li>It is possible to type all characters in the <a href="https://en.wikipedia.org/wiki/Devanagari_(Unicode_block)">Devanagari unicode block</a></li>
+				</ul>
+
+				<h3>Consonants Row</h3>
+				<p>In Devanagari, the consonants are grouped by tongue/lip movements:</p>
+				<img src="devanagari_cons_group_circled.png" alt="Devanagari consonants">
+				<br>
+				<a href="https://www.omniglot.com/writing/devanagari.htm">source</a>
+				<p>For example, the "Labial" group's characters are all lip-movements:</p>
+				<ul>
+					<li>प = p</li>
+					<li>फ = f</li>
+					<li>ब = b</li>
+					<li>म = m</li>
+				</ul>
+				<img src="consonants_row_original.png" alt="consonants original" style="width:500px;height:auto;">
+				<p>Let's have a key for each consonant group.</p>
+				<p>Further organization:</p>
+				<img src="consonants_row_by_aspiration.png" alt="consonants grouped by aspiration" style="width:500px;height:auto;">
+				<ul>
+					<li>Circled in <span style="color:#FF0000">red</span> above: aspirated consonants</li>
+					<li>Circled in <span style="color:#0000FF">blue</span> above: unaspirated consonants</li>
+					<li>Circled in <span style="color:#FFFF00">yellow</span> above: nasal consonants</li>
+					<li>Circled in <span style="color:#00FF00">green</span> above: the consonants which don't follow the pattern</li>
+				</ul>
+				<img src="consonants_row_by_sound.png" alt="consonants grouped by sound" style="width:500px;height:auto;">
+				<p>Here, each circled pair of consonants has the same tongue/lip movement.</p>
+
+				<h3>Vowels Row</h3>
+				<p>In Devanagari, the vowels are grouped by sound:</p>
+				<img src="devanagari_vwl_group_circled.png" alt="Devanagari vowels">
+				<a href="https://www.omniglot.com/writing/devanagari.htm">source</a>
+				<p>For example, the "Rounded high back" group's characters are all "u"-sounds.</p>
+				<p>Q: What is "diphthong"?</p>
+				<details>
+					<summary>A:</summary>
+					When you change your underwear
+				</details>
+				<br>
+				<img src="vowels_row_original.png" alt="vowels original" style="width:500px;height:auto;">
+				<p>Let's have a key for each vowel group. The vowel row also somewhat follows the "standard" vowel order:</p>
+				<p>अ आ इ ई उ ऊ ऋ ए ऐ ओ औ</p>
+				<p>It's analogous to the "standard" vowel order in English: AEIOU.
+				Note neither of the "standard" vowel orders follows <a
+																			href="https://en.wikipedia.org/wiki/Scale_of_vowels">pitch
+																			order</a> (sad).</p>
+				<p>Further organization:</p>
+				<img src="vowel_row_by_diacritic.png" alt="vowels grouped by diacritic" style="width:500px;height:auto;">
+				<ul>
+					<li>Circled in <span style="color:#FF0000">red</span> above: initial vowels</li>
+					<li>Circled in <span style="color:#0000FF">blue</span> above: diacritic vowels</li>
+				</ul>
+				<img src="vowel_row_by_sound.png" alt="vowels grouped by sound" style="width:500px;height:auto;">
+				<p>Here, each circled pair of vowels has the same sound.</p>
+
+				<h3>Alternative Layouts</h3>
+				<p>Before creating my layout, I asked my Indian bros which
+				layouts they used. They pretty much had 2 answers:</p>
+
+				<p>1. <a href="https://play.google.com/store/search?q=gboard">GBoard</a>'s Hindi layout</p>
+				<img src="hindi_gboard.png" alt="Gboard Hindi layout" style="width:540px;height:auto;">
+				<p>2. <a href="https://play.google.com/store/search?q=swiftkey">SwiftKey</a>'s Hindi layout</p>
+				<img src="swiftkey_hindi_layout.png" alt="Swiftkey Hindi layout.png" style="width:540px;height:auto;">
+
+				<p>In hindsight, these are both great options. They both have
+				similar organization. Both these keyboards have auto-complete,
+				whereas Unexpected Keyboard (the app which I added my layout to)
+				doesn't have auto-complete.</p>
+				<p>If you already know Devanagari and simply want to type fast,
+				auto-complete might be the move.</p>
+				<hr>
+				<p>I briefly considered the <a
+													href="https://en.wikipedia.org/wiki/InScript_keyboard">Inscript
+													layout</a>, the official Devanagari layout for desktop.</p>
+				<img src="inscript_layout.png" alt="Inscript layout" style="width:540px;height:auto;">
+				<p>(<a href="https://play.google.com/store/apps/details?id=juloo.keyboard2">Google Play Store</a>)
+				If you already know this layout from typing on desktop, this might be the move.</p>
+
+				<h3>Is My Layout Better? (opinionated)</h3>
+				<details>
+					<summary>short answer</summary>
+					Probably not; It is better for me specifically
+				</details>
+				<p>As mentioned above, Unexpected Keyboard doesn't have
+				autocomplete/autocorrect. Also, Unexpected Keyboard uses swipe
+				to type characters, whereas for GBoard and Swiftkey you can
+				swipe to type entire words.</p>
+				<p>To most people, these features are a pro of GBoard/Swiftkey.
+				To me, someone learning Devanagari, I like how my layout forces
+				me to type out words in full from memory. This forces me to
+				learn the spelling (which is also the pronunciation) without
+				the crutch of these features.</p>
+				<p>In particular, this helped me learn the
+				<a href="https://www.omniglot.com/writing/devanagari_conjuncts.php">conjunct consonants</a>.
+				For example for the conjunct consonant त्य:</p>
+				<ul>
+					<li>With my layout, I'm forced to type the sequence त then ् then य. Here,  ् is the
+						<a href="https://en.wikipedia.org/wiki/Virama">Virama character</a>
+						and means that there is no vowel sound between त and य.
+						It also changes how the character looks visually (त्य
+						looks like the left half of त and then य).
+						<details>
+							<br>
+							<summary>One exception: the ज्ञ character</summary>
+							Its pronunciation is a bit controversial:
+							<br>
+							<br>
+							ज्ञ = ज + ् + ञ in unicode, so you would think its
+							pronunciation is half of ज, and then ञ, but this
+							is only true in Sanskrit.
+							<br>
+							<br>
+							In Hindi, ज्ञ is pronounced like ग + ् + ञ (= ग्ञ).
+							Hindi borrows many things from Sanskrit but doesn't
+							always keep everything the same.
+							<br>
+							<br>
+							For this reason alone, I type it via a single swipe
+							instead of the long way with the Virama character:
+							<img src="devanagari_exception_character.png" alt="devanagari exception character" style="width:500px;height:auto;">
+						</details>
+					</li>
+					<li>With GBoard, conjunct characters exist on different layers:
+						<img src="gboard_third_layer_conjunct_consonant.png" alt="gboard conjunct consonant" style="width:350px;height:auto;">
+						<br>
+						although GBoard also does have a key for  ् so you can
+						type it out in full if wanted.
+					</li>
+				</ul>
+				<hr>
+				<p>I like how my layout has large keys, thus I almost never mis-type.</p>
+			</div>
+		</div>
+	</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Minesweeper Probability</title>
+		<link rel="stylesheet" href="/style.css">
+		<script src="/mathjax/es5/tex-chtml.js" id="MathJax-script" async></script>
+	</head>
+	<body>
+		<script type="text/javascript" language="javascript" src="/navagation_bar.js"></script>
+		<div class="body">
+			<div class="heading">
+				<h1 class="main_title">Calculating Mine Probability in Minesweeper</h1>
+				<h2 class="blog_date">2020 July 17</h2>
+			</div>
+			<br>
+			<div class="main_content">
+				<h3>Background</h3>
+				<p>In minesweeper, to calculate the probability that given square is a mine was
+				<a href="https://www.semanticscholar.org/paper/The-complexity-of-Minesweeper-and-strategies-for-Pedersen/20833f71d74ff26ffd18979796cf1cbc8b3d92e6?p2df">proved to be #P-complete</a>.
+				I offer an exponential, heuristically improved approach to
+				finding such probabilities. Everything discussed in this blog
+				is already implemented in my
+				<a href="https://play.google.com/store/apps/details?id=com.LukeVideckis.minesweeper">android app</a>.</p>
+
+				<h3>How Mine Probability is Defined</h3>
+				<p>Mine probability for a square X is defined as:</p>
+				\[\frac{\text{number of mine configurations where X is a mine}}{\text{total number of mine configurations}}\]
+				<p>as each mine configuration has an equal chance of occurring. Let's look at an example board with 20 mines:</p>
+				<img src="zoomed_out_board_cropped.png" alt="zoomed out board cropped" style="width:300px;height:auto;">
+				<p>The above board has 10 equally likely configurations of mines:</p>
+				<img src="config_1_cropped.png" alt="config 1 cropped" style="width:130px;height:auto;padding:2px;">
+				<img src="config_2_cropped.png" alt="config 2 cropped" style="width:130px;height:auto;padding:2px;">
+				<img src="config_3_cropped.png" alt="config 3 cropped" style="width:130px;height:auto;padding:2px;">
+				<img src="config_4_cropped.png" alt="config 4 cropped" style="width:130px;height:auto;padding:2px;">
+				<img src="config_5_cropped.png" alt="config 5 cropped" style="width:130px;height:auto;padding:2px;">
+				<img src="config_6_cropped.png" alt="config 6 cropped" style="width:130px;height:auto;padding:2px;">
+				<img src="config_7_cropped.png" alt="config 7 cropped" style="width:130px;height:auto;padding:2px;">
+				<img src="config_8_cropped.png" alt="config 8 cropped" style="width:130px;height:auto;padding:2px;">
+				<img src="config_9_cropped.png" alt="config 9 cropped" style="width:130px;height:auto;padding:2px;">
+				<img src="config_10_cropped.png" alt="config 10 cropped" style="width:130px;height:auto;padding:2px;">
+				<p>All the configurations have the following in common:</p>
+				<img src="config_with_solver_cropped.png" alt="config with solver cropped" style="width:130px;height:auto;padding:2px;">
+				<ul>
+					<li>The red squares are the squares where every configuration has a mine</li>
+					<li>The green square had no mine in any configuration</li>
+				</ul>
+				<p>In a sense, it is possible "to deduce" that the red squares
+				are mines, and the green square isn't a mine. For example, the
+				top 3 red squares on the first row are all mines since the
+				middle 3 has only 3 surrounding squares. Thus all three squares
+				must have a mine.</p>
+				<hr>
+				<p>Now what about calculating mine probabilities? For each
+				square, let's count up how many out of the above 10
+				configurations have a mine:</p>
+				<img src="config_with_mine_counts.png" alt="config with mine counts" style="width:150px;height:auto;padding:2px;">
+				<p>It seems like the top-left square has probability
+				\(\frac{4}{10}\) of being a mine since 4 out of 10
+				configurations have a mine there. As pointed out
+				<a href="https://luckytoilet.wordpress.com/2012/12/23/2125/#comment-14493">in this comment</a>,
+				this is incorrect; it turns out to be more
+				complicated. Let's zoom out to see the entire board again.</p>
+				<img src="zoomed_out_board_cropped_away_cells_highlighted.png" alt="zoomed out board cropped away cells highlighted" style="width:300px;height:auto;padding:2px;">
+				<p>There are 75 squares which weren't accounted for previously
+				(surrounded in red). Not all configurations of mines have the
+				same number of mines, and thus aren't weighted equally. For
+				example
+				<img src="config_10_cropped.png" alt="config_10_cropped" style="width:100px;height:auto;">
+				has 8 mines, while
+				<img src="config_1_cropped.png" alt="config_1_cropped" style="width:100px;height:auto;">
+				has 11 mines. Recall
+				there are 20 total mines. We have to choose where to place the
+				remaining mines among the 75 remaining squares. For example,
+				since
+				<img src="config_10_cropped.png" alt="config_10_cropped" style="width:100px;height:auto;">
+				has 8 mines, we need to
+				choose \(20 - 8\) squares out of the remaining 75 squares to
+				place the remaining mines. The number of ways to do this is
+				\(\binom{75}{20-8} = 26123889412400\). You can think of
+				\(\binom{75}{20-8}\) as
+				<img src="config_10_cropped.png" alt="config_10_cropped" style="width:100px;height:auto;">
+				's "weight". Then, the fraction of "weighted" sums will give the
+				correct mine probability for each square.</p>
+				<table>
+					<tr>
+						<th>Number of Mines</th>
+						<th>Number of Configurations with top-left a mine</th>
+						<th>Number of Configurations</th>
+					</tr>
+					<tr>
+						<td>8</td>
+						<td>0</td>
+						<td>1</td>
+					</tr>
+					<tr>
+						<td>9</td>
+						<td>1</td>
+						<td>4</td>
+					</tr>
+					<tr>
+						<td>10</td>
+						<td>2</td>
+						<td>4</td>
+					</tr>
+					<tr>
+						<td>11</td>
+						<td>1</td>
+						<td>1</td>
+					</tr>
+				</table>
+				<p>For example, the top-left square has
+				<a href="https://www.wolframalpha.com/input/?i=%280*%2875+choose+20-8%29%2B1*%2875+choose+20-9%29%2B2*%2875+choose+20-10%29%2B1*%2875+choose+20-11%29%29%2F%281*%2875+choose+20-8%29%2B4*%2875+choose+20-9%29%2B4*%2875+choose+20-10%29%2B1*%2875+choose+20-11%29%29">probability</a>:
+				\[\frac{0\binom{75}{20-8} + 1\binom{75}{20-9} + 2\binom{75}{20-10} + 1\binom{75}{20-11}}{1\binom{75}{20-8} + 4\binom{75}{20-9} + 4\binom{75}{20-10} + 1\binom{75}{20-11}} = \frac{14}{103} \neq \frac{4}{10}\]
+				of being a mine.
+				</p>
+				<hr>
+				<p>Let's now define mine probability in general.</p>
+				<ul>
+					<li>Let \(C\) denote the set of all mine configurations</li>
+					<li>
+						Define \(f \colon C \to \{true,false\}\) as follows:
+						\( f(c)=\begin{cases}
+						true & \text{c has a mine in square X} \\
+						false & \text{c has no mine in square X}
+						\end{cases}
+						\)
+					</li>
+					<li>Let \(Y\) denote the number of squares not next to any number, clue. (in the above example, \(Y=75\))</li>
+					<li>Let \(M\) denote the total number of mines. (in the above example, \(M=20\))</li>
+					<li>Define \(\#m \colon C \to \mathbb{Z}^+\) as follows: \(\#m\left(c\right) =\) the number of mines in configuration c. (in the above example, \(8 \leq \#m(c) \leq 11\))</li>
+				</ul>
+				<p>Then square X has a mine with probability:
+				\[\frac{\sum\limits_{c \in C \mid f(c)} \binom{Y}{M-\#m(c)}}{\sum\limits_{d \in C} \binom{Y}{M-\#m(d)}}.\]
+				</p>
+				<p>How about squares not next to any number (e.g. the \(Y = 75\) squares)? For these squares, mine probability is:
+				\[\frac{\sum\limits_{c \in C} \frac{M-\#m(c)}{Y}\binom{Y}{M-\#m(c)}}{\sum\limits_{d \in C} \binom{Y}{M-\#m(d)}}.\]
+				</p>
+				<p>For a given configuration c, \(\frac{M-\#m(c)}{Y}\) is the probability that any of the \(Y\) squares are a mine. And the final probability is a weighted average, where the weight is \(\binom{Y}{M-\#m(c)}\).</p>
+				<hr>
+				<p>Notice the numerator and denominator are <i>huge</i> (in magnitude). For the above example:
+				\[\text{numerator} = 0\binom{75}{20-8} + 1\binom{75}{20-9} + 2\binom{75}{20-10} + 1\binom{75}{20-11}\]
+				\[= 6,681,687,099,710\]
+				but the end result is relatively small (in magnitude): \(\frac{14}{103}\). The reason why most factors cancel is because
+				\[\frac{\sum\limits_{c \in C \mid f(c)} \binom{Y}{M-\#m(c)}}{\sum\limits_{d \in C} \binom{Y}{M-\#m(d)}}=
+				\sum\limits_{c \in C \mid f(c)} \frac{\binom{Y}{M-\#m(c)}}{\sum\limits_{d \in C} \binom{Y}{M-\#m(d)}}=
+				\sum\limits_{c \in C \mid f(c)} \frac{1}{\frac{\sum\limits_{d \in C} \binom{Y}{M-\#m(d)}}{\binom{Y}{M-\#m(c)}}}=\]\[
+				\sum\limits_{c \in C \mid f(c)} \frac{1}{\sum\limits_{d \in C} \frac{\binom{Y}{M-\#m(d)}}{\binom{Y}{M-\#m(c)}}},\]
+				and
+				\[\frac{\binom{Y}{M-\#m(d)}}{\binom{Y}{M-\#m(c)}}=\frac{\left(M-\#m(c)\right)!\left(Y-M+\#m(c)\right)!}{\left(M-\#m(d)\right)!\left(Y-M+\#m(d)\right)!}.\]
+				Notice \(\left|\#m(c)-\#m(d)\right|\) is small, \(\leq 3\) in most cases, thus most factors in
+				\(\frac{\left(M-\#m(c)\right)!}{\left(M-\#m(d)\right)!}\), and \(\frac{\left(Y-M+\#m(c)\right)!}{\left(Y-M+\#m(d)\right)!}\) cancel.
+				</p>
+				<p>We can employ one of the following formulas (or their reciprocals):</p>
+				<ul>
+					<li>\(\frac{\binom{n}{k}}{\binom{n}{k}}=1\)</li>
+					<li>\(\frac{\binom{n}{k}}{\binom{n}{k+1}}=\frac{k+1}{n-k}\)</li>
+					<li>\(\frac{\binom{n}{k}}{\binom{n}{k+2}}=\frac{\left(k+1\right)\left(k+2\right)}{\left(n-k\right)\left(n-k-1\right)}\)</li>
+					<li>\(\frac{\binom{n}{k}}{\binom{n}{k+m}}= \frac{(k+1)(k+2)\dots(k+m)}{(n-k)(n-k-1)\dots(n-k-(m-1))}\)</li>
+				</ul>
+				<h3>Implementing Mine Probability</h3>
+				<p>In order to calculate the probability that square X is a mine, we need to calculate 2 things:</p>
+				<ul>
+					<li>For each square X, the number of mine configurations which have \(m\) mines where X is a mine, (\(0 \leq m \leq M\))</li>
+					<li>number of total mine configurations with \(m\) mines, (\(0 \leq m \leq M\))</li>
+				</ul>
+				<p>To calculate these, we employ backtracking:</p>
+				<img src="backtracking_pseudo_code.png" alt="backtracking pseudo code" style="width:540px;height:auto;">
+				<p>Even with pruning, this algorithm runs in \(\mathcal{O}\left(\left|squares\right| \cdot 2^{\left|squares\right|}\right)\). The \(\left|squares\right|\) factor comes from handling the base case, and there are at most \(2^{\left|squares\right|}\) base cases (mine configurations). The next section will discuss ways to make \(\left|squares\right|\) smaller.</p>
+
+				<h3>Splitting by Components</h3>
+				<p>The first optimization, splitting by components, is discussed in other blogs for example
+				<a href="https://luckytoilet.wordpress.com/2012/12/23/2125/">this blog</a>. Consider the following board:</p>
+				<img src="board_multiple_components_marked.png" alt="board multiple components marked" style="width:300px;height:auto;">
+				<p>
+				Running the backtracking will take roughly \(\left(3+4+11\right)\cdot2^{3+4+11}=4,718,592\) steps. Instead, how about running the backtracking independently on the red, blue, and green components. This will take roughly \(3\cdot2^3+4\cdot2^4+11\cdot2^{11}=22,616\) steps (much smaller).
+				</p>
+				<p>
+				But splitting the backtracking into multiple components makes things difficult. Let's look at another example (there are still 20 total mines):
+				</p>
+				<img src="two_components.png" alt="two components" style="width:300px;height:auto;">
+				<p>
+				Both components are the same as earlier, and both can have
+				either 8, 9, 10, or 11 mines. But since there are 20 total
+				mines, if one component has 11 mines, then the other component
+				can only have 8 or 9 mines. In general, the total number of
+				mines has to be in the range \([M-Y,M]\), with \(M,Y\) defined
+				earlier. This leads to the following problem.
+				</p>
+				<hr>
+				<p>
+				You are given \(n\), the number of components (labeled 1, 2, ..., n), and an array \(\#configs[][]\), where
+				</p>
+				<p>
+				\(\#configs[i][j]\) = number of configurations of mines for the \(i\)-th component which have \(j\) mines, \((1 \leq i \leq n,\;0 \leq j \leq M)\).
+				</p>
+				<p>
+				Find \(\#totalConfigs[]\) defined as:
+				</p>
+				<p>
+				\(\#totalConfigs[i]\) = number of configurations of mines which
+				have \(i\) mines when including all components, \((0 \leq i \leq M)\).
+				</p>
+				<p>
+				This problem is similar to
+				<a href="https://en.wikipedia.org/wiki/Knapsack_problem#0-1_knapsack_problem">0-1 knapsack</a>.
+				It's solved by dynamic programming. Let
+				</p>
+				<p>
+				\(dp[i][j]\) = number of configurations including only components \(1, 2, ..., i\) which have \(j\) mines, \((1 \leq i \leq n,\;0 \leq j \leq M)\).
+				</p>
+				<p>
+				Then the array dp is calculated as:
+				\[dp[i][j] = \sum\limits_{k=0}^j dp[i-1][k] \cdot \#configs[i][j-k].\]
+				The answer, \(\#totalConfigs\), is stored in \(dp[n]\).
+				</p>
+				<hr>
+				<p>
+				This works great for calculating mine probability for squares not next to any number,
+				\[\frac{\sum\limits_{c \in C} \frac{M-\#m(c)}{Y}\binom{Y}{M-\#m(c)}}{\sum\limits_{d \in C} \binom{Y}{M-\#m(d)}},\]
+				because we just need to know the number of components, and the number of mines for each component. We have
+				\[\sum\limits_{c \in C} \frac{M-\#m(c)}{Y}\binom{Y}{M-\#m(c)} =\]
+				\[\sum\limits_{i=0}^M \frac{M-i}{Y} \cdot \#totalConfigs[i] \cdot \binom{Y}{M-i},\]
+				and a similar formula for the denominator. Here, \(i\) represents the number of mines.
+				</p>
+				<p>
+				But calculating \(\#totalConfigs[]\) isn't enough to determine mine probability for a square X next to a number,
+				\[\frac{\sum\limits_{c \in C \mid f(c)} \binom{Y}{M-\#m(c)}}{\sum\limits_{d \in C} \binom{Y}{M-\#m(d)}},\]
+				because the numerator requires us to calculate the number of configurations <i>where square X is a mine</i>. To do this, we define a new problem.
+				</p>
+				<p>
+				Again you are given \(n\), the number of components (labeled 1, 2, ..., n), and an array \(\#configs[][]\), where
+				</p>
+				<p>
+				\(\#configs[i][j]\) = number of configurations of mines for the \(i\)-th component which have \(j\) mines, \((1 \leq i \leq n,\;0 \leq j \leq M)\).
+				</p>
+				<p>
+				This time, find an array \(dp[][][]\) defined as:
+				</p>
+				<p>
+				\(dp[i][j][k]\) = total number of mine configurations which have \(k\) mines, considering all components \((1, 2, ..., n)\) with the restriction that component \(i\) has exactly 1 configuration which has \(j\) mines, \((1 \leq i \leq n,\;0 \leq j \leq M,\;0 \leq k \leq M)\).
+				</p>
+				<p>
+				To solve, we first calculate 2 arrays:
+				</p>
+				<ul>
+					<li>
+						\(prefix[i][j]\) = number of configurations considering components \(1, 2, ..., i\) which have \(j\) mines, \((1 \leq i \leq n,\;0 \leq j \leq M)\).
+						<ul>
+							<li>calculated as: \(prefix[i][j] = \sum\limits_{k=0}^j prefix[i-1][k] \cdot \#configs[i][j-k]\)</li>
+						</ul>
+					</li>
+					<li>\(suffix[i][j]\) = number of configurations considering components \(i, i+1, ..., n\) which have \(j\) mines, \((1 \leq i \leq n,\;0 \leq j \leq M)\).
+						<ul>
+							<li>calculated as: \(suffix[i][j] = \sum\limits_{k=0}^j suffix[i+1][k] \cdot \#configs[i][j-k]\)</li>
+						</ul>
+					</li>
+				</ul>
+				<p>
+				Finally, \(dp[][][]\) is calculated as:
+				\[dp[i][j][k] = \sum\limits_{l=0}^{k-j} prefix[i-1][l] \cdot suffix[i+1][k-j-l].\]
+				How can we use \(dp[][][]\) to calculate \(\frac{\sum\limits_{c \in C \mid f(c)} \binom{Y}{M-\#m(c)}}{\sum\limits_{d \in C} \binom{Y}{M-\#m(d)}}?\)
+				</p>
+				<p>
+				Consider a square X next to at least one number. Assume X is in component \(i\). When we run backtracking on component \(i\), the base case is hit once for every mine configuration. So we can calculate an array: \(countXIsMine[]\) defined as
+				</p>
+				<p>
+				\(countXIsMine[j]\) = number of mine configurations for component \(i\) with \(j\) mines where X is a mine, \((0 \leq j \leq M)\).
+				</p>
+				<p>
+				We have
+				\[\sum\limits_{c \in C \mid f(c)} \binom{Y}{M-\#m(c)}=\]
+				\[\sum\limits_{k=0}^M \sum\limits_{j=0}^k dp[i][j][k] \cdot countXIsMine[j] \cdot \binom{Y}{M-k}.\]
+				Here, \(\sum\limits_{j=0}^k dp[i][j][k] \cdot countXIsMine[j]\) is the number of mine configurations (considering all components) which have \(k\) mines and X is a mine. Recall that when calculating \(dp[i][j][k]\), we assumed component \(i\) has exactly 1 mine configuration which has \(j\) mines. After multiplying with \(countXIsMine[j]\), component \(i\) now has \(countXIsMine[j]\) configurations with \(j\) mines (and X is a mine).
+				</p>
+
+				<h3>Matrices and Local Deductions</h3>
+				<p>
+				Minesweeper can be reduced to
+				<a href="https://massaioli.wordpress.com/2013/01/12/solving-minesweeper-with-matricies/">solving a system of linear equations</a>.
+				Combining this with
+				<a href="https://stackoverflow.com/a/4356982">local deductions</a>
+				is a good approach to determining whether certain moves are
+				save. What if we ran these 2 approaches first, before splitting
+				the board by components? Any deducible squares which these 2
+				approaches give can be used to split components, reducing their
+				size.
+				</p>
+				<img src="backtracking_local_deductions_pseudo_code.png" alt="backtracking local deductions pseudo code" style="width:540px;height:auto;">
+				<p>An example:</p>
+				<img src="before_local.png" alt="before local" style="width:270px;height:auto;">
+				<img src="after_local.png" alt="after local" style="width:270px;height:auto;">
+				<p>
+				The [green/red] squares are the squares where running local
+				deductions determined they [didn't/did] have mines. Notice
+				local deductions have failed to find all possible deducible
+				squares (there's a 2-1 pattern on the top row).
+				</p>
+				<p>
+				Before running local deductions, there is 1 component with 28
+				squares. The backtracking would have taken \(\sim 28\cdot2^{28} = 7,516,192,768\)
+				operations. After running local deductions, there's 1 component
+				with 9 non-deduced squares
+				(\(9\cdot2^9 = 4,608\)).
+				</p>
+				<p>
+				Although this optimization seems like it would help a lot,
+				there are many cases where this optimization doesn't help out
+				much (for example, consider if there are no deducible squares).
+				</p>
+				<h4>Further Splitting of Components</h4>
+				<p>
+				Let's define the problem: You are given a <i>single</i>
+				component of \(n\) squares (labeled 1, 2, ..., n). Find:
+				</p>
+				<ul>
+					<li>\(\#configs[]\) defined as:  \(\#configs[i]\) = the number of mine configurations with \(i\) mines, (\(0 \leq i \leq M\))</li>
+					<li>\(\#configsWithJMine[][]\) defined as: \(\#configsWithJMine[i][j]\) = the number of mine configurations which have \(i\) mines, and square \(j\) is a mine, (\(0 \leq i \leq M, 1 \leq j \leq n\))</li>
+				</ul>
+				<p>
+				This of course can be solved with recursive backtracking in
+				\(\mathcal{O}(n\cdot2^n)\). Let's try to solve this problem
+				faster as it is usually the bottleneck of the entire mine
+				probability calculation (every other step runs in polynomial
+				time).
+				</p>
+				<p>
+				Consider the following board.
+				</p>
+				<img src="board_before_splitting_by_cut_nodes.png" alt="board before splitting by cut nodes" style="width:170px;height:auto;">
+				<p>
+				Imagine if we somehow "removed" the un-discovered square next to the 1.
+				</p>
+				<img src="board_middle_of_splitting_by_cut_nodes.png" alt="board middle of splitting by cut nodes" style="width:170px;height:auto;">
+				<p>
+				Then, the board would contain 2 components.
+				</p>
+				<img src="board_after_splitting_by_cut_nodes.png" alt="board after splitting by cut nodes" style="width:170px;height:auto;">
+				<p>
+				Now, what if we ran the backtracking <i>independently</i> on
+				both the blue and yellow components, and then somehow combined
+				the results? In this way, we can take a single component, and
+				split it further into \(\geq 2\) smaller components.
+				</p>
+				<p>
+				But why limit ourselves to splitting a single component once?
+				Notice, we have to solve the exact same problem for both the
+				blue and yellow components. Thus, why solve it with
+				backtracking, when we can again use the same trick of
+				"removing" squares? This leads to the following recursive
+				algorithm.
+				</p>
+				<img src="solve_component_recursively_pseudo_code.png" alt="solve component recursively pseudo code" style="width:540px;height:auto;">
+				<p>
+				Here, the "split" squares are the squares which we remove to
+				split up the original component. Before diving into the reasons
+				why this algorithm is still exponential, I'll explain the
+				following parts:
+				</p>
+				<ul>
+					<li>the \(findSplitSquares\) function</li>
+					<li>combining results</li>
+				</ul>
+				<h4>Finding Split Squares</h4>
+				<p>
+				First, we don't have to limit ourselves to removing just 1
+				square to split components. Although, assuming we remove \(k\)
+				squares, it turns out the combine step will take
+				\(\mathcal{O}(2^k)\) time. So in my implementation, I
+				arbitrarily chose 6 as an upper bound on the number of split
+				squares.
+				</p>
+				<p>
+				Finding split squares requires representing the minesweeper board as a graph:
+				</p>
+				<ul>
+					<li>squares are nodes</li>
+					<li>2 squares share an edge if there exists a number next to both squares</li>
+				</ul>
+				<p>
+				For example this board,
+				<img src="board_as_graph_2.png" alt="board as graph 2" style="width:170px;height:auto;">,
+				produces the following graph:
+				</p>
+				<img src="Drawing.png" alt="Drawing" style="width:300px;height:auto;">
+				<p>
+				Notice that if node 4 is removed, then the graph would split
+				into 2 connected components. Thus node 4 is an
+				<a href="https://cp-algorithms.com/graph/cutpoints.html">articulation node</a>.
+				The first attempt would be to choose \(\leq\) 6 articulation nodes
+				from the graph to remove. Although this approach would
+				fail on grids such as:
+				<img src="board_with_no_cut_nodes.png" alt="board with no cut nodes" style="width:160px;height:auto;">
+				whose graphs have no articulation nodes. So let's find a more
+				generalized solution.
+				</p>
+				<p>
+				Ideally, we would want to remove \(\leq\) 6 nodes such that the
+				size of the largest component is minimized. Unfortunately, the
+				generalized problem of finding k nodes to remove to minimize
+				the size of the largest remaining component
+				<a href="https://cs.stackexchange.com/q/12789">is NP-complete</a>.
+				But this isn't as relevant as you'd think. There are at least 2
+				options:
+				</p>
+				<ul>
+					<li>
+						employ an approximation algorithm such as
+						<a href="https://supernet.isenberg.umass.edu/hlogistics/slides/Pardalos-Bellago-Nagurney.pdf#page=38">the 2-exchange method</a>
+					</li>
+					<li>
+						employ a brute force approach similar to
+						<a href="https://cs.stackexchange.com/questions/12789/find-which-vertices-to-delete-from-graph-to-get-smallest-largest-component#comment27752_12809">this comment</a>.
+						Brute force here is okay since we're only removing
+						\(\leq\) 6 nodes (thus is exponential in 6).
+					</li>
+				</ul>
+				<h4>Combining Results</h4>
+				<p>
+				Recall the problem: you are given a <i>single</i> component of \(n\) squares (labeled 1, 2, ..., n). Find:
+				</p>
+				<ul>
+					<li>\(\#configs[]\) defined as:  \(\#configs[i]\) = the number of mine configurations with \(i\) mines, (\(0 \leq i \leq M\))</li>
+					<li>\(\#configsWithJMine[][]\) defined as: \(\#configsWithJMine[i][j]\) = the number of mine configurations which have \(i\) mines, and square \(j\) is a mine, (\(0 \leq i \leq M, 1 \leq j \leq n\))</li>
+				</ul>
+				<p>
+				I'll only explain how to calculate \(\#configs[]\) as
+				\(\#configsWithJMine[][]\) is calculated very similarly.
+				</p>
+				<hr>
+				<p>
+				To understand this section, it'll help to know about
+				<a href="https://codeforces.com/blog/entry/337">dynamic programming with bitmasks</a>.
+				Consider this example board again:</p>
+				<img src="board_after_splitting_by_cut_nodes.png" alt="board after splitting by cut nodes" style="width:170px;height:auto;">
+				<p>
+				Our goal is to calculate some sub-result (not necessarily
+				\(\#configs[]\)) for both the blue and yellow components, and
+				then calculate the same sub-result for the original component.
+				Also, we have to be able to calculate \(\#configs[]\) from this
+				sub-result.
+				</p>
+				<p>
+				The sub-result is an array \(dp[][]\) defined as:
+				\(dp[mask][i]\) = the number of mine configurations with \(i\)
+				mines under the restriction that if and only if the \(j\)-th
+				bit in \(mask\) is 1, then there is a mine in the \(j\)-th
+				removed square.
+				</p>
+				<p>
+				Since the above example has only 1 removed square we consider 2 cases:
+				</p>
+				<ul>
+					<li>the removed square is a mine \(\left(mask = 1\right)\)</li>
+					<li>the removed square is not a mine \(\left(mask = 0\right)\)</li>
+				</ul>
+				<p>
+				If the removed square is a mine, we have
+				\[dpOriginal[1][i] = \sum \limits_{j=0}^{i+1} dpBlue[1][j] \cdot dpYellow[1][i+1-j]\]
+				where:
+				</p>
+				<ul>
+					<li>\(dpOriginal[][]\) is the \(dp[][]\) array corresponding to the original component</li>
+					<li>\(dpBlue[][]\) is the \(dp[][]\) array corresponding to the blue component</li>
+					<li>\(dpYellow[][]\) is the \(dp[][]\) array corresponding to the yellow component</li>
+				</ul>
+				<p>
+				Notice the upper bound on the sum is curiously
+				\(\left(i+1\right)\). Both the blue and yellow components have
+				a mine in the removed square. Thus we end up double counting
+				this mine. The \(\left(i+1\right)\) upper limit cancels out
+				with the double counting to get the correct result.
+				</p>
+				<p>
+				If the removed square is not a mine, we have
+				\[dpOriginal[0][i] = \sum \limits_{j=0}^i dpBlue[0][j] \cdot dpYellow[0][i-j].\]
+				Assuming there are \(k\) removed squares \(\left(k \leq 6\right)\), we have
+				\[\#configs[i] = \sum \limits_{mask=0}^{2^k-1} dp[mask][i].\]
+				Here, there are \(2^k\) masks as there are \(2^k\) possible
+				ways to place mines among the \(k\) removed squares.
+				</p>
+				<p>
+				Finally, the original recursive call has 0 removed squares, so
+				\(2^0 = 1\), there's 1 possible mask \(\left(mask = 0\right)\),
+				and the \(\#configs\) array is stored in \(dp[0].\)
+				</p>
+				<hr>
+				<p>
+				In this example, the original component was split into 2
+				sub-components, but in general, the original component can be
+				split into \(k\) sub-components. It is possible to generalize
+				this knapsack-like dynamic programming to work for \(k\)
+				sub-components.
+				</p>
+				<p>
+				There is a tricky case where a clue is surrounded by only
+				"removed" squares. Make sure to skip the masks which have the
+				incorrect number of mines for these clues.
+				</p>
+				<h4>Discussion on this Recursive Algorithm</h4>
+				<p>
+				Why is this algorithm still exponential? Consider the case
+				where all of the \(\binom{n}{\leq 6}\) subsets of nodes to
+				remove don't decrease the size of the component (there's still
+				1 component after removing nodes). In this case, we're forced
+				to solve the problem with normal recursive backtracking in
+				\(\mathcal{O}(n\cdot2^n)\). Although in practice, this case is
+				super rare.
+				</p>
+				<p>
+				Where does the speedup come from with this recursive approach?
+				For recursive backtracking, even with the best possible
+				pruning, you'll still hit the base case once for every mine
+				configuration. Thus, recursive backtracking has a lower bound
+				of \(\Omega\left(\text{number of mine configurations}\right)\).
+				This new recursive approach doesn't have the same lower bound,
+				and thus potentially can be faster (and is faster in practice).
+				</p>
+				<p>
+				Finally, here's a picture of the recursion tree for the board:
+				<img src="recursion_tree_removed_nodes.png" alt="recursion tree removed nodes" style="width:300px;height:auto;">.
+				Here, the squares marked with an "R" are articulation nodes in
+				the corresponding graph. If you remove any of the "R" squares,
+				the board will split into 2 components (not considering the
+				flagged squares).
+				</p>
+				<img src="recursion_tree_final.png" alt="recursion tree final" style="width:540px;height:auto;">.
+				<ul>
+					<li>Each node in this tree represents a single recursive call</li>
+					<li>Squares surrounded in black are in the sub-component in the current recursive call</li>
+					<li>Squares surrounded in both black and red are the "removed" squares which are used to further split the current component</li>
+					<li>Leaf node components are solved with recursive backtracking</li>
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Suffix Array Binary Search</title>
+		<link rel="stylesheet" href="/style.css">
+		<link rel="stylesheet" href="/highlight/styles/github.min.css">
+		<script src="/highlight/highlight.min.js"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', (event) => {
+				document.querySelectorAll('pre code').forEach((block) => {
+					hljs.highlightBlock(block)
+				})
+			})
+		</script>
+		<script src="/mathjax/es5/tex-chtml.js" id="MathJax-script" async></script>
+	</head>
+	<body>
+		<script type="text/javascript" language="javascript" src="/navagation_bar.js"></script>
+		<div class="body">
+			<div class="heading">
+				<h1 class="main_title">String Matching: Binary Search over Suffix Array in \(O(log(|s|)+|p|)\)</h1>
+				<h2 class="blog_date">2024 August 22</h2>
+			</div>
+			<br>
+			<div class="main_content">
+				<p>Recently I was learning about how to binary
+				search over suffix array to solve string
+				matching (specifically, single text, multiple
+				patterns, solve it online). Here
+				(<a href="https://codeforces.com/blog/entry/111380">1</a> ("Pattern Query" section),
+				<a href="https://codeforces.com/edu/course/2/lesson/2/3">2</a>,
+				<a href="https://cp-algorithms.com/string/suffix-array.html#finding-a-substring-in-a-string">3</a>)
+				describes how to solve it in \(O(|s| *
+				log(|p|))\) but I'll describe how to improve
+				this to \(O(|s| + log(|p|))\). There already
+				exists
+				<a href="https://stackoverflow.com/a/11374737">resources</a>
+				online about this, but I will try to help visualize it it.</p>
+
+				<h3>Visualizing Suffix Array</h3>
+
+				<p>Let's take the text s="\(banana\)", and consider all suffixes (written vertically):</p>
+				<pre>
+a
+n a
+a n a
+n a n a
+a n a n a
+b a n a n a
+0 1 2 3 4 5
+				</pre>
+
+				<p>now let's sort it:</p>
+
+				<pre>
+      a
+    a n
+    n a   a
+  a a n   n
+  n n a a a
+a a a b n n
+5 3 1 0 4 2
+				</pre>
+
+				<p>s's suffix array is \([5, 3, 1, 0, 4, 2]\).</p>
+
+				<p>Now take any substring of s (like "\(an\)").
+				Observe there exists a maximal-length subarray
+				of s's suffix array (\([3,1]\)) representing
+				all the suffixes (3 -> "\(ana\)", 1 ->
+				"\(anana\)"`) where "\(an\)" is a prefix. I
+				like to call this the "subarray of matches": as
+				this subarray represents all the starting
+				indexes (in s) of a match.</p>
+
+				<p>Let's define a function which calculates
+				this: \(subarrayOfMatches(s[s_l:s_r]) =\)
+				\(suffixArray[suffixArrayL:suffixArrayR]\).</p>
+
+				<p>Now observe that
+				\(subarrayOfMatches(s[s_l:s_r+1])\) is nested
+				inside \(subarrayOfMatches(s[s_l:s_r])\). This
+				is because every spot where \(s[s_l:s_r+1]\) is
+				a match, \(s[s_l:s_r]\) is also a match.</p>
+
+				<p>But in particular, we can take some suffix
+				(like "\(anana\)") and plug in all of its'
+				prefixes to \(subarrayOfMatches\) and we get a
+				sequence of nested subarrays:</p>
+
+				<p>\(subarrayOfMatches(\)"\(a\)"\() = [5,3,1]\)</p>
+				<p>\(subarrayOfMatches(\)"\(an\)"\() = [3,1]\)</p>
+				<p>\(subarrayOfMatches(\)"\(ana\)"\() = [3,1]\)</p>
+				<p>\(subarrayOfMatches(\)"\(anan\)"\() = [1]\)</p>
+				<p>\(subarrayOfMatches(\)"\(anana\)"\() = [1]\)</p>
+
+				<p>in general, you can visualize it like this:</p>
+
+				<img src="suffix_array_visual.png" alt="suffix array visual" style="width:auto;height:auto;">
+
+				<p>One more point: consider any subarray of the
+				suffix array:
+				\(suffixArray[suffixArrayL:suffixArrayR]\) and
+				let \(lcpLength\) = the longest common prefix
+				of these suffixes. Formally: for each \(i\) in
+				range \([suffixArrayL,suffixArrayR)\) the
+				strings
+				\(s[suffixArray[i]:suffixArray[i]+lcpLength]\)
+				are all equal.</p>
+
+				<p>Now consider the set of next letters:
+				\(s[suffixArray[i]+lcpLength]\), they are
+				sorted. We can visualize it like:</p>
+
+				<img src="suffix_array_lcp_visual.png" alt="suffix array lcp visual" style="width:auto;height:auto;">
+
+				<h3>Visualizing the Binary Search</h3>
+
+				<p>Given text s, s's suffix array, and query
+				string p, our goal is to calculate the minimum
+				index i such that p is a prefix of
+				\(s[suffixArray[i]:]\) (the suffix of s
+				starting at \(suffixArray[i]\))</p>
+
+				<p>so we can start the binary search as usual
+				with \(l=0,r=size(s),m=(l+r)/2\), and compare p to
+				\(s[suffixArray[m]:]\). if p is less, search lower
+				(\(r=m\)), else search higher (\(l=m\)).</p>
+
+				<p>Let's also keep track of the "best" suffix
+				so far, e.g. the suffix which matches the most
+				characters in p. Let's store it as a pair
+				\(\{bestISoFar,countMatched\}\) with the
+				invariant: \(p[:countMatched] == s[bestISoFar:bestISoFar+countMatched]\).</p>
+
+				<img src="suffix_array_binary_search_invariant.png" alt="suffix array binary search invariant" style="width:auto;height:auto;">
+
+				<p>So now, depending on whether
+				\(p[:countMatched+1]\) is less/greater than
+				\(s[bestISoFar:bestISoFar+countMatched+1]\) we
+				want to look for the green section which is
+				before/after \(bestISoFar\). And here, we have
+				the cases taken from
+				<a href="https://stackoverflow.com/a/11374737">here</a>:</p>
+
+				<ul>
+					<li>the middle red section will not
+						contain the answer because the
+						pattern p didn't match with
+					that letter \(g\), so it still won't
+					match anywhere in that range.</li>
+					<li>the green sections will contain a
+						match which is either better or
+						the same as the middle red
+					section</li>
+					<li>the outer red sections won't
+						contain the answer because the
+						LCP is too low</li>
+				</ul>
+
+				<p>So back to our binary search, we have \(l,r,m=(l+r)/2\).</p>
+
+				<ul>
+					<li>If \(m\) lies in either of the red
+						sections; then we can check for
+						this in \(O(1)\) using a lcp
+					query, and continue the search
+					"towards" the green section.</li>
+					<li>If \(m\) is already in the green
+						section, then  continue
+						matching \(p[countMatched:]\)
+					with \(s[bestISoFar+countMatched:]\)
+					(and also update our best match
+				\(\{bestISoFar,countMatched\}\))</li>
+				</ul>
+
+				<p>we start comparing characters in p starting
+				from \(countMatched\), so we only compare
+				characters in p once, and achieve complexity
+				\(O(log(|s|) + |p|)\).</p>
+
+				<details>
+					<summary>code</summary>
+					<pre><code class="language-cpp">
+/**
+ * @see https://github.com/kth-competitive-programming/kactl /blob/main/content/strings/SuffixArray.h
+ *
+ * suffixes of "banana":
+ * 0 banana 3
+ * 1 anana  2
+ * 2 nana   5
+ * 3 ana    1
+ * 4 na     4
+ * 5 a      0
+ *
+ * 5 a      0
+ *   |
+ * 3 ana    1
+ *   |||
+ * 1 anana  2
+ *
+ * 0 banana 3
+ *
+ * 4 na     4
+ *   ||
+ * 2 nana   5
+ *
+ * sa = {5, 3, 1, 0, 4, 2}
+ * sa_inv = {3, 2, 5, 1, 4, 0} (sa[sa_inv[i]] == i, sa_inv[sa[i]] == i)
+ * lcp = {1, 3, 0, 0, 2}
+ *
+ * @code{.cpp}
+       string s
+       auto [sa, sa_inv, lcp] = get_sa(s, 256)
+       // or
+       vi a
+       auto [sa, sa_inv, lcp] = get_sa(a, 100'005)
+ * @endcode
+ *
+ * @param s,max_num string/array with 0 &lt;= s[i] &lt; max_num
+ * @returns sa, sa_inv, lcp
+ * @time O(n + max_num)
+ * @space vectors `sa`, `sa_inv`, `lcp` are O(n). vector `freq` is O(max_num) and is allocated temporarily
+ */
+template &lt;class T&gt; array&lt;vector&lt;int&gt;, 3&gt; get_sa(const T&amp; s, int max_num) {
+  int n = (int)size(s)
+  vector&lt;int&gt; sa(n), sa_inv(begin(s), end(s)), lcp(max(0, n - 1))
+  iota(begin(sa), end(sa), 0)
+  for (int ln = 0; ln &lt; n; ln = max(1, 2 * ln)) {
+    vector&lt;int&gt; tmp(n), freq(max_num)
+    iota(begin(tmp), begin(tmp) + ln, n - ln)
+    copy_if(begin(sa), end(sa), begin(tmp) + ln, [&amp;](int&amp; x) { return (x -= ln) &gt;= 0; })
+    for (int x : sa_inv) freq[x]++
+    partial_sum(begin(freq), end(freq), begin(freq))
+    for_each(rbegin(tmp), rend(tmp), [&amp;](int x) { sa[--freq[sa_inv[x]]] = x; })
+    swap(sa_inv, tmp)
+    max_num = 1, sa_inv[sa[0]] = 0
+    auto prev_inv = [&amp;](int i) { return pair(tmp[i], i + ln &lt; n ? tmp[i + ln] : -1); }
+    for (int i = 1; i &lt; (n); i++) {
+      max_num += prev_inv(sa[i - 1]) != prev_inv(sa[i])
+      sa_inv[sa[i]] = max_num - 1
+    }
+    if (max_num == n) break
+  }
+  int sz = 0
+  for (int i = 0; i &lt; (n); i++) {
+    if (sz &gt; 0) sz--
+    if (sa_inv[i] == 0) continue
+    for (int j = sa[sa_inv[i] - 1]; max(i, j) + sz &lt; n &amp;&amp; s[i + sz] == s[j + sz];) sz++
+    lcp[sa_inv[i] - 1] = sz
+  }
+  return {sa, sa_inv, lcp}
+}
+/**
+ * @code{.cpp}
+       vector&lt;ll&gt; a
+       RMQ rmq(a, ranges::min); // -std=c++20
+       RMQ rmq(a, [&amp;](auto&amp; x, auto&amp; y) { return min(x, y); })
+ * @endcode
+ */
+template &lt;class T, class F&gt; struct RMQ {
+  vector&lt;vector&lt;T&gt;&gt; dp
+  F op
+  /**
+   * @param a static array
+   * @param a_op any associative, commutative, idempotent operation
+   * @time O(n log n)
+   * @space O(n log n) for `dp` vector
+   */
+  RMQ(const vector&lt;T&gt;&amp; a, F a_op) : dp(1, a), op(a_op) {
+    for (int i = 0; (2 &lt;&lt; i) &lt;= (int)size(a); i++) {
+      dp.emplace_back((int)size(a) - (2 &lt;&lt; i) + 1)
+      transform(begin(dp[i]), end(dp[i]) - (1 &lt;&lt; i), begin(dp[i]) + (1 &lt;&lt; i), begin(dp[i + 1]), op)
+    }
+  }
+  /**
+   * @param le,ri defines range [le, ri)
+   * @returns a[le] op a[le + 1] op ... op a[ri - 1]
+   * @time O(1)
+   * @space O(1)
+   */
+  T query(int le, int ri) {
+    assert(le &lt; ri)
+    int lg = __lg(ri - le)
+    return op(dp[lg][le], dp[lg][ri - (1 &lt;&lt; lg)])
+  }
+}
+/**
+ * subarray of `sa` of matches, and example of longest matching prefix of t in s
+ */
 struct match {
-	int sa le, sa ri, s le, s ri
+  /**
+   * t is some string defined by the query
+   *
+   * [sa_le, sa_ri) defines subarray of suffix array such that:
+   * - for all i in [sa_le, sa_ri): t == s.substr(sa[i], sz(t))
+   * - `sa_ri - sa_le` is the # of matches of t in s.
+   *
+   * [s_le, s_ri) defines a substring of s such that:
+   * - s.substr(s_le, s_ri - s_le) == t.substr(0, s_ri - s_le)
+   * - (s_ri - s_le) is maximized, if there are multiple answers, s_le is arbitrary
+   *
+   * - note if sa_le &lt; sa_ri, i.e. at least one match, then s_ri - s_le == sz(t)
+   * - note if sa_le == sa_ri, i.e. no matches, then s_ri - s_le &lt; sz(t)
+   * @{
+   */
+  int sa_le, sa_ri, s_le, s_ri
+  /** @} */
+}
+template &lt;class T&gt; struct sa_query {
+  T s
+  int n
+  vector&lt;int&gt; sa, sa_inv, lcp
+  RMQ&lt;int, function&lt;int(int, int)&gt;&gt; rmq
+  sa_query(const T&amp; a_s, const array&lt;vector&lt;int&gt;, 3&gt;&amp; d) : s(a_s), n((int)size(s)), sa(d[0]), sa_inv(d[1]), lcp(d[2]), rmq(lcp, [](int x, int y) { return min(x, y); }) {}
+  /**
+   * @time O(nlogn + max_val)
+   * @space O(nlogn + max_val) used during constructor; but member variables are only O(nlogn)
+   */
+  sa_query(const T&amp; a_s, int max_val) : sa_query(a_s, get_sa(a_s, max_val)) {}
+  /**
+   * @param i1,i2 defines suffixes [i1, n), [i2, n)
+   *      - if one of the suffixes is the entire string (i1 == 0 || i2 == 0) then
+   *        it's the same as z algorithm
+   *      - doesn't work when i1,i2 == n
+   * @returns max integer k such that s.substr(i1, k) == s.substr(i2, k)
+   * @time O(1)
+   * @space O(1)
+   */
+  int len_lcp(int i1, int i2) {
+    if (i1 == i2) return n - i1
+    auto [le, ri] = minmax(sa_inv[i1], sa_inv[i2])
+    return rmq.query(le, ri)
+  }
+  /**
+   * @param le1,le2 defines suffixes [le1, n), [le2, n)
+   *     - doesn't work when le1,le2 == n
+   * @returns a number `cmp` where:
+   *     - cmp &lt; 0 iff s.substr(le1) &lt; s.substr(le2)
+   *     - cmp = 0 iff s.substr(le1) = s.substr(le2)
+   *     - cmp &gt; 0 iff s.substr(le1) &gt; s.substr(le2)
+   * @time O(1)
+   * @space O(1)
+   */
+  int cmp_sufs(int le1, int le2) {
+    return sa_inv[le1] - sa_inv[le2]
+  }
+  /**
+   * @see https://stackoverflow.com/a/11374737
+   * @param t query string
+   * @returns see match
+   * @time O(|t| + log(|s|))
+   * @space O(1)
+   */
+  match find_str_fast(const T&amp; t) {
+    int s_le = n, s_len = 0
+    auto cmp = [&amp;](int i, int) -&gt; bool {
+      if (int lcp_len = s_le == n ? 0 : len_lcp(i, s_le); lcp_len != s_len)
+        return (lcp_len &lt; s_len) ^ (cmp_sufs(s_le, i) &lt; 0)
+      auto [it_s, it_t] = mismatch(i + s_len + begin(s), end(s), s_len + begin(t), end(t))
+      s_le = i, s_len = it_t - begin(t)
+      return lexicographical_compare(it_s, end(s), it_t, end(t))
+    }
+    int sa_le = lower_bound(begin(sa), end(sa), 0, cmp) - begin(sa), sa_ri = sa_le
+    if (s_len == (int)size(t))
+      sa_ri = lower_bound(sa_le + begin(sa), end(sa), 0, [&amp;](int i, int) -&gt; bool { return len_lcp(i, s_le) &gt;= (int)size(t); }) - begin(sa)
+    return {sa_le, sa_ri, s_le, s_le + s_len}
+  }
+}
+					</code></pre>
+				</details>
+			</div>
+		</div>
+	</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Linear Level Ancestors</title>
+		<link rel="stylesheet" href="/style.css">
+		<link rel="stylesheet" href="/highlight/styles/github.min.css">
+		<script src="/highlight/highlight.min.js"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', (event) => {
+				document.querySelectorAll('pre code').forEach((block) => {
+					hljs.highlightBlock(block)
+				})
+			})
+		</script>
+		<script src="/mathjax/es5/tex-chtml.js" id="MathJax-script" async></script>
+	</head>
+	<body>
+		<script type="text/javascript" language="javascript" src="/navagation_bar.js"></script>
+		<div class="body">
+			<div class="heading">
+				<h1 class="main_title">&lt;\(O(n)\),\(O(1)\)&gt; Level Ancestors, not Method of 4 Russians</h1>
+				<h2 class="blog_date">2024 February 29</h2>
+			</div>
+			<br>
+			<div class="main_content">
+				<p>
+				I recently read “Still Simpler Static Level Ancestors by Torben
+				Hagerup” describing how to process a rooted tree in \(O(n)\)
+				time/space to be able to answer online level ancestor queries
+				in \(O(1)\). I would like to explain it here. Thank you to
+				Cameron Custer for proof-reading and giving feedback.
+				</p>
+				<h3>Background/Warmup</h3>
+				<p>
+				Prerequisites: <a href="https://codeforces.com/blog/entry/71567?#comment-559299">ladder decomposition</a> and
+				<a href="https://codeforces.com/blog/entry/52062?#comment-360824">&lt;O(n),O(1)&gt; offline level ancestor</a>
+				</p>
+				<p>
+				First, to define a level ancestor query: For a node \(u\), and
+				integer \(k\), let \(LA(u, k)\) = the node \(k\) edges “up”
+				from \(u\). Formally a node \(v\) such that:
+				</p>
+				<ul>
+					<li>\(v\) is an ancestor of \(u\)</li>
+					<li>\(distance(u, v) = k\) (distance here is number of edges)</li>
+				</ul>
+				<p>
+				For example \(LA(u, 0) = u\)
+				</p>
+				<p>
+				Now the slowest part of ladder decomposition is the \(O(n \cdot log(n))\)
+				binary lifting. Everything else is \(O(n)\). So the approach will
+				be to swap out the binary lifting part for something else which
+				is \(O(n)\).
+				</p>
+				<p>
+				Note we can do the following, and it will still be \(O(n)\):
+				</p>
+				<ul>
+					<li>Store the answers to \(O(n)\) level ancestor queries of
+						our choosing (answered offline during the initial
+						build)</li>
+					<li>Normally in ladder decomposition, \(length(ladder) = 2
+						\cdot length(verticalPath)\). But we can change this to
+						\(length(ladder) = c \cdot length(verticalPath)\) for
+					any constant \(c\) (of course the smaller the better).</li>
+				</ul>
+				<p>
+				The key observation about ladders: Given any node \(u\) and
+				integer \(k\) \((0 &le; k &le; \frac{depth[u]}{2})\):
+				</p>
+				<p>
+				The ladder which contains \(LA(u, k)\) also contains \(LA(u, 2
+				\cdot k)\); or generally \(LA(u, c \cdot k)\) when we extend
+				the vertical paths by the multiple of \(c\)
+				</p>
+				<img src="ladder_key_observation.png" alt="ladder key observation" style="width:auto;height:auto;">
+				<h3>The Magic Sequence</h3>
+				<p>
+				Let’s take a detour to the following sequence \(a(i)\) =
+				highest power of \(2\) which divides \(i\) for \(i &ge; 1\) <a
+				href="https://oeis.org/A006519">https://oeis.org/A006519</a>
+				</p>
+				<p>
+				1 2 1 4 1 2 1 8 1 2 1 4 1 2 1 16 1 2 1 4 1 2 1 8 1 2 1 4 1 2 1 32 1 2 1 4 1 …
+				</p>
+				<p>
+				Observe: for every value \(2^k\), it shows up first at index
+				\(2^k\) (1-based), then every \(2^{k+1}\)-th index afterwards.
+				</p>
+				<p>
+				Q: Given index \(i &ge; 1\), and some value \(2^k\), I can move left or
+				right. What’s the minimum steps I need to travel to get to the
+				nearest value of \(2^k\)?
+				</p>
+				<p>
+				A: at most \(2^k\) steps. The worst case is I start at \(a(i) =
+				2^l &gt; 2^k\), e.g. exactly in the middle of the previous, and
+				next occurrence of \(2^k\)
+				</p>
+				<h3>The Algorithm</h3>
+				<p>
+				Let’s do a \(2 \cdot n - 1\) euler tour; let the \(i\)’th node be
+				\(eulerTour[i]\); \(i &ge; 1\). Let’s calculate an array
+				\(jump[i] = LA(eulerTour[i], a(i))\) offline, upfront.
+				</p>
+				<img src="euler_tour_jump.png" alt="euler tour jump" style="width:auto;height:auto;">
+				<p>
+				how to use the \(jump\) array to handle queries?
+				</p>
+				<p>
+				Let node \(u\), and integer \(k\) be a query. We can know \(i\)
+				= \(u\)’s index in the euler tour (it can show up multiple times
+				any index will work).
+				</p>
+				<hr>
+				<p>
+				<b>key idea</b>: We want to move either left, right in the
+				euler tour to find some “close”-ish index \(j\) with a “big”
+				jump upwards. But not too big: we want to stay in the subtree
+				of \(LA(u, k)\). Then we use the ladder containing \(jump[j]\)
+				to get to \(LA(u, k)\). The rest of the blog will be the all
+				math behind this.
+				</p>
+				<hr>
+				<p>
+				It turns out we want to find closest index \(j\) such that \(2
+				\cdot a(j) &le; k &lt; 4 \cdot a(j)\). Intuition: we move
+				roughly \(\frac{k}{2}\) steps away in the euler tour to get to
+				a node with an upwards jump of size roughly \(\frac{k}{2}\).
+				</p>
+				<img src="main_alg_visualized.png" alt="main algorithm visualilzed" style="width:auto;height:auto;">
+				<p>
+				Note if we move to \(j\): \(|depth[eulerTour[i]] - depth[eulerTour[j]]| &le; |i - j| &le; a(j)\)
+				</p>
+				<hr>
+				<details>
+					<summary>how to calculate \(j\) in \(O(1)\)</summary>
+					<p>
+					First we calculate the power-of-2 \(targetValue\) such that
+					\(2 \cdot targetValue &le; k &lt; 4 \cdot targetValue\):
+					</p>
+					<p>
+					<code>targetValue = bit_floor(k / 2) = 1 &lt;&lt; __lg(k/2)</code>
+					</p>
+					<p>
+					Here, we want \(\frac{k}{2} &ge; 1\) for it to work, so if \(k &lt; 2\)
+					then calculate \(LA(u, k)\) naively.
+					</p>
+					<p>
+					Now we want the closest index \(j\) with \(a(j) ==
+					targetValue\). First zero-out all unwanted least
+					significant bits with <code>i &amp; -targetValue</code>.
+					Then ensure the correct value of <code>__builtin_ctz</code>
+					by or-ing in the targetValue:
+					</p>
+					<p>
+					<code>j = i &amp; -targetValue | targetValue</code>
+					</p>
+				</details>
+				<hr>
+				<p>
+				Note we’re not creating a ladder of length \(c \cdot a(i)\)
+				starting from every node because that sums to \(c \cdot
+				(a(1)+a(2)+...+a(2n-1)) = O(n \cdot log(n))\). Rather it’s a
+				vertical path decomposition (sum of lengths is exactly \(n\)),
+				and each vertical path is extended upwards to \(c\) times its
+				original length into a ladder (sum of lengths &le; \(c \cdot
+				n\))
+				</p>
+				<h3>Finding the Smallest \(c\) for Ladders to be Long Enough</h3>
+				<p>
+				Let’s prove some bounds on \(d = depth[eulerTour[j]] - depth[LA(u, k)]\)
+				</p>
+				<img src="lower_bound_main_alg.png" alt="lower bound main algorithm" style="width:auto;height:auto;">
+				<p>
+				Note \(2 \cdot a(j) &le; k\) from earlier. So \(a(j) = 2 \cdot
+				a(j) - a(j) &le; k - a(j) &le; d\). This implies \(jump[j]\)
+				stays in the subtree of \(LA(u, k)\).
+				</p>
+				<img src="upper_bound_main_alg.png" alt="upper bound main algorithm" style="width:auto;height:auto;">
+				<p>
+				Note \(k &lt; 4 \cdot a(j)\) from earlier. So \(d &le; k + a(j)
+				&lt; 4 \cdot a(j) + a(j) = 5 \cdot a(j)\)
+				</p>
+				<img src="final_punchline.png" alt="final punchline" style="width:auto;height:auto;">
+				<p>
+				if we choose \(c=5\) then \(d &lt; 5 \cdot a(j) &le; 5 \cdot
+				length(verticalPath) = length(ladder)\), so the ladder is long
+				enough to always contain \(LA(u,k)\).
+				</p>
+				<img src="meme.png" alt="meme" style="width:auto;height:auto;">
+				<p>
+				I mean that constant factor kinda sucks :( Well, at least we’ve
+				shown a way to do the almighty, all-powerful theoretical
+				&lt;\(O(n),O(1)\)&gt; level ancestor, all hail to the almighty. If
+				thou is tempted by method of 4 russians, thou shall receive
+				eternal punishment.
+				</p>
+				<details>
+					<summary>c++ code with everything discussed so far</summary>
+					<pre><code class="language-cpp">
+// https://oeis.org/A006519
+int a(int i) {
+	assert(i &gt;= 1)
+	return i &amp; -i
 }
 
-match find substrs concated(const vector<pii>& substrs) {
-	using dt = array<int, 3>
-	int sa le = 0, sa ri = n, s le = 0, s ri = 0,
-			sum len = 0
-	auto cmp = [&](int i, const dt& x) -> bool {
-		int j = i + sum len,
-		lcp len = j == n ? 0 : min(len lcp(j, x[0]), x[1])
-		if (lcp len + sum len > s ri - s le)
-			s le = i, s ri = j + lcp len
-		if (lcp len < min(n - j, x[1]))
-			return sa inv[j] - sa inv[x[0]] < x[2]
-		return x[2] ^ (n - j < x[1])
-	}
-	for (auto [le, ri] : substrs) {
-		sa le = lower bound(begin(sa) + sa le,
-												begin(sa) + sa ri, dt{le, ri - le, 0}, cmp) -
-						begin(sa)
-		sa ri = lower bound(begin(sa) + sa le,
-												begin(sa) + sa ri, dt{le, ri - le, 1}, cmp) -
-						begin(sa)
-		sum len += ri - le
-	}
-	return {sa le, sa ri, s le, s ri}
-}
+struct linear_level_ancestor {
 
-pii find str(const t& t) {
-	int le =
-		lower bound(all(sa), 0,
-	[&](int i, int) -> bool {
-		return lexicographical compare(i + all(s), all(t))
-	}) -
-	begin(sa)
-	int ri = lower bound(le + all(sa), 0,
-	[&](int i, int) -> bool {
-		return mismatch(all(t), i + all(s)).first ==
-		end(t)
-	}) -
-	begin(sa)
-	return {le, ri}
-}
-
-match find str fast(const t& t) {
-	int s le = n, s len = 0
-	auto cmp = [&](int i, int) -> bool {
-		if (int lcp len = s le == n ? 0 : len lcp(s le, i)
-				lcp len != s len)
-			return (lcp len < s len) ^ (cmp sufs(s le, i) < 0)
-		auto [it s, it t] =
-		mismatch(i + s len + all(s), s len + all(t))
-		s le = i, s len = it t - begin(t)
-		return lexicographical compare(it s, end(s), it t,
-																	 end(t))
-	}
-	int sa le = lower bound(all(sa), 0, cmp) - begin(sa),
-			sa ri = sa le
-	if (s len == sz(t))
-		sa ri = lower bound(sa le + all(sa), 0,
-		[&](int i, int) -> bool {
-		return len lcp(s le, i) >= sz(t)
-	}) -
-	begin(sa)
-	return {sa le, sa ri, s le, s le + s len}
-}
-
-template<class t>
-array<vi, 3> get sa(const t& s, int max num) {
-	int n = sz(s)
-	vi sa(n), sa inv(all(s)), lcp(max(0, n - 1))
-	iota(all(sa), 0)
-	for (int ln = 0; ln < n; ln = max(1, 2 * ln)) {
-		vi tmp(n), freq(max num)
-		iota(begin(tmp), begin(tmp) + ln, n - ln)
-		copy if(all(sa), begin(tmp) + ln,
-		[&](int& x) {
-			return (x -= ln) >= 0
-		})
-		for (int x : sa inv) freq[x]++
-		partial sum(all(freq), begin(freq))
-		for each(rbegin(tmp), rend(tmp),
-		[&](int x) {
-			sa[--freq[sa inv[x]]] = x
-		})
-		swap(sa inv, tmp)
-		max num = 1, sa inv[sa[0]] = 0
-		auto prev inv = [&](int i) {
-			return pair(tmp[i], i + ln < n ? tmp[i + ln] : -1)
-		}
-		rep(i, 1, n) {
-			max num += prev inv(sa[i - 1]) != prev inv(sa[i])
-			sa inv[sa[i]] = max num - 1
-		}
-		if (max num == n) break
-	}
-	int sz = 0
-	rep(i, 0, n) {
-		if (sz > 0) sz--
-		if (sa inv[i] == 0) continue
-		for (int j = sa[sa inv[i] - 1]
-				 max(i, j) + sz < n && s[i + sz] == s[j + sz];)
-			sz++
-		lcp[sa inv[i] - 1] = sz
-	}
-	return {sa, sa inv, lcp}
-}
-
-int get child(int v, char c) {
-	return v < sf a.n - 1 ? adj[v][c - mn] : -1
-}
-
-const int mn = '0',
-					cnt let =
-						36
-struct lcp tree {
-	sa query<string> sf a
-	vi le, ri
-	int root
-	vector<vi> adj
-	lcp tree(const string& s):
-		sf a(s, mn + cnt let), le(mono st(sf a.lcp, less())),
-		ri(mono range(le)),
-		adj(max(sf a.n - 1, 0), vector(cnt let, -1)) {
-		vi p = cart k ary tree(sf a.lcp, le)
-		root = find(all(p), -1) - begin(p)
-		auto node = [&](int i) -> int {
-			return p[i] < i || sf a.lcp[i] != sf a.lcp[p[i]]
-			? i
-			: p[i]
-		}
-		rep(i, 0, sz(p)) if (node(i) == i && i != root)
-			adj[p[i]][s[sf a.sa[i] + sf a.lcp[p[i]]] - mn] = i
-		rep(i, 0, sf a.n) {
-			int prev lcp = (i ? sf a.lcp[i - 1] : 0)
-			int next lcp = (i < sz(sf a.lcp) ? sf a.lcp[i] : -1)
-			int v = (prev lcp > next lcp) ? i - 1 : node(i)
-			int idx = sf a.sa[i] + max(prev lcp, next lcp)
-			if (v == -1 || idx == sf a.n) continue
-			adj[v][s[idx] - mn] = sf a.n - 1 + i
-		}
-	}
-}
-
-int len lcp range(int v) {
-	return v < sf a.n - 1 ? sf a.lcp[v]
-				 : sf a.n - sf a.sa[v - sf a.n + 1]
-}
-
-pii sa range(int v) {
-	if (v < sf a.n - 1) return {le[v] + 1, ri[v] + 1}
-	return {v - sf a.n + 1, v - sf a.n + 2}
-}
-
-pii find str(const string& t) {
-	int v = root
-	rep(i, 0, sz(t)) {
-		if (i == len lcp range(v)) {
-			v = get child(v, t[i])
-			if (v == -1) return {0, 0}
-		}
-		int sa le = sa range(v).first
-		if (sf a.s[sf a.sa[sa le] + i] != t[i]) return {0, 0}
-	}
-	return sa range(v)
-}
-
-const int mn = '0',
-					cnt let =
-						36
-struct bwt {
 	int n
-	char last
-	vector<array<int, cnt let>> occ
-	array<int, cnt let + 1> cnt{}
-	bwt(const string& s, const vi& sa):
-		n(sz(s)), last(empty(s) ? -1 : s.back() - mn),
-		occ(n + 1) {
-		rep(i, 0, n) {
-			cnt[s[i] + 1 - mn]++
-			occ[i + 1] = occ[i]
-			if (sa[i] == 0) continue
-			occ[i + 1][s[sa[i] - 1] - mn]++
-		}
-		partial sum(all(cnt), begin(cnt))
-	}
-	array<vi, 2> find str(const string& t) {
-		vi le(sz(t) + 1, 0), ri(sz(t) + 1, n)
-		for (int i = sz(t) - 1; i >= 0; i--) {
-			char c = t[i] - mn
-			le[i] = cnt[c] + occ[le[i + 1]][c] +
-							(c == last && i < sz(t) - 1)
-			ri[i] = cnt[c] + occ[ri[i + 1]][c] + (c == last)
-		}
-		return {le, ri}
-	}
-}
+	vector&lt;vector&lt;int&gt;&gt; adj
+	vector&lt;int&gt; depth
+	vector&lt;int&gt; parent
+	vector&lt;int&gt; jump
+	vector&lt;int&gt; deepest_leaf
+	vector&lt;int&gt; euler_tour_index
+	vector&lt;int&gt; dfs_stack
+	vector&lt;vector&lt;int&gt;&gt; ladder
 
-const int mn = 'a',
-					cnt let = 26
-struct trie {
-	struct node {
-		array<int, cnt let> next
-		int cnt words = 0, par = -1
-		char ch
-		node(int a par = -1, char a ch = '#'):
-			par(a par), ch(a ch) {
-			fill(all(next), -1)
-		}
-	}
-	vector<node> t
-	trie(): t(1) {}
-	void insert(const string& s) {
-		int v = 0
-		for (char ch : s) {
-			int u = ch - mn
-			if (t[v].next[u] == -1) {
-				t[v].next[u] = sz(t)
-				t.emplace back(v, ch)
+	linear_level_ancestor(const vector&lt;vector&lt;int&gt;&gt;&amp; adj) : n(ssize(adj)), adj(adj), depth(n), parent(n), deepest_leaf(n), euler_tour_index(n), ladder(n) {
+		dfs(0)
+		assert(ssize(jump) == 2 * n - 1)
+		for (int i = 0; i &lt; n; i++)
+			if (parent[i] == i || deepest_leaf[parent[i]] != deepest_leaf[i]) {
+				int leaf = deepest_leaf[i]
+				auto&amp; lad = ladder[leaf]
+				lad.resize(min((depth[leaf] - depth[i]) * 5, depth[leaf] + 1), leaf)
+				for (int k = 1; k &lt; ssize(lad); k++)
+					lad[k] = parent[lad[k - 1]]
 			}
-			v = t[v].next[u]
+	}
+
+	void add_jump() {
+		jump.push_back(dfs_stack[0])
+		int i = ssize(dfs_stack) - 1 - a(ssize(jump))
+		if (i &gt; 0) jump.back() = dfs_stack[i]
+	}
+
+	void dfs(int u) {
+		dfs_stack.push_back(u)
+		add_jump()
+		euler_tour_index[u] = ssize(jump)
+		deepest_leaf[u] = u
+		for (int v : adj[u]) {
+			if (v == parent[u]) continue
+			parent[v] = u
+			depth[v] = depth[u] + 1
+			dfs(v)
+			add_jump()
+			if (depth[deepest_leaf[u]] &lt; depth[deepest_leaf[v]])
+				deepest_leaf[u] = deepest_leaf[v]
 		}
-		t[v].cnt words++
+		dfs_stack.pop_back()
 	}
-	int find(const string& s) {
-		int v = 0
-		for (char ch : s) {
-			int u = ch - mn
-			if (t[v].next[u] == -1) return 0
-			v = t[v].next[u]
-		}
-		return t[v].cnt words
+
+	//kth parent of u
+	int LA(int u, int k) {
+		assert(0 &lt;= k &amp;&amp; k &lt;= depth[u])
+		if (k == 0) return u
+		if (k == 1) return parent[u]
+		int target_value = bit_floor(unsigned(k / 2))
+		assert(2 * target_value &lt;= k &amp;&amp; k &lt; 4 * target_value)
+		//now want to find closest index j with a(j) == target_value
+		int j = (euler_tour_index[u] &amp; -target_value) | target_value
+		assert(a(j) == target_value)
+		assert(abs(j - euler_tour_index[u]) &lt;= target_value)
+		int leaf = deepest_leaf[jump[j - 1]]
+		k += depth[leaf] - depth[u]
+		assert(0 &lt;= k &amp;&amp; k &lt; ssize(ladder[leaf]))
+		return ladder[leaf][k]
 	}
+}
+					</code></pre>
+				</details>
+				<h3>A Cool Thing</h3>
+				<p>
+				Here’s some intuition for why we chose the sequence \(a(i)\): It
+				contains arbitrarily large jumps which appear regularly,
+				sparsely. Sound familiar to any algorithm you know? It feels
+				like <a href="https://codeforces.com/blog/entry/74847">linear jump pointers</a>.
+				Let’s look at the jump sizes for each depth:
+				</p>
+				<p>
+				1,1,3,1,1,3,7,1,1,3,1,1,3,7,15,1,1,3,...
+				</p>
+				<p>
+				Map \(x ⇒ \frac{x+1}{2}\) and you get <a href="https://oeis.org/A182105">https://oeis.org/A182105</a>.
+				</p>
+				<p>
+				<a href="https://oeis.org/A006519">https://oeis.org/A006519</a> is kinda like the in-order
+				traversal of a complete binary tree, and
+				<a href="https://oeis.org/A182105">https://oeis.org/A182105</a>
+				is like the post-order traversal.
+				</p>
+				<h3>Improving the Constant Factor</h3>
+				<p>
+				Let’s introduce a constant \(κ\) \((κ &ge; 2)\).
+				</p>
+				<p>
+				Instead of calculating \(jump[i]\) as \(LA(eulerTour[i],
+				a(i))\), calculate it as \(LA(eulerTour[i], (κ-1) \cdot a(i))\)
+				</p>
+				<p>
+				Let node \(u\), and integer \(k\) be a query. We want to find nearest \(j\)
+				such that \(κ \cdot a(j) &le; k &lt; 2 \cdot κ \cdot a(j)\)
+				</p>
+				<p>
+				Then you can bound \(d\) like: \((κ-1) \cdot a(j) &le; d &lt; (2 \cdot κ + 1) \cdot a(j)\)
+				</p>
+				<p>
+				And you can show \(c\) needs to be \(&ge; \frac{2 \cdot κ +
+				1}{κ - 1}\)
+				</p>
+				<p>
+				The catch is when \(k &lt; κ\), you need to calculate
+				\(LA(u,k)\) naively (or maybe store them).
+				</p>
+				<p>
+				Final complexity is one of
+				</p>
+				<ul>
+					<li>&lt;\(O(n \cdot \frac{2 \cdot κ + 1}{κ - 1})\),\(O(κ)\)&gt;</li>
+					<li>&lt;\(O(n \cdot \frac{2 \cdot κ + 1}{κ - 1} + n \cdot κ)\),\(O(1)\)&gt;</li>
+				</ul>
+				<p>
+				The initial explanation is for \(κ = 2\) btw
+				</p>
+				<details>
+					<summary>c++ code with \(κ\)</summary>
+					<pre><code class="language-cpp">
+
+// https://oeis.org/A006519
+int a(int i) {
+	assert(i &gt;= 1)
+	return i &amp; -i
 }
 
-template<class t> vi prefix function(const t& s) {
-	vi pi(sz(s))
-	rep(i, 1, sz(s)) {
-		int j = pi[i - 1]
-		while (j > 0 && s[i] != s[j]) j = pi[j - 1]
-		pi[i] = j + (s[i] == s[j])
-	}
-	return pi
-}
+struct linear_level_ancestor {
 
-template<class t>
-vi lcs queries(const t& s, const t& t,
-							 const vector<array<int, 3>>& queries) {
-	int n = sz(s), m = sz(t), q = sz(queries)
-	vector<vector<array<int, 3>>> qs(n)
-	rep(i, 0, q) {
-		auto [s ri, t le, t ri] = queries[i]
-		if (s ri == 0 || t le == m) continue
-		qs[s ri - 1].push back({t le, t ri, i})
-	}
-	lcs dp lcs(t)
-	vi res(q)
-	rep(i, 0, n) {
-		lcs.push onto s(s[i])
-		vi init(m), dp inv(m, -1)
-		rep(j, 0, m) {
-			if (lcs.dp[j] == -1) init[j] = 1
-			else dp inv[lcs.dp[j]] = j
-		}
-		bit<int> bit(init)
-		sort(all(qs[i]))
-		int j = 0
-		rep(t le, 0, m) {
-			while (j < sz(qs[i]) && qs[i][j][0] == t le)
-				res[qs[i][j][2]] = bit.query(t le, qs[i][j][1]),
-													 j++
-			if (dp inv[t le] != -1) bit.update(dp inv[t le], 1)
-		}
-	}
-	return res
-}
-
-template<class t> struct lcs dp {
-	t t
-	vi dp
-	lcs dp(const t& a t): t(a t), dp(sz(t)) {
-		iota(all(dp), 0)
-	}
-	void push onto s(int c) {
-		int v = -1
-		rep(i, 0, sz(t)) if (c == t[i] || dp[i] < v)
-			swap(dp[i], v)
-	}
-}
-
-template<class t> struct kmp {
-	t t
-	vi pi
-	kmp(const t& a t): t(a t), pi(prefix function(t)) {}
-	vi find str(const t& s) {
-		vi matches
-		int j = 0
-		rep(i, 0, sz(s)) {
-			while (j > 0 && t[j] != s[i]) j = pi[j - 1]
-			j += (t[j] == s[i])
-			if (j == sz(t)) {
-				matches.push back(i - sz(t) + 1)
-				j = pi[j - 1]
-			}
-		}
-		return matches
-	}
-}
-
-vector<vl> make powers(const vl& v) {
-	int n = sz(v)
-	vector<vl> pws(3, vl(n))
-	rep(i, 0, n) {
-		pws[0][i] = v[i]
-		pws[1][i] = v[i] * v[i]
-		pws[2][i] = v[i] * v[i] * v[i]
-	}
-	return pws
-}
-template<class f>
-vector<bool> wildcard pattern matching(const vl& s,
-																			 const vl& t, f conv) {
-	int n = sz(s), m = sz(t)
-	auto s pws = make powers(s)
-	auto t pws = make powers(t)
-	for (auto& t pw : t pws) reverse(all(t pw))
-	vector<vl> res(3)
-	rep(pw hay, 0, 3) res[pw hay] =
-		conv(s pws[pw hay], t pws[2 - pw hay])
-	vector<bool> mtch(n - m + 1)
-	rep(i, 0, n - m + 1) {
-		int id = i + m - 1
-		auto num = res[0][id] - 2 * res[1][id] + res[2][id]
-		mtch[i] = num == 0
-	}
-	return mtch
-}
-
-mt19937 rng(
-	chrono::steady clock::now().time since epoch().count())
-template<class t> t rnd(t le, t ri) {
-	assert(le <= ri)
-	return uniform int distribution<t>(le, ri)(rng)
-}
-
-struct ladder {
 	int n
-	vector<vi> b tbl, l tbl
-	vi d, p, dl
-	ladder(const vector<vi>& adj):
-		n(sz(adj)), l tbl(n), d(n), p(n, -1), dl(n) {
-		auto dfs = [&](auto&& self, int v) -> void {
-			dl[v] = v
-			for (int u : adj[v])
-				if (u != p[v]) {
-					d[u] = d[p[u] = v] + 1
-					self(self, u)
-					if (d[dl[u]] > d[dl[v]]) dl[v] = dl[u]
-				}
-		}
-		rep(i, 0, n) if (p[i] == -1) p[i] = i, dfs(dfs, i)
-		b tbl = treejump(p)
-		rep(i, 0, n) if (p[i] == i || dl[p[i]] != dl[i]) {
-			int leaf = dl[i]
-			vi& lad = l tbl[leaf]
-			lad.resize(min(2 * (d[leaf] - d[i]), d[leaf] + 1),
-								 leaf)
-			rep(j, 1, sz(lad)) lad[j] = p[lad[j - 1]]
-		}
+	const int kappa
+	vector&lt;vector&lt;int&gt;&gt; adj
+	vector&lt;int&gt; depth
+	vector&lt;int&gt; parent
+	vector&lt;int&gt; jump
+	vector&lt;int&gt; deepest_leaf
+	vector&lt;int&gt; euler_tour_index
+	vector&lt;int&gt; dfs_stack
+	vector&lt;vector&lt;int&gt;&gt; ladder
+
+	linear_level_ancestor(const vector&lt;vector&lt;int&gt;&gt;&amp; adj, int kappa) : n(ssize(adj)), kappa(kappa), adj(adj), depth(n), parent(n), deepest_leaf(n), euler_tour_index(n), ladder(n) {
+		assert(kappa &gt;= 2)
+		dfs(0)
+		assert(ssize(jump) == 2 * n - 1)
+		for (int i = 0; i &lt; n; i++)
+			if (parent[i] == i || deepest_leaf[parent[i]] != deepest_leaf[i]) {
+				int leaf = deepest_leaf[i]
+				auto&amp; lad = ladder[leaf]
+				lad.resize(min((depth[leaf] - depth[i]) * (2 * kappa + 1) / (kappa - 1), depth[leaf] + 1), leaf)
+				for (int k = 1; k &lt; ssize(lad); k++)
+					lad[k] = parent[lad[k - 1]]
+			}
 	}
-	int kth par(int v, int k) {
-		if (k == 0) return v
-		int bit =   lg(k)
-		v = b tbl[bit][v], k -= (1 << bit)
-		int leaf = dl[v]
-		return l tbl[leaf][k + d[leaf] - d[v]]
+
+	void add_jump() {
+		jump.push_back(dfs_stack[0])
+		int i = ssize(dfs_stack) - 1 - (kappa - 1) * a(ssize(jump))
+		if (i &gt; 0) jump.back() = dfs_stack[i]
+	}
+
+	void dfs(int u) {
+		dfs_stack.push_back(u)
+		add_jump()
+		euler_tour_index[u] = ssize(jump)
+		deepest_leaf[u] = u
+		for (int v : adj[u]) {
+			if (v == parent[u]) continue
+			parent[v] = u
+			depth[v] = depth[u] + 1
+			dfs(v)
+			add_jump()
+			if (depth[deepest_leaf[u]] &lt; depth[deepest_leaf[v]])
+				deepest_leaf[u] = deepest_leaf[v]
+		}
+		dfs_stack.pop_back()
+	}
+
+	//kth parent of u
+	int LA(int u, int k) {
+		assert(0 &lt;= k &amp;&amp; k &lt;= depth[u])
+		if(k &lt; kappa) {
+			while(k--) u = parent[u]
+			return u
+		}
+		int target_value = bit_floor(unsigned(k / kappa))
+		assert(kappa * target_value &lt;= k &amp;&amp; k &lt; 2 * kappa * target_value)
+		int j = (euler_tour_index[u] &amp; -target_value) | target_value
+		assert(a(j) == target_value)
+		assert(abs(j - euler_tour_index[u]) &lt;= target_value)
+		int leaf = deepest_leaf[jump[j - 1]]
+		k += depth[leaf] - depth[u]
+		assert(0 &lt;= k &amp;&amp; k &lt; ssize(ladder[leaf]))
+		return ladder[leaf][k]
 	}
 }
-
-struct linear kth par {
-	struct node {
-		int d, p = -1, idx, dl
-		vi lad
-	}
-	vector<node> t
-	vi j
-	linear kth par(const vector<vi>& adj):
-		t(sz(adj)), j(2 * sz(t)) {
-		vi st
-		int pos = 1
-		auto add j = [&]() -> void {
-			j[pos] = st[max(0, sz(st) - 1 - 2 * (pos & -pos))]
-			pos++
-		}
-		auto dfs = [&](auto&& self, int v) -> void {
-			st.push back(v)
-			t[v].idx = pos
-			t[v].dl = v
-			add j()
-			for (int u : adj[v])
-				if (u != t[v].p) {
-					t[u].d = t[t[u].p = v].d + 1
-					self(self, u)
-					if (t[t[u].dl].d > t[t[v].dl].d)
-						t[v].dl = t[u].dl
-					add j()
-				}
-			st.pop back()
-		}
-		rep(i, 0, sz(t)) if (t[i].p == -1) t[i].p = i,
-																						 dfs(dfs, i)
-		rep(i, 0, sz(t)) if (
-			t[i].p == i || t[t[i].p].dl != t[i].dl) {
-			int leaf = t[i].dl
-			vi& lad = t[leaf].lad
-			lad.resize(
-				min((t[leaf].d - t[i].d) * 7 / 2, t[leaf].d + 1),
-				leaf)
-			rep(k, 1, sz(lad)) lad[k] = t[lad[k - 1]].p
-		}
-	}
-	int kth par(int v, int k) {
-		switch (k) {
-		case 0:
-			return v
-		case 1:
+					</code></pre>
+				</details>
+			</br>
+			</div>
+		</div>
+	</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Luke Videckis's blog</title>
+		<link rel="stylesheet" href="/style.css">
+		<script src="/mathjax/es5/tex-chtml.js" id="MathJax-script" async></script>
+	</head>
+	<body>
+		<div class="body">
+			<div class="heading">
+				<h1 class="main_title">Luke Videckis's blog</h1>
+			</div><br>
+			<img class="dp" src="me.jpg" alt="profile picture"><br>
+			<div class="main_content">
+				<h3 class="blog_title"><a href="/blog/2024/08/22/suffix_array_binary_search.html">String Matching: Binary Search over Suffix Array in \(O(log(|s|)+|p|)\)</a></h3>
+				<p class="blog_date">2024 August 22</p>
+				<h3 class="blog_title"><a href="/blog/2024/02/29/linear_level_ancestors.html">&lt;\(O(n)\),\(O(1)\)&gt; Level Ancestors, not Method of 4 Russians</a></h3>
+				<p class="blog_date">2024 February 29</p>
+				<h3 class="blog_title"><a href="/blog/2023/09/01/segtree_memory.html">Coding Segment Trees with Optimal Memory</a></h3>
+				<p class="blog_date">2023 September 01</p>
+				<h3 class="blog_title"><a href="/blog/2023/08/21/devanagari_keyboard.html">Designing a Devanagari Keyboard on Mobile</a></h3>
+				<p class="blog_date">2023 August 21</p>
+				<h3 class="blog_title"><a href="/blog/2020/07/17/minesweeper_probability.html">Calculating Mine Probability in Minesweeper</a></h3>
+				<p class="blog_date">2020 July 17</p>
+			</div>
+		</div>
+	</body>
+</html>
