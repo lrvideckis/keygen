@@ -143,6 +143,17 @@ fn run_ref(s: &str) {
     simulator::print_result(&layout::BEST_KEYGEN_CORPUS_LAYOUT, &penalty);
     println!();
 
+    let penalty = penalty::calculate_penalty(
+        &quartads,
+        len,
+        &layout::BEST_KEYGEN_PTC_CORPUS_LAYOUT,
+        &penalties,
+        true,
+    );
+    println!("Reference: BEST_KEYGEN_PTC_CORPUS_LAYOUT");
+    simulator::print_result(&layout::BEST_KEYGEN_PTC_CORPUS_LAYOUT, &penalty);
+    println!();
+
     let penalty =
         penalty::calculate_penalty(&quartads, len, &layout::INIT_LAYOUT, &penalties, true);
     println!("Reference: INITIAL");
