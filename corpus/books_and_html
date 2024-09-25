@@ -50367,7 +50367,7 @@ void update(int pos, int val, int tl=0, int tr=n, int v=0) {
 							<summary>How to derive this</summary>
 							<p>The distinct property follows directly from the above BST-property</p>
 							<hr>
-							<p>Each internal node \(v\) has range \([tl, tr) ⊆ [0, n)\), and its midpoint
+							<p>Each internal node \(v\) has range \([tl, tr)  [0, n)\), and its midpoint
 							is strictly inside \([tl, tr)\). So \(0 &le; tl &lt; tm &lt; tr &le; n\), so \(0 &lt; tm &lt; n\).</p>
 						</details>
 					</li>
@@ -50523,8 +50523,8 @@ int in_order(int tl, int tr) {
 				You can spell English words different ways in Devanagari depending on the accent:
 				</p>
 				<ul>
-					<li>niche can = नीश (neesh), निछ (nitch)</li>
-					<li>mobile can = मोबईयल (moh-bye-ul), मोबल (moh-buhl)</li>
+					<li>niche can =  (neesh),  (nitch)</li>
+					<li>mobile can =  (moh-bye-ul),  (moh-buhl)</li>
 				</ul>
 				<hr>
 				<p>The spelling for certain Hindi words can change as their pronunciation evolves:</p>
@@ -50536,23 +50536,23 @@ int in_order(int tl, int tr) {
 					</tr>
 					<tr>
 						<td>why</td>
-						<td>क्यों (kyo)</td>
-						<td>क्युं (cue/queue)</td>
+						<td> (kyo)</td>
+						<td>(cue/queue)</td>
 					</tr>
 					<tr>
 						<td>he/she/it</td>
-						<td>वह (vaha)</td>
-						<td>वो (voh)</td>
+						<td> (vaha)</td>
+						<td> (voh)</td>
 					</tr>
 					<tr>
 						<td>very</td>
-						<td>बहुत (bahut)</td>
-						<td>बहौत (bahaut)</td>
+						<td> (bahut)</td>
+						<td> (bahaut)</td>
 					</tr>
 					<tr>
 						<td>no</td>
-						<td>नहीं (nahii)</td>
-						<td>ने (nay)</td>
+						<td> (nahii)</td>
+						<td>(nay)</td>
 					</tr>
 				</table>
 				<hr>
@@ -50565,27 +50565,27 @@ int in_order(int tl, int tr) {
 					</tr>
 					<tr>
 						<td>boar</td>
-						<td>बोर</td>
+						<td></td>
 					</tr>
 					<tr>
 						<td>core</td>
-						<td>कोर</td>
+						<td></td>
 					</tr>
 					<tr>
 						<td>door</td>
-						<td>डोर</td>
+						<td></td>
 					</tr>
 					<tr>
 						<td>four</td>
-						<td>फोर</td>
+						<td></td>
 					</tr>
 					<tr>
 						<td>nor</td>
-						<td>नोर</td>
+						<td></td>
 					</tr>
 					<tr>
 						<td>you're</td>
-						<td>योर</td>
+						<td></td>
 					</tr>
 				</table>
 				<hr>
@@ -50600,73 +50600,73 @@ int in_order(int tl, int tr) {
 						<th>explanation</th>
 					</tr>
 					<tr>
-						<td>शब्द (sh-ah-bd)</td>
-						<td>typed it like शुब्द (sh-uu-bd)</td>
-						<td>शब्द is stored like 'shubd' in my head, so my brain
+						<td> (sh-ah-bd)</td>
+						<td>typed it like  (sh-uu-bd)</td>
+						<td>is stored like 'shubd' in my head, so my brain
 							sees 'shu' and thinks it is pronounced like
 							'shoe'</td>
 					</tr>
 					<tr>
-						<td>bull (बल)</td>
-						<td>typed it like बुल (b-uu-ll)</td>
+						<td>bull</td>
+						<td>typed it like (b-uu-ll)</td>
 						<td>My brain sees the 'u' in 'bull' and wants to spell
-							it like बुल (b-uu-ll). But bull is pronounced like
-							'b-ah-ll' (बल)</td>
+							it like  (b-uu-ll). But bull is pronounced like
+							'b-ah-ll' ()</td>
 					</tr>
 					<tr>
-						<td>pong (पौंग)</td>
-						<td>typed it like पोंग</td>
+						<td>pong ()</td>
+						<td>typed it like </td>
 						<td>My brain sees the 'o' in pong and thinks it's
-							spelled with the ' ो' symbol representing the 'o'
+							spelled with the '' symbol representing the 'o'
 							sound. When actually pong is pronounced 'p-aw-ng'
-						(पौंग)</td>
+						()</td>
 					</tr>
 					<tr>
-						<td>Americans (अमेरिकन्ज़)</td>
-						<td>typed it like अमेरिकन्स</td>
-						<td>s=स in Devanagari, so my brain thinks 'Americans'
-							is spelled like अमेरिकन्स. When actually it's
-							pronounced like 'American-z' and z=ज़, so the
-						correct Devanagari spelling is अमेरिकन्ज़</td>
+						<td>Americans ()</td>
+						<td>typed it like </td>
+						<td>s= in Devanagari, so my brain thinks 'Americans'
+							is spelled like . When actually it's
+							pronounced like 'American-z' and z=, so the
+						correct Devanagari spelling is </td>
 					</tr>
 					<tr>
-						<td>आसमान (aas-maan)</td>
-						<td>pronounced it like आज़मान</td>
-						<td>My brain sees the 'sm' in आसमान and thinks it's
+						<td> (aas-maan)</td>
+						<td>pronounced it like </td>
+						<td>My brain sees the 'sm' in and thinks it's
 							pronounced like the 'sm' in
 							<ul>
 								<li>co<b>sm</b>etic</li>
 								<li>journali<b>sm</b></li>
 								<li>pla<b>sm</b>a</li>
 							</ul>
-							e.g. like zm=ज़म
+							e.g. like zm=
 						</td>
 					</tr>
 					<tr>
-						<td>अन्य (ah-nyah)</td>
-						<td>pronounced it like ऐनी (an-ee)</td>
-						<td>My brain sees the Romanization of अन्य='any', and
+						<td> (ah-nyah)</td>
+						<td>pronounced it like  (an-ee)</td>
+						<td>My brain sees the Romanization of ='any', and
 							wants to pronounce it like that, e.g. like
 							'an-ee'.</td>
 					</tr>
 					<tr>
-						<td>सिर्फ (s-ee-rf)</td>
-						<td>pronounced it like सर्फ (sirf)</td>
-						<td>In my head, सिर्फ is stored like 'sirf', and my
+						<td> (s-ee-rf)</td>
+						<td>pronounced it like  (sirf)</td>
+						<td>In my head,  is stored like 'sirf', and my
 							brain sees 'sir' and pronounces it like that (e.g.
-							like सर)</td>
+							like )</td>
 					</tr>
 					<tr>
-						<td>कहावत (kuh-haa-vat)</td>
-						<td>pronounced like कहावित (kuh-haa-vit)</td>
+						<td> (kuh-haa-vat)</td>
+						<td>pronounced like (kuh-haa-vit)</td>
 						<td>My brain sees the 'va' in the pronounciation
 							'kuh-haa-<b>va</b>t' and thinks it's pronounced
-							like the 'va' in a<b>va</b>tar, e.g. like 'vi'=वि
+							like the 'va' in a<b>va</b>tar, e.g. like 'vi'=
 						</td>
 					</tr>
 					<tr>
-						<td>लिपि (li-pi)</td>
-						<td>pronounced like लिपी (li-pee)</td>
+						<td> (li-pi)</td>
+						<td>pronounced like  (li-pee)</td>
 						<td>My brain thinks the 'pi' in the pronounciation
 							'li-<b>pi</b>' is pronounced like the 'pi' in words
 							like:
@@ -50677,8 +50677,8 @@ int in_order(int tl, int tr) {
 						</td>
 					</tr>
 					<tr>
-						<td>विशेष (vi-shay-sh)</td>
-						<td>typed it like वेशेष (vay-shay-sh)</td>
+						<td> (vi-shay-sh)</td>
+						<td>typed it like (vay-shay-sh)</td>
 						<td>This one is the hardest to explain. My brain starts
 							to sound out the word like 'vi..' and remembers
 							words like:
@@ -50689,7 +50689,7 @@ int in_order(int tl, int tr) {
 							</ul>
 							Then my brain further forgets that in these words,
 							'va' is pronounced somewhere in between 'vah',
-							'vih'; and instead thinks it's pronounced 'vay'=वे.
+							'vih'; and instead thinks it's pronounced 'vay'=.
 						</td>
 					</tr>
 				</table>
@@ -50722,10 +50722,10 @@ int in_order(int tl, int tr) {
 				<a href="https://www.omniglot.com/writing/devanagari.htm">source</a>
 				<p>For example, the "Labial" group's characters are all lip-movements:</p>
 				<ul>
-					<li>प = p</li>
-					<li>फ = f</li>
-					<li>ब = b</li>
-					<li>म = m</li>
+					<li> = p</li>
+					<li> = f</li>
+					<li> = b</li>
+					<li> = m</li>
 				</ul>
 				<img src="consonants_row_original.png" alt="consonants original" style="width:500px;height:auto;">
 				<p>Let's have a key for each consonant group.</p>
@@ -50753,7 +50753,7 @@ int in_order(int tl, int tr) {
 				<br>
 				<img src="vowels_row_original.png" alt="vowels original" style="width:500px;height:auto;">
 				<p>Let's have a key for each vowel group. The vowel row also somewhat follows the "standard" vowel order:</p>
-				<p>अ आ इ ई उ ऊ ऋ ए ऐ ओ औ</p>
+				<p></p>
 				<p>It's analogous to the "standard" vowel order in English: AEIOU.
 				Note neither of the "standard" vowel orders follows <a
 																			href="https://en.wikipedia.org/wiki/Scale_of_vowels">pitch
@@ -50806,25 +50806,25 @@ int in_order(int tl, int tr) {
 				the crutch of these features.</p>
 				<p>In particular, this helped me learn the
 				<a href="https://www.omniglot.com/writing/devanagari_conjuncts.php">conjunct consonants</a>.
-				For example for the conjunct consonant त्य:</p>
+				For example for the conjunct consonant :</p>
 				<ul>
-					<li>With my layout, I'm forced to type the sequence त then ् then य. Here,  ् is the
+					<li>With my layout, I'm forced to type the sequence  then then . Here,  is the
 						<a href="https://en.wikipedia.org/wiki/Virama">Virama character</a>
-						and means that there is no vowel sound between त and य.
-						It also changes how the character looks visually (त्य
-						looks like the left half of त and then य).
+						and means that there is no vowel sound between  and .
+						It also changes how the character looks visually (
+						looks like the left half of  and then ).
 						<details>
 							<br>
-							<summary>One exception: the ज्ञ character</summary>
+							<summary>One exception: the  character</summary>
 							Its pronunciation is a bit controversial:
 							<br>
 							<br>
-							ज्ञ = ज + ् + ञ in unicode, so you would think its
-							pronunciation is half of ज, and then ञ, but this
+							 in unicode, so you would think its
+							pronunciation is half of , and then , but this
 							is only true in Sanskrit.
 							<br>
 							<br>
-							In Hindi, ज्ञ is pronounced like ग + ् + ञ (= ग्ञ).
+							In Hindi,  is pronounced like 
 							Hindi borrows many things from Sanskrit but doesn't
 							always keep everything the same.
 							<br>
@@ -50837,7 +50837,7 @@ int in_order(int tl, int tr) {
 					<li>With GBoard, conjunct characters exist on different layers:
 						<img src="gboard_third_layer_conjunct_consonant.png" alt="gboard conjunct consonant" style="width:350px;height:auto;">
 						<br>
-						although GBoard also does have a key for  ् so you can
+						although GBoard also does have a key for  so you can
 						type it out in full if wanted.
 					</li>
 				</ul>
@@ -51790,8 +51790,8 @@ template &lt;class T&gt; struct sa_query {
 			<br>
 			<div class="main_content">
 				<p>
-				I recently read “Still Simpler Static Level Ancestors by Torben
-				Hagerup” describing how to process a rooted tree in \(O(n)\)
+				I recently read Still Simpler Static Level Ancestors by Torben
+				Hagerup describing how to process a rooted tree in \(O(n)\)
 				time/space to be able to answer online level ancestor queries
 				in \(O(1)\). I would like to explain it here. Thank you to
 				Cameron Custer for proof-reading and giving feedback.
@@ -51803,7 +51803,7 @@ template &lt;class T&gt; struct sa_query {
 				</p>
 				<p>
 				First, to define a level ancestor query: For a node \(u\), and
-				integer \(k\), let \(LA(u, k)\) = the node \(k\) edges “up”
+				integer \(k\), let \(LA(u, k)\) = the node \(k\) edges up
 				from \(u\). Formally a node \(v\) such that:
 				</p>
 				<ul>
@@ -51843,7 +51843,7 @@ template &lt;class T&gt; struct sa_query {
 				<img src="ladder_key_observation.png" alt="ladder key observation" style="width:auto;height:auto;">
 				<h3>The Magic Sequence</h3>
 				<p>
-				Let’s take a detour to the following sequence \(a(i)\) =
+				Let's take a detour to the following sequence \(a(i)\) =
 				highest power of \(2\) which divides \(i\) for \(i &ge; 1\) <a
 				href="https://oeis.org/A006519">https://oeis.org/A006519</a>
 				</p>
@@ -51856,7 +51856,7 @@ template &lt;class T&gt; struct sa_query {
 				</p>
 				<p>
 				Q: Given index \(i &ge; 1\), and some value \(2^k\), I can move left or
-				right. What’s the minimum steps I need to travel to get to the
+				right. What's the minimum steps I need to travel to get to the
 				nearest value of \(2^k\)?
 				</p>
 				<p>
@@ -51866,8 +51866,8 @@ template &lt;class T&gt; struct sa_query {
 				</p>
 				<h3>The Algorithm</h3>
 				<p>
-				Let’s do a \(2 \cdot n - 1\) euler tour; let the \(i\)’th node be
-				\(eulerTour[i]\); \(i &ge; 1\). Let’s calculate an array
+				Let's do a \(2 \cdot n - 1\) euler tour; let the \(i\)'th node be
+				\(eulerTour[i]\); \(i &ge; 1\). Let's calculate an array
 				\(jump[i] = LA(eulerTour[i], a(i))\) offline, upfront.
 				</p>
 				<img src="euler_tour_jump.png" alt="euler tour jump" style="width:auto;height:auto;">
@@ -51876,13 +51876,13 @@ template &lt;class T&gt; struct sa_query {
 				</p>
 				<p>
 				Let node \(u\), and integer \(k\) be a query. We can know \(i\)
-				= \(u\)’s index in the euler tour (it can show up multiple times
+				= \(u\)'s index in the euler tour (it can show up multiple times
 				any index will work).
 				</p>
 				<hr>
 				<p>
 				<b>key idea</b>: We want to move either left, right in the
-				euler tour to find some “close”-ish index \(j\) with a “big”
+				euler tour to find some close-ish index \(j\) with a big
 				jump upwards. But not too big: we want to stay in the subtree
 				of \(LA(u, k)\). Then we use the ladder containing \(jump[j]\)
 				to get to \(LA(u, k)\). The rest of the blog will be the all
@@ -51926,9 +51926,9 @@ template &lt;class T&gt; struct sa_query {
 				</details>
 				<hr>
 				<p>
-				Note we’re not creating a ladder of length \(c \cdot a(i)\)
+				Note we're not creating a ladder of length \(c \cdot a(i)\)
 				starting from every node because that sums to \(c \cdot
-				(a(1)+a(2)+...+a(2n-1)) = O(n \cdot log(n))\). Rather it’s a
+				(a(1)+a(2)+...+a(2n-1)) = O(n \cdot log(n))\). Rather it's a
 				vertical path decomposition (sum of lengths is exactly \(n\)),
 				and each vertical path is extended upwards to \(c\) times its
 				original length into a ladder (sum of lengths &le; \(c \cdot
@@ -51936,7 +51936,7 @@ template &lt;class T&gt; struct sa_query {
 				</p>
 				<h3>Finding the Smallest \(c\) for Ladders to be Long Enough</h3>
 				<p>
-				Let’s prove some bounds on \(d = depth[eulerTour[j]] - depth[LA(u, k)]\)
+				Let's prove some bounds on \(d = depth[eulerTour[j]] - depth[LA(u, k)]\)
 				</p>
 				<img src="lower_bound_main_alg.png" alt="lower bound main algorithm" style="width:auto;height:auto;">
 				<p>
@@ -51957,7 +51957,7 @@ template &lt;class T&gt; struct sa_query {
 				</p>
 				<img src="meme.png" alt="meme" style="width:auto;height:auto;">
 				<p>
-				I mean that constant factor kinda sucks :( Well, at least we’ve
+				I mean that constant factor kinda sucks :( Well, at least we've
 				shown a way to do the almighty, all-powerful theoretical
 				&lt;\(O(n),O(1)\)&gt; level ancestor, all hail to the almighty. If
 				thou is tempted by method of 4 russians, thou shall receive
@@ -52041,17 +52041,17 @@ struct linear_level_ancestor {
 				</details>
 				<h3>A Cool Thing</h3>
 				<p>
-				Here’s some intuition for why we chose the sequence \(a(i)\): It
+				Here's some intuition for why we chose the sequence \(a(i)\): It
 				contains arbitrarily large jumps which appear regularly,
 				sparsely. Sound familiar to any algorithm you know? It feels
 				like <a href="https://codeforces.com/blog/entry/74847">linear jump pointers</a>.
-				Let’s look at the jump sizes for each depth:
+				Let's look at the jump sizes for each depth:
 				</p>
 				<p>
 				1,1,3,1,1,3,7,1,1,3,1,1,3,7,15,1,1,3,...
 				</p>
 				<p>
-				Map \(x ⇒ \frac{x+1}{2}\) and you get <a href="https://oeis.org/A182105">https://oeis.org/A182105</a>.
+				Map \(x  \frac{x+1}{2}\) and you get <a href="https://oeis.org/A182105">https://oeis.org/A182105</a>.
 				</p>
 				<p>
 				<a href="https://oeis.org/A006519">https://oeis.org/A006519</a> is kinda like the in-order
@@ -52061,39 +52061,39 @@ struct linear_level_ancestor {
 				</p>
 				<h3>Improving the Constant Factor</h3>
 				<p>
-				Let’s introduce a constant \(κ\) \((κ &ge; 2)\).
+				Let's introduce a constant \(k\) \((k &ge; 2)\).
 				</p>
 				<p>
 				Instead of calculating \(jump[i]\) as \(LA(eulerTour[i],
-				a(i))\), calculate it as \(LA(eulerTour[i], (κ-1) \cdot a(i))\)
+				a(i))\), calculate it as \(LA(eulerTour[i], (k-1) \cdot a(i))\)
 				</p>
 				<p>
 				Let node \(u\), and integer \(k\) be a query. We want to find nearest \(j\)
-				such that \(κ \cdot a(j) &le; k &lt; 2 \cdot κ \cdot a(j)\)
+				such that \(k \cdot a(j) &le; k &lt; 2 \cdot k \cdot a(j)\)
 				</p>
 				<p>
-				Then you can bound \(d\) like: \((κ-1) \cdot a(j) &le; d &lt; (2 \cdot κ + 1) \cdot a(j)\)
+				Then you can bound \(d\) like: \((k-1) \cdot a(j) &le; d &lt; (2 \cdot k + 1) \cdot a(j)\)
 				</p>
 				<p>
-				And you can show \(c\) needs to be \(&ge; \frac{2 \cdot κ +
-				1}{κ - 1}\)
+				And you can show \(c\) needs to be \(&ge; \frac{2 \cdot k +
+				1}{k - 1}\)
 				</p>
 				<p>
-				The catch is when \(k &lt; κ\), you need to calculate
+				The catch is when \(k &lt; k\), you need to calculate
 				\(LA(u,k)\) naively (or maybe store them).
 				</p>
 				<p>
 				Final complexity is one of
 				</p>
 				<ul>
-					<li>&lt;\(O(n \cdot \frac{2 \cdot κ + 1}{κ - 1})\),\(O(κ)\)&gt;</li>
-					<li>&lt;\(O(n \cdot \frac{2 \cdot κ + 1}{κ - 1} + n \cdot κ)\),\(O(1)\)&gt;</li>
+					<li>&lt;\(O(n \cdot \frac{2 \cdot k + 1}{k - 1})\),\(O(k)\)&gt;</li>
+					<li>&lt;\(O(n \cdot \frac{2 \cdot k + 1}{k - 1} + n \cdot k)\),\(O(1)\)&gt;</li>
 				</ul>
 				<p>
-				The initial explanation is for \(κ = 2\) btw
+				The initial explanation is for \(k = 2\) btw
 				</p>
 				<details>
-					<summary>c++ code with \(κ\)</summary>
+					<summary>c++ code with \(k\)</summary>
 					<pre><code class="language-cpp">
 
 // https://oeis.org/A006519
