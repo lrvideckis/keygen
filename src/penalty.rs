@@ -188,14 +188,14 @@ fn penalty_for_quartad<'a, 'b>(
 // https://github.com/Julow/Unexpected-Keyboard/issues/740#issuecomment-2350971805
 #[rustfmt::skip]
 pub static BASE_PENALTY: [[f64; 6]; 3] = [
-    [0.2, 0.4, 0.7, 0.7, 0.4, 0.2],
-    [0.4, 0.0, 0.4, 0.4, 0.0, 0.4],
-    [0.0, 0.4, 0.2, 0.2, 0.4, 0.0],
+    [0.3, 0.6, 1.0, 1.0, 0.6, 0.3],
+    [0.6, 0.0, 0.6, 0.6, 0.0, 0.6],
+    [0.0, 0.6, 0.3, 0.3, 0.6, 0.0],
 ];
 
 // penalty for each swipe
-pub static SWIPE_PENALTY: f64 = 2.0;
-pub static EXTRA_SWIPE_PENALTY: f64 = 2.0;
+pub static SWIPE_PENALTY: f64 = 3.0;
+pub static EXTRA_SWIPE_PENALTY: f64 = 3.0;
 
 // constants taken from https://www.exideas.com/ME/ICMI2003Paper.pdf
 // Time (in seconds) taken to tap (finger down, then finger up)
