@@ -121,6 +121,28 @@ fn run_ref(s: &str) {
     let quartads = penalty::prepare_quartad_list(s, &init_pos_map);
     let len = s.len();
 
+    let penalty = penalty::calculate_penalty(
+        &quartads,
+        len,
+        &layout::BEST_CALGARY_CORPUS_LAYOUT,
+        &penalties,
+        true,
+    );
+    println!("Reference: BEST_CALGARY_CORPUS_LAYOUT");
+    simulator::print_result(&layout::BEST_CALGARY_CORPUS_LAYOUT, &penalty);
+    println!();
+
+    let penalty = penalty::calculate_penalty(
+        &quartads,
+        len,
+        &layout::BEST_KEYGEN_CORPUS_LAYOUT,
+        &penalties,
+        true,
+    );
+    println!("Reference: BEST_KEYGEN_CORPUS_LAYOUT");
+    simulator::print_result(&layout::BEST_KEYGEN_CORPUS_LAYOUT, &penalty);
+    println!();
+
     let penalty =
         penalty::calculate_penalty(&quartads, len, &layout::INIT_LAYOUT, &penalties, true);
     println!("Reference: INITIAL");
