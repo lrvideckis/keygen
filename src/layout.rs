@@ -100,8 +100,8 @@ pub static INIT_LAYOUT: Layout = Layout(KeyMap([
 '\0','\0','\0','\0','\0',
 '=','\0','q','\0','s',
 ',','&','w','\0','t',
-'^','y','`',':','e',
-'\0','.','\0','\0','h',
+'^','y','`','.','e',
+'\0',':','\0','\0','h',
 ]));
 
 pub static KP_NONE: Option<KeyPress> = None;
