@@ -188,9 +188,9 @@ fn penalty_for_quartad<'a, 'b>(
 // https://github.com/Julow/Unexpected-Keyboard/issues/740#issuecomment-2350971805
 #[rustfmt::skip]
 pub static BASE_PENALTY: [[f64; 6]; 3] = [
-    [0.3, 0.6, 1.0, 1.0, 0.6, 0.3],
-    [0.6, 0.0, 0.6, 0.6, 0.0, 0.6],
-    [0.0, 0.6, 0.3, 0.3, 0.6, 0.0],
+    [0.5, 1.0, 1.5, 1.5, 1.0, 0.5],
+    [1.0, 0.0, 1.0, 1.0, 0.0, 1.0],
+    [0.0, 1.0, 0.5, 0.5, 1.0, 0.0],
 ];
 
 // penalty for each swipe

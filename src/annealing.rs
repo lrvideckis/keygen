@@ -10,7 +10,7 @@ use std::ops::Range;
 
 // These values are taken from Carpalx, with T0 adjusted for the scale that our
 // penalty model outputs.
-const T0: f64 = 3.5;
+const T0: f64 = 4.0;
 const K: f64 = 10.0;
 const P0: f64 = 1.0;
 const N: usize = 15000;
