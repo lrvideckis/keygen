@@ -307,9 +307,16 @@ fn penalize<'a, 'b>(
         }
     }
 
+    let mut contains_period = false;
+    for c in slice2.chars() {
+        if c == '.' {
+            contains_period = true;
+        }
+    }
+
     if same_hand(old1, curr) {
         let penalty = thumb_travel_penalty(old1, curr) * count;
-        if detailed {
+        if detailed && contains_period {
             *result[3].high_keys.entry(slice2).or_insert(0.0) += penalty;
             result[3].total += penalty;
         }
@@ -335,6 +342,11 @@ fn penalize<'a, 'b>(
             return total;
         }
     }
+    for c in slice3.chars() {
+        if c == '.' {
+            contains_period = true;
+        }
+    }
 
     {
         let mut penalty = 0.0;
@@ -350,7 +362,7 @@ fn penalize<'a, 'b>(
         total += penalty;
     }
 
-    if same_hand(old2, curr) && !same_hand(old2, old1) {
+    if same_hand(old2, curr) && !same_hand(old2, old1) && contains_period {
         let penalty = thumb_travel_penalty(old2, curr) * count;
         if detailed {
             *result[4].high_keys.entry(slice3).or_insert(0.0) += penalty;
@@ -371,6 +383,11 @@ fn penalize<'a, 'b>(
             return total;
         }
     }
+    for c in slice4.chars() {
+        if c == '.' {
+            contains_period = true;
+        }
+    }
     {
         let mut penalty = 0.0;
 
@@ -385,7 +402,8 @@ fn penalize<'a, 'b>(
         total += penalty;
     }
 
-    if same_hand(old3, curr) && !same_hand(old3, old1) && !same_hand(old3, old2) {
+    if same_hand(old3, curr) && !same_hand(old3, old1) && !same_hand(old3, old2) && contains_period
+    {
         let penalty = thumb_travel_penalty(old3, curr) * count;
         if detailed {
             *result[5].high_keys.entry(slice4).or_insert(0.0) += penalty;
