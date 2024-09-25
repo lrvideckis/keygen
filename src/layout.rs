@@ -83,6 +83,30 @@ pub struct KeyPress {
 #[rustfmt::skip]
 pub static INIT_LAYOUT: Layout = Layout(KeyMap([
 //row 0
+'\'','+','*','\0','o',
+';','`','\0','\0','u',
+'!','\0','\0','=','y',
+'\0','\0','\0','\0','m',
+'\0','\0','\0','\0','s',
+'\0','j','\0','q','l',
+//row 1
+'_','\0','/','\0','p',
+'.','\0','k','^','t',
+'@','\0','-','#','a',
+'\0','v','\\','\0','r',
+'\0','c','\0','\"','n',
+'&','x','\0','\0','w',
+//row 2
+'\0','\0','\0','\0','\0',
+'?','~',':','\0','i',
+',','\0','g','\0','e',
+'\0','f','|','b','h',
+'\0','$','%','z','d',
+]));
+
+#[rustfmt::skip]
+pub static BEST_CALGARY_CORPUS_LAYOUT: Layout = Layout(KeyMap([
+//row 0
 'b','\0',';','\0','l',
 'z','\0','*','\0','c',
 '#','\0','&','\0','m',
@@ -194,6 +218,13 @@ impl Layout {
         map[' ' as usize] = Some(KeyPress { pos: 109 });
         for (pos, c) in layer.into_iter().enumerate() {
             if *c < (128 as char) {
+                if *c != '\0' {
+                    assert!(
+                        map[*c as usize].is_none(),
+                        "character should be none {}",
+                        *c
+                    );
+                }
                 map[*c as usize] = Some(KeyPress { pos });
             }
         }
