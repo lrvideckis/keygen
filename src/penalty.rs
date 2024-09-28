@@ -210,7 +210,7 @@ pub static LENGTH_2_ALTERNATION_BONUS: f64 = -0.15;
 pub static LENGTH_3_ALTERNATION_BONUS: f64 = -0.3;
 pub static LENGTH_4_ALTERNATION_BONUS: f64 = -0.7;
 
-pub static TWO_THUMB_3_4_ALTERNATION_WEIGHT: f64 = 0.5;
+pub static TWO_THUMB_TRAVEL_WEIGHT: f64 = 0.5;
 
 // if your thumb starts at position (x_start,y_start), and needs to travel to a button (with the
 // given width) at (x_end,y_end) where dist=sqrt((x_start-x_end)^2 + (y_start-y_end)^2)
@@ -310,7 +310,7 @@ fn penalize<'a, 'b>(
     }
 
     if same_hand(old1, curr) {
-        let penalty = thumb_travel_penalty(old1, curr) * count;
+        let penalty = TWO_THUMB_TRAVEL_WEIGHT * thumb_travel_penalty(old1, curr) * count;
         if detailed {
             *result[3].high_keys.entry(slice2).or_insert(0.0) += penalty;
             result[3].total += penalty;
@@ -353,7 +353,7 @@ fn penalize<'a, 'b>(
     }
 
     if same_hand(old2, curr) && !same_hand(old2, old1) {
-        let penalty = TWO_THUMB_3_4_ALTERNATION_WEIGHT * thumb_travel_penalty(old2, curr) * count;
+        let penalty = TWO_THUMB_TRAVEL_WEIGHT * thumb_travel_penalty(old2, curr) * count;
         if detailed {
             *result[4].high_keys.entry(slice3).or_insert(0.0) += penalty;
             result[4].total += penalty;
@@ -388,7 +388,7 @@ fn penalize<'a, 'b>(
     }
 
     if same_hand(old3, curr) && !same_hand(old3, old1) && !same_hand(old3, old2) {
-        let penalty = TWO_THUMB_3_4_ALTERNATION_WEIGHT * thumb_travel_penalty(old3, curr) * count;
+        let penalty = TWO_THUMB_TRAVEL_WEIGHT * thumb_travel_penalty(old3, curr) * count;
         if detailed {
             *result[5].high_keys.entry(slice4).or_insert(0.0) += penalty;
             result[5].total += penalty;
